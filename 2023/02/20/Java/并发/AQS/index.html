@@ -4,21 +4,21 @@
   <meta charset="utf-8">
   
   
-  <title>Hexo</title>
+  <title>唯&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="AQSAQS 使用 FIFO 队列实现了一个锁相关的并发器模板，可以基于这个模板来实现各种锁，包括独占锁、共享锁、信号量等。 AQS 中，有一个核心状态是 waitStatus，这个代表节点的状态，决定了当前节点的后续操作，比如是否等待唤醒，是否要唤醒后继节点。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/2023/02/20/Java/%E5%B9%B6%E5%8F%91/AQS/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:title" content="唯&#39;s Blog">
+<meta property="og:url" content="https://izachwei.github.io/2023/02/20/Java/%E5%B9%B6%E5%8F%91/AQS/index.html">
+<meta property="og:site_name" content="唯&#39;s Blog">
 <meta property="og:description" content="AQSAQS 使用 FIFO 队列实现了一个锁相关的并发器模板，可以基于这个模板来实现各种锁，包括独占锁、共享锁、信号量等。 AQS 中，有一个核心状态是 waitStatus，这个代表节点的状态，决定了当前节点的后续操作，比如是否等待唤醒，是否要唤醒后继节点。">
-<meta property="og:locale" content="cn_ZH">
+<meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-02-20T09:23:57.293Z">
 <meta property="article:modified_time" content="2022-12-31T06:16:46.212Z">
 <meta property="article:author" content="Zach Wei">
 <meta name="twitter:card" content="summary">
   
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="唯's Blog" type="application/atom+xml">
   
   
     <link rel="shortcut icon" href="/favicon.png">
@@ -46,8 +46,12 @@
   <div id="header-outer" class="outer">
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">Hexo</a>
+        <a href="/" id="logo">唯&#39;s Blog</a>
       </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">笔者是一个热爱编程的 Java 程序员。</a>
+        </h2>
       
     </div>
     <div id="header-inner" class="inner">
@@ -61,12 +65,12 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Suche"></a>
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
       </nav>
       <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://izachwei.github.io"></form>
       </div>
     </div>
   </div>
@@ -91,7 +95,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/02/20/Java/%E5%B9%B6%E5%8F%91/AQS/" data-id="clecm27oz000cdwuq5ugu6ymz" data-title="" class="article-share-link">Teilen</a>
+      <a data-url="https://izachwei.github.io/2023/02/20/Java/%E5%B9%B6%E5%8F%91/AQS/" data-id="clecm27oz000cdwuq5ugu6ymz" data-title="" class="article-share-link">分享</a>
       
       
       
@@ -102,7 +106,7 @@
 <nav id="article-nav">
   
     <a href="/2023/02/20/Java/%E5%B9%B6%E5%8F%91/CompletableFuture/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Neuer</strong>
+      <strong class="article-nav-caption">前一篇</strong>
       <div class="article-nav-title">
         
           (no title)
@@ -112,7 +116,7 @@
   
   
     <a href="/2023/02/20/Java/%E5%A4%9A%E7%BA%BF%E7%A8%8B/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%BD%93%E7%B3%BB/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Älter</strong>
+      <strong class="article-nav-caption">后一篇</strong>
       <div class="article-nav-title"></div>
     </a>
   
@@ -136,9 +140,9 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archiv</h3>
+    <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">February 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li></ul>
     </div>
   </div>
 
@@ -146,7 +150,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">letzter Beitrag</h3>
+    <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
         
