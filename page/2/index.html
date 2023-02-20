@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/page/2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="cn_ZH">
+<meta property="article:author" content="Zach Wei">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Suche"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-Java/IO/读取资源文件" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/02/20/Java/IO/%E8%AF%BB%E5%8F%96%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6/" class="article-date">
+  <time class="dt-published" datetime="2023-02-20T09:23:57.267Z" itemprop="datePublished">2023-02-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Java-读取资源文件"><a href="#Java-读取资源文件" class="headerlink" title="Java 读取资源文件"></a>Java 读取资源文件</h2><h3 id="绝对路径"><a href="#绝对路径" class="headerlink" title="绝对路径"></a>绝对路径</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;D://test.txt&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="相对路径-项目根目录"><a href="#相对路径-项目根目录" class="headerlink" title="相对路径 - 项目根目录"></a>相对路径 - 项目根目录</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;test.txt&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="读取-Java-工程中-Resource-资源文件"><a href="#读取-Java-工程中-Resource-资源文件" class="headerlink" title="读取 Java  工程中 Resource  资源文件"></a>读取 Java  工程中 Resource  资源文件</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 方法1</span></span><br><span class="line">URL fileURL=<span class="built_in">this</span>.getClass().getResource(<span class="string">&quot;/resource/res.txt&quot;</span>);   </span><br><span class="line">System.out.println(fileURL.getFile());  </span><br><span class="line"><span class="comment">// 方法2</span></span><br><span class="line"><span class="comment">//返回读取指定资源的输入流  </span></span><br><span class="line">InputStream is=<span class="built_in">this</span>.getClass().getResourceAsStream(<span class="string">&quot;/resource/res.txt&quot;</span>); </span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/02/20/Java/IO/%E8%AF%BB%E5%8F%96%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6/" data-id="clecm27or0002dwuqh7bt5sg6" data-title="" class="article-share-link">Teilen</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Java/agent/JavaAgent" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/02/20/Java/agent/JavaAgent/" class="article-date">
+  <time class="dt-published" datetime="2023-02-20T09:23:57.262Z" itemprop="datePublished">2023-02-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="JavaAgent-技术"><a href="#JavaAgent-技术" class="headerlink" title="JavaAgent 技术"></a>JavaAgent 技术</h2><p>JavaAgent 又称 Java 探针，是在 JDK5 引进的一种动态修改字节码的技术。它在 JVM 在加载字节码之前，获取字节码信息 通过字节码转换器修改字节码来实现一些额外的功能。JavaAgent本质可以理解成一个Jar包插件，使用 JVMTI（JVM Tool Interface）完成加载，利用 JVM 提供的 <code>Instrumentatiion</code> 接口来实现字节码加载前、加载后的修改。-javaagent 参数来指定一个 agent jar包，实现启动jvm时加载 agent。利用这一特性可以实现虚拟机级别的 AOP ，实时监控、分析虚拟机，干预虚拟机的执行。</p>
+<h4 id="Instrumentation（核心）JDK-官方提供"><a href="#Instrumentation（核心）JDK-官方提供" class="headerlink" title="Instrumentation（核心）JDK 官方提供"></a>Instrumentation（核心）JDK 官方提供</h4><p>提供了注入字节码转换器的入口</p>
+<h4 id="ClassFileTransformer"><a href="#ClassFileTransformer" class="headerlink" title="ClassFileTransformer"></a>ClassFileTransformer</h4><p>字节码转换器接口，想要对字节码的转换需要实现该接口</p>
+<h3 id="Java-能做什么？"><a href="#Java-能做什么？" class="headerlink" title="Java 能做什么？"></a>Java 能做什么？</h3><ul>
+<li>在 JVM 加载字节码之前对字节码修改</li>
+<li>在 JVM 加载字节码之后对字节码修改</li>
+<li>获取当前 JVM 加载的所有类信息</li>
+<li>获取 JVM 初始化的类信息</li>
+<li>修改 native 方法</li>
+<li>获取某个对象的大小</li>
+<li>将某个jar加入到bootstrapclasspath里作为高优先级被bootstrapClassloader加载</li>
+<li>将某个jar加入到classpath里供AppClassloard去加载</li>
+</ul>
+<h3 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h3><h4 id="启动-JVM-时加载-Agent-premain"><a href="#启动-JVM-时加载-Agent-premain" class="headerlink" title="启动 JVM 时加载 Agent(premain)"></a>启动 JVM 时加载 Agent(premain)</h4><h5 id="定义-Agent"><a href="#定义-Agent" class="headerlink" title="定义 Agent"></a>定义 Agent</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyAgent</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">premain</span><span class="params">(String[] args, Instrumentation instrumentation)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;JVM starting, load agent&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="定义-MANIFEST-MF，放在-resource-x2F-META-INF-x2F"><a href="#定义-MANIFEST-MF，放在-resource-x2F-META-INF-x2F" class="headerlink" title="定义 MANIFEST.MF，放在 resource&#x2F; META-INF&#x2F;"></a>定义 <code>MANIFEST.MF</code>，放在 resource&#x2F; META-INF&#x2F;</h5><img src="../imgs/manifest.png" />
+
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Manifest-Version</span>: <span class="string">1.0</span></span><br><span class="line"><span class="attr">Premain-Class</span>: <span class="string">org.example.agent.MyAgent</span></span><br><span class="line"><span class="attr">Agent-Class</span>: <span class="string">org.example.agent.MyAgent</span></span><br><span class="line"><span class="attr">Can-Redefine-Classes</span>: <span class="string">true</span></span><br><span class="line"><span class="attr">Can-Retransform-Classes</span>: <span class="string">true</span></span><br><span class="line"><span class="attr">Can-Set-Native-Method-Prefix</span>: <span class="string">true</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="修改-POM-文件"><a href="#修改-POM-文件" class="headerlink" title="修改 POM 文件"></a>修改 POM 文件</h5><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-assembly-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">descriptorRefs</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">descriptorRef</span>&gt;</span>jar-with-dependencies<span class="tag">&lt;/<span class="name">descriptorRef</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">descriptorRefs</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">archive</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">manifestFile</span>&gt;</span>src/main/resources/META-INF/MANIFEST.MF<span class="tag">&lt;/<span class="name">manifestFile</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">archive</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="打包-mvn-assembly-assembly-进行打包，会生成2个jar包，my-agent-1-0-SNAPSHOT-jar中不带这个项目所依赖的jar包，my-agent-1-0-SNAPSHOT-jar-with-dependencies-jar中包含这个项目所依赖的jar包，后面需要使用my-agent-1-0-SNAPSHOT-jar-with-dependencies-jar这个jar"><a href="#打包-mvn-assembly-assembly-进行打包，会生成2个jar包，my-agent-1-0-SNAPSHOT-jar中不带这个项目所依赖的jar包，my-agent-1-0-SNAPSHOT-jar-with-dependencies-jar中包含这个项目所依赖的jar包，后面需要使用my-agent-1-0-SNAPSHOT-jar-with-dependencies-jar这个jar" class="headerlink" title="打包 mvn assembly:assembly 进行打包，会生成2个jar包，my-agent-1.0-SNAPSHOT.jar中不带这个项目所依赖的jar包，my-agent-1.0-SNAPSHOT-jar-with-dependencies.jar中包含这个项目所依赖的jar包，后面需要使用my-agent-1.0-SNAPSHOT-jar-with-dependencies.jar这个jar"></a>打包 mvn assembly:assembly 进行打包，会生成2个jar包，my-agent-1.0-SNAPSHOT.jar中不带这个项目所依赖的jar包，my-agent-1.0-SNAPSHOT-jar-with-dependencies.jar中包含这个项目所依赖的jar包，后面需要使用my-agent-1.0-SNAPSHOT-jar-with-dependencies.jar这个jar</h5><h5 id="项目工程引入自定义-agent-，在项目启动时-添加-vm-参数，-javaagent-x3D-agentpath-x2F-myagent-jar"><a href="#项目工程引入自定义-agent-，在项目启动时-添加-vm-参数，-javaagent-x3D-agentpath-x2F-myagent-jar" class="headerlink" title="项目工程引入自定义 agent ，在项目启动时 添加 vm 参数，-javaagent&#x3D;{agentpath}&#x2F;myagent.jar"></a>项目工程引入自定义 agent ，在项目启动时 添加 vm 参数，-javaagent&#x3D;{agentpath}&#x2F;myagent.jar</h5><h3 id="JVM-运行时加载-agent（attachemain）"><a href="#JVM-运行时加载-agent（attachemain）" class="headerlink" title="JVM 运行时加载 agent（attachemain）"></a>JVM 运行时加载 agent（attachemain）</h3><ul>
+<li>该方法就不是使用  -javaagent 参数引入，需要使用 virtualMachine 下的 attche 方法引入，该类不是 jdk 官方提供，又sun公司提供，需要引入依赖</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Attacher</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span></span><br><span class="line">        <span class="keyword">throws</span> IOException, AttachNotSupportedException, AgentLoadException, AgentInitializationException &#123;</span><br><span class="line">        <span class="comment">// 指定进程号</span></span><br><span class="line">        <span class="type">VirtualMachine</span> <span class="variable">vm</span> <span class="operator">=</span> VirtualMachine.attach(args[<span class="number">0</span>]);</span><br><span class="line">        <span class="comment">// 指定agent包位置和要传入的参数</span></span><br><span class="line">        vm.loadAgent(</span><br><span class="line">            <span class="string">&quot;/Users/fisher/Documents/code/gitee/myAgent/target/my-agent-1.0-SNAPSHOT-jar-with-dependencies.jar&quot;</span>,</span><br><span class="line">            <span class="string">&quot;Hello JVM Attach&quot;</span>);</span><br><span class="line">        vm.detach();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="打包-POM"><a href="#打包-POM" class="headerlink" title="打包 POM"></a>打包 POM</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-assembly-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.5.5<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;<span class="name">archive</span>&gt;</span></span><br><span class="line">                       <span class="tag">&lt;<span class="name">manifest</span>&gt;</span></span><br><span class="line">                           <span class="tag">&lt;<span class="name">mainClass</span>&gt;</span>org.example.attach.Attacher<span class="tag">&lt;/<span class="name">mainClass</span>&gt;</span></span><br><span class="line">                       <span class="tag">&lt;/<span class="name">manifest</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;/<span class="name">archive</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;<span class="name">descriptorRefs</span>&gt;</span></span><br><span class="line">                       <span class="tag">&lt;<span class="name">descriptorRef</span>&gt;</span>jar-with-dependencies<span class="tag">&lt;/<span class="name">descriptorRef</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;/<span class="name">descriptorRefs</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>利用 jps 查看进程号，选择要加载agent的进程号，启动 agent 传入 进程号，完成 agent 的载入</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/02/20/Java/agent/JavaAgent/" data-id="clecm27ox0009dwuq5okc09kd" data-title="" class="article-share-link">Teilen</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Java/JMS_MBean" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/02/20/Java/JMS_MBean/" class="article-date">
+  <time class="dt-published" datetime="2023-02-20T09:23:57.256Z" itemprop="datePublished">2023-02-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="JMX"><a href="#JMX" class="headerlink" title="JMX"></a>JMX</h1><h2 id="Mbean"><a href="#Mbean" class="headerlink" title="Mbean"></a>Mbean</h2><p>用JMX把需要配置的属性集中在一个类中，然后写一个MBean，再进行相关配置。另外JMX还提供了一个工具页，以方便我们对参数值进行修改。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="type">ObjectName</span> <span class="variable">beanConfigName</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectName</span>(<span class="string">&quot;com.zaxxer.hikari:type=PoolConfig (&quot;</span> + poolName + <span class="string">&quot;)&quot;</span>);</span><br><span class="line"><span class="keyword">final</span> <span class="type">ObjectName</span> <span class="variable">beanPoolName</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectName</span>(<span class="string">&quot;com.zaxxer.hikari:type=Pool (&quot;</span> + poolName + <span class="string">&quot;)&quot;</span>);</span><br><span class="line"><span class="keyword">if</span> (!mBeanServer.isRegistered(beanConfigName)) &#123;</span><br><span class="line">    mBeanServer.registerMBean(config, beanConfigName);</span><br><span class="line">    mBeanServer.registerMBean(hikariPool, beanPoolName);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/02/20/Java/JMS_MBean/" data-id="clecm27ol0000dwuq13w08xdk" data-title="" class="article-share-link">Teilen</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Java/Java引用关系" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/02/20/Java/Java%E5%BC%95%E7%94%A8%E5%85%B3%E7%B3%BB/" class="article-date">
+  <time class="dt-published" datetime="2023-02-20T09:23:57.254Z" itemprop="datePublished">2023-02-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Java引用关系"><a href="#Java引用关系" class="headerlink" title="Java引用关系"></a>Java引用关系</h2><h3 id="强引用-默认"><a href="#强引用-默认" class="headerlink" title="强引用  默认"></a>强引用  默认</h3><ul>
+<li>A a &#x3D; new A();</li>
+</ul>
+<h3 id="软引用"><a href="#软引用" class="headerlink" title="软引用"></a>软引用</h3><ul>
+<li>在垃圾回收器 GC 时，内存不够用的情况下 会回收此类对象</li>
+</ul>
+<h3 id="弱引用"><a href="#弱引用" class="headerlink" title="弱引用"></a>弱引用</h3><ul>
+<li>当 JVM 进行垃圾回收时，<strong>无论内存是否充足</strong>，都会回收被弱引用关联的对象。</li>
+</ul>
+<h3 id="虚引用"><a href="#虚引用" class="headerlink" title="虚引用"></a>虚引用</h3><ul>
+<li><p>最弱的引用，JDK 堆外内存使用了此类引用 <code>DirectByteBuffer</code> -&gt; <code>Cleane</code>对象 </p>
+</li>
+<li><pre><code class="java">DirectByteBuffer 
+    Cleaner extends PhantomReference
+        使用 虚引用 ReferenceQueue 机制来清除 堆外内存
+</code></pre>
+</li>
+<li></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/02/20/Java/Java%E5%BC%95%E7%94%A8%E5%85%B3%E7%B3%BB/" data-id="clecm27oq0001dwuq0n4vgnet" data-title="" class="article-share-link">Teilen</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Java/Java 安全点技术" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/02/20/Java/Java%20%E5%AE%89%E5%85%A8%E7%82%B9%E6%8A%80%E6%9C%AF/" class="article-date">
+  <time class="dt-published" datetime="2023-02-20T09:23:57.252Z" itemprop="datePublished">2023-02-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="Java-安全点技术"><a href="#Java-安全点技术" class="headerlink" title="Java 安全点技术"></a>Java 安全点技术</h3><h4 id="进入安全点时java线程可能存在不同的状态，这里需要处理所有的可能情况："><a href="#进入安全点时java线程可能存在不同的状态，这里需要处理所有的可能情况：" class="headerlink" title="进入安全点时java线程可能存在不同的状态，这里需要处理所有的可能情况："></a>进入安全点时java线程可能存在不同的状态，这里需要处理所有的可能情况：</h4><ul>
+<li><p>（1）处于解释执行字节码的状态中，解释器在通过字节码派发表（dispatch table）获取到下一条字节码的时候会主动检查安全点的状态；</p>
+</li>
+<li><p>（2）处于执行native代码的状态，也就是执行JNI，此时，VMThread不会等待线程进入安全点，执行JNI退出后线程需要主动检查安全点状态，如果此时安全点位置被标记了，那么就不能继续执行，需要等待安全点位置被清除后才能继续执行；</p>
+</li>
+<li><p>（3）处于编译代码执行中，那么编译器会在合适的位置（比如循环、方法调用等）插入读取全局Safepoint Polling内存页的指令，如果此时安全点位置被标记了，那么Safepoint Polling内存页会变成不可读，此时线程会因为读取了不可读的内存也而陷入内核，事先注册好的信号处理程序就会处理这个信号并让线程进入安全点。</p>
+</li>
+<li><p>（4）线程本身处于blocked状态，比如线程在等待锁，那么线程的阻塞状态将不会结束直到安全点标志被清除掉；</p>
+</li>
+<li><p>（5）当线程处于(1)&#x2F;(2)&#x2F;(3)三种状态的切换中，那么切换前会先检查安全点的状态，如果此时要求进入安全点，那么切换将不被允许，需要等待直到安全点状态清除；</p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/02/20/Java/Java%20%E5%AE%89%E5%85%A8%E7%82%B9%E6%8A%80%E6%9C%AF/" data-id="clecm27ot0004dwuqgl9paqu7" data-title="" class="article-share-link">Teilen</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Java引用关系" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/11/02/Java%E5%BC%95%E7%94%A8%E5%85%B3%E7%B3%BB/" class="article-date">
+  <time class="dt-published" datetime="2022-11-02T13:10:35.289Z" itemprop="datePublished">2022-11-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Java引用关系"><a href="#Java引用关系" class="headerlink" title="Java引用关系"></a>Java引用关系</h2><h3 id="强引用-默认"><a href="#强引用-默认" class="headerlink" title="强引用  默认"></a>强引用  默认</h3><ul>
+<li>A a &#x3D; new A();</li>
+</ul>
+<h3 id="软引用"><a href="#软引用" class="headerlink" title="软引用"></a>软引用</h3><ul>
+<li>在垃圾回收器 GC 时，内存不够用的情况下 会回收此类对象</li>
+</ul>
+<h3 id="弱引用"><a href="#弱引用" class="headerlink" title="弱引用"></a>弱引用</h3><ul>
+<li>当 JVM 进行垃圾回收时，<strong>无论内存是否充足</strong>，都会回收被弱引用关联的对象。</li>
+</ul>
+<h3 id="虚引用"><a href="#虚引用" class="headerlink" title="虚引用"></a>虚引用</h3><ul>
+<li><p>最弱的引用，JDK 堆外内存使用了此类引用 <code>DirectByteBuffer</code> -&gt; <code>Cleane</code>对象 </p>
+</li>
+<li><pre><code class="java">DirectByteBuffer 
+    Cleaner extends PhantomReference
+        使用 虚引用 ReferenceQueue 机制来清除 堆外内存
+</code></pre>
+</li>
+<li></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/11/02/Java%E5%BC%95%E7%94%A8%E5%85%B3%E7%B3%BB/" data-id="cleclbnrd0000ysuq5ebrfhvb" data-title="" class="article-share-link">Teilen</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/">&laquo; zurück</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">February 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/02/20/Java/%E7%BA%BF%E7%A8%8B/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2023/02/20/Java/%E5%B9%B6%E5%8F%91/ThreadLocal/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2023/02/20/Java/%E5%B9%B6%E5%8F%91/CompletableFuture/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2023/02/20/Java/%E5%B9%B6%E5%8F%91/AQS/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2023/02/20/Java/%E5%A4%9A%E7%BA%BF%E7%A8%8B/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%BD%93%E7%B3%BB/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 Zach Wei<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
