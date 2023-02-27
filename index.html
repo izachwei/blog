@@ -186,254 +186,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/02/25/SpringFactorys/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/02/25/SpringFactorys/" class="post-title-link" itemprop="url">SpringFactorys</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-02-25 22:17:54" itemprop="dateCreated datePublished" datetime="2023-02-25T22:17:54+08:00">2023-02-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%A1%86%E6%9E%B6/" itemprop="url" rel="index"><span itemprop="name">框架</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%A1%86%E6%9E%B6/Spring-notes/" itemprop="url" rel="index"><span itemprop="name">Spring-notes</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>org.springframework.context.ApplicationContextInitializer&#x3D;\</p>
-<p>org.springframework.boot.autoconfigure.SharedMetadataReaderFactoryContextInitializer,\</p>
-<p>org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener</p>
-<h1 id="Application-Listeners"><a href="#Application-Listeners" class="headerlink" title="Application Listeners"></a>Application Listeners</h1><p>org.springframework.context.ApplicationListener&#x3D;\</p>
-<p>org.springframework.boot.autoconfigure.BackgroundPreinitializer</p>
-<h1 id="Environment-Post-Processors"><a href="#Environment-Post-Processors" class="headerlink" title="Environment Post Processors"></a>Environment Post Processors</h1><p>org.springframework.boot.env.EnvironmentPostProcessor&#x3D;\</p>
-<p>org.springframework.boot.autoconfigure.integration.IntegrationPropertiesEnvironmentPostProcessor</p>
-<h1 id="Auto-Configuration-Import-Listeners"><a href="#Auto-Configuration-Import-Listeners" class="headerlink" title="Auto Configuration Import Listeners"></a>Auto Configuration Import Listeners</h1><p>org.springframework.boot.autoconfigure.AutoConfigurationImportListener&#x3D;\</p>
-<p>org.springframework.boot.autoconfigure.condition.ConditionEvaluationReportAutoConfigurationImportListener</p>
-<h1 id="Auto-Configuration-Import-Filters"><a href="#Auto-Configuration-Import-Filters" class="headerlink" title="Auto Configuration Import Filters"></a>Auto Configuration Import Filters</h1><p>org.springframework.boot.autoconfigure.AutoConfigurationImportFilter&#x3D;\</p>
-<p>org.springframework.boot.autoconfigure.condition.OnBeanCondition,\</p>
-<p>org.springframework.boot.autoconfigure.condition.OnClassCondition,\</p>
-<p>org.springframework.boot.autoconfigure.condition.OnWebApplicationCondition</p>
-<h1 id="Auto-Configure"><a href="#Auto-Configure" class="headerlink" title="Auto Configure"></a>Auto Configure</h1><p>org.springframework.boot.autoconfigure.EnableAutoConfiguration&#x3D;\</p>
-<p>org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.aop.AopAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.batch.BatchAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.cassandra.CassandraAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.context.ConfigurationPropertiesAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.context.LifecycleAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.context.PropertyPlaceholderAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.couchbase.CouchbaseAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.dao.PersistenceExceptionTranslationAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.cassandra.CassandraDataAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.cassandra.CassandraReactiveDataAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.cassandra.CassandraReactiveRepositoriesAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.cassandra.CassandraRepositoriesAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.couchbase.CouchbaseDataAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.couchbase.CouchbaseReactiveDataAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.couchbase.CouchbaseReactiveRepositoriesAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.couchbase.CouchbaseRepositoriesAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchDataAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchRepositoriesAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.elasticsearch.ReactiveElasticsearchRepositoriesAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.elasticsearch.ReactiveElasticsearchRestClientAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.jdbc.JdbcRepositoriesAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.ldap.LdapRepositoriesAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.mongo.MongoReactiveRepositoriesAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.mongo.MongoRepositoriesAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.neo4j.Neo4jDataAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.neo4j.Neo4jReactiveDataAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.neo4j.Neo4jReactiveRepositoriesAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.neo4j.Neo4jRepositoriesAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.r2dbc.R2dbcDataAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.r2dbc.R2dbcRepositoriesAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.redis.RedisReactiveAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.freemarker.FreeMarkerAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.groovy.template.GroovyTemplateAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.hateoas.HypermediaAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.hazelcast.HazelcastAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.hazelcast.HazelcastJpaDependencyAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.http.codec.CodecsAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.influx.InfluxDbAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.info.ProjectInfoAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.integration.IntegrationAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.jdbc.JndiDataSourceAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.jdbc.XADataSourceAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.jms.JmsAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.jmx.JmxAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.jms.JndiConnectionFactoryAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.jms.activemq.ActiveMQAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.jms.artemis.ArtemisAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.jersey.JerseyAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.jooq.JooqAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.jsonb.JsonbAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.availability.ApplicationAvailabilityAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.ldap.embedded.EmbeddedLdapAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.ldap.LdapAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.mail.MailSenderValidatorAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.mustache.MustacheAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.neo4j.Neo4jAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.netty.NettyAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.r2dbc.R2dbcTransactionManagerAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.rsocket.RSocketMessagingAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.rsocket.RSocketRequesterAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.rsocket.RSocketServerAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.rsocket.RSocketStrategiesAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.security.reactive.ReactiveUserDetailsServiceAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.security.rsocket.RSocketSecurityAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.security.saml2.Saml2RelyingPartyAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.sendgrid.SendGridAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.session.SessionAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.security.oauth2.client.reactive.ReactiveOAuth2ClientAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.security.oauth2.resource.reactive.ReactiveOAuth2ResourceServerAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.solr.SolrAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.sql.init.SqlInitializationAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.task.TaskSchedulingAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.transaction.TransactionAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.transaction.jta.JtaAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.web.embedded.EmbeddedWebServerFactoryCustomizerAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.web.reactive.HttpHandlerAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.web.reactive.ReactiveMultipartAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.web.reactive.ReactiveWebServerFactoryAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.web.reactive.WebSessionIdResolverAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.web.reactive.error.ErrorWebFluxAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.web.reactive.function.client.ClientHttpConnectorAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.web.servlet.DispatcherServletAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.web.servlet.ServletWebServerFactoryAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.web.servlet.HttpEncodingAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.web.servlet.MultipartAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.websocket.reactive.WebSocketReactiveAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.websocket.servlet.WebSocketServletAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.websocket.servlet.WebSocketMessagingAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.webservices.WebServicesAutoConfiguration,\</p>
-<p>org.springframework.boot.autoconfigure.webservices.client.WebServiceTemplateAutoConfiguration</p>
-<h1 id="Failure-analyzers"><a href="#Failure-analyzers" class="headerlink" title="Failure analyzers"></a>Failure analyzers</h1><p>org.springframework.boot.diagnostics.FailureAnalyzer&#x3D;\</p>
-<p>org.springframework.boot.autoconfigure.data.redis.RedisUrlSyntaxFailureAnalyzer,\</p>
-<p>org.springframework.boot.autoconfigure.diagnostics.analyzer.NoSuchBeanDefinitionFailureAnalyzer,\</p>
-<p>org.springframework.boot.autoconfigure.flyway.FlywayMigrationScriptMissingFailureAnalyzer,\</p>
-<p>org.springframework.boot.autoconfigure.jdbc.DataSourceBeanCreationFailureAnalyzer,\</p>
-<p>org.springframework.boot.autoconfigure.jdbc.HikariDriverConfigurationFailureAnalyzer,\</p>
-<p>org.springframework.boot.autoconfigure.jooq.NoDslContextBeanFailureAnalyzer,\</p>
-<p>org.springframework.boot.autoconfigure.r2dbc.ConnectionFactoryBeanCreationFailureAnalyzer,\</p>
-<p>org.springframework.boot.autoconfigure.r2dbc.MissingR2dbcPoolDependencyFailureAnalyzer,\</p>
-<p>org.springframework.boot.autoconfigure.r2dbc.MultipleConnectionPoolConfigurationsFailureAnalzyer,\</p>
-<p>org.springframework.boot.autoconfigure.r2dbc.NoConnectionFactoryBeanFailureAnalyzer,\</p>
-<p>org.springframework.boot.autoconfigure.session.NonUniqueSessionRepositoryFailureAnalyzer</p>
-<h1 id="Template-availability-providers"><a href="#Template-availability-providers" class="headerlink" title="Template availability providers"></a>Template availability providers</h1><p>org.springframework.boot.autoconfigure.template.TemplateAvailabilityProvider&#x3D;\</p>
-<p>org.springframework.boot.autoconfigure.freemarker.FreeMarkerTemplateAvailabilityProvider,\</p>
-<p>org.springframework.boot.autoconfigure.mustache.MustacheTemplateAvailabilityProvider,\</p>
-<p>org.springframework.boot.autoconfigure.groovy.template.GroovyTemplateAvailabilityProvider,\</p>
-<p>org.springframework.boot.autoconfigure.thymeleaf.ThymeleafTemplateAvailabilityProvider,\</p>
-<p>org.springframework.boot.autoconfigure.web.servlet.JspTemplateAvailabilityProvider</p>
-<h1 id="DataSource-initializer-detectors"><a href="#DataSource-initializer-detectors" class="headerlink" title="DataSource initializer detectors"></a>DataSource initializer detectors</h1><p>org.springframework.boot.sql.init.dependency.DatabaseInitializerDetector&#x3D;\</p>
-<p>org.springframework.boot.autoconfigure.flyway.FlywayMigrationInitializerDatabaseInitializerDetector</p>
-<h1 id="Depends-on-database-initialization-detectors"><a href="#Depends-on-database-initialization-detectors" class="headerlink" title="Depends on database initialization detectors"></a>Depends on database initialization detectors</h1><p>org.springframework.boot.sql.init.dependency.DependsOnDatabaseInitializationDetector&#x3D;\</p>
-<p>org.springframework.boot.autoconfigure.batch.JobRepositoryDependsOnDatabaseInitializationDetector,\</p>
-<p>org.springframework.boot.autoconfigure.quartz.SchedulerDependsOnDatabaseInitializationDetector,\</p>
-<p>org.springframework.boot.autoconfigure.session.JdbcIndexedSessionRepositoryDependsOnDatabaseInitializationDetector</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/02/25/Spring%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1428,6 +1180,95 @@ ExternalDataSourceServiceImpl
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/31/DDD%20%E4%B8%8E%20COLA%20%E6%9E%B6%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/31/DDD%20%E4%B8%8E%20COLA%20%E6%9E%B6%E6%9E%84/" class="post-title-link" itemprop="url">DDD 与 COLA 架构</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-31 18:58:30" itemprop="dateCreated datePublished" datetime="2023-01-31T18:58:30+08:00">2023-01-31</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">系统架构</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/DDD-%E4%B8%8E-COLA/" itemprop="url" rel="index"><span itemprop="name">DDD 与 COLA</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="架构设计原则"><a href="#架构设计原则" class="headerlink" title="架构设计原则"></a>架构设计原则</h4><p>原则是指导思想，就像听党指挥能打胜仗一样，需要熟记于心，做方案评估时挨个对照，看是否满足，以下基本原则很是认可。</p>
+<ul>
+<li><p>合适优于领先</p>
+</li>
+<li><p>演进优于快成</p>
+</li>
+<li><p>简单优于复杂</p>
+</li>
+</ul>
+<h4 id="Cola-是什么？"><a href="#Cola-是什么？" class="headerlink" title="Cola 是什么？"></a>Cola 是什么？</h4><p>Cola是阿里开源框架，可以说是DDD的实现。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/21a874e232e54784915bfb69235d9e86~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt="image.png"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5e841aed1981494293791ffa72385a59~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt="image.png"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
@@ -1499,7 +1340,7 @@ ExternalDataSourceServiceImpl
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">82</span>
+          <span class="site-state-item-count">81</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

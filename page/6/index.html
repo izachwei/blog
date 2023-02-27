@@ -186,122 +186,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/10/16/%E4%BD%95%E8%B0%93%20ServiceMesh/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/10/16/%E4%BD%95%E8%B0%93%20ServiceMesh/" class="post-title-link" itemprop="url">何谓 ServiceMesh</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-10-16 18:41:12" itemprop="dateCreated datePublished" datetime="2022-10-16T18:41:12+08:00">2022-10-16</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%BA%91%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">云技术</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="Service-Mesh"><a href="#Service-Mesh" class="headerlink" title="Service Mesh"></a>Service Mesh</h4><ul>
-<li><p>在  Service Mesh 架构出来之前，传统的微服务架构存在底层服务交互与业务逻辑耦合在一起，依赖冲突，考虑：透明升级，多语言服务通信等问题。</p>
-</li>
-<li><p>Service Mesh 通过部署独立的 Sidecar组件来拦截所有的出口与入口流量，集成丰富的负载均衡策略，开发本身只关注业务逻辑，开发更纯粹。</p>
-</li>
-<li><p>Service Mesh 解决了什么问题？</p>
-</li>
-</ul>
-<blockquote>
-<p>透明升级</p>
-</blockquote>
-<blockquote>
-</blockquote>
-<blockquote>
-<p>多语言</p>
-</blockquote>
-<blockquote>
-</blockquote>
-<blockquote>
-<p>依赖冲突</p>
-</blockquote>
-<blockquote>
-</blockquote>
-<blockquote>
-<p>流量治理</p>
-</blockquote>
-<ul>
-<li><p>经典 Mesh 在实施层面也面临成本过高的问题</p>
-<ol>
-<li><p>需要运维控制面（Control Panel）</p>
-</li>
-<li><p>需要运维 Sidecar</p>
-</li>
-<li><p>需要考虑如何从原有 SDK 迁移到 Sidecar</p>
-</li>
-<li><p>需要考虑引入 Sidecar 后整个链路的性能损耗</p>
-</li>
-</ol>
-</li>
-</ul>
-<h4 id="Proxyless-Mesh"><a href="#Proxyless-Mesh" class="headerlink" title="Proxyless Mesh"></a>Proxyless Mesh</h4><ul>
-<li>为了解决 Service Mesh 的问题引入全新的 Proxyless Mesh 架构，Proxyless Mesh 指的是没有 Sidecar 部署，由 Dubbo SDK 直接与控制面交互。</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/10/14/ImportBeanDefinitionRegistrar/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1216,6 +1100,91 @@
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/09/11/%E9%80%9A%E8%BF%87DockerImage%E7%94%9F%E6%88%90DockerFile/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/09/11/%E9%80%9A%E8%BF%87DockerImage%E7%94%9F%E6%88%90DockerFile/" class="post-title-link" itemprop="url">通过DockerImage生成DockerFile</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-09-11 23:03:59" itemprop="dateCreated datePublished" datetime="2022-09-11T23:03:59+08:00">2022-09-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%BA%91%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">云技术</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%BA%91%E6%8A%80%E6%9C%AF/docker/" itemprop="url" rel="index"><span itemprop="name">docker</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">// a.newegg.org/newegg-docker 可替换</span><br><span class="line"></span><br><span class="line"><span class="built_in">alias</span> dfimage=<span class="string">&quot;docker run -v /var/run/docker.sock:/var/run/docker.sock --rm a.newegg.org/newegg-docker/alpine/dfimage&quot;</span> </span><br><span class="line"></span><br><span class="line">dfimage -sV=1.36 7270ef2de0b0</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
@@ -1287,7 +1256,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">82</span>
+          <span class="site-state-item-count">81</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
