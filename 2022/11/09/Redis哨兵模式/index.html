@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"izachwei.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"7OR2X9NOEG","apiKey":"90c22c200a6b30d16a0ac11fb91cae0e","indexName":"wei_blog","hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="什么是哨兵模式？ 在 Redis 主从架构下，Master 节点负责写数据，异步复制给从节点，Slave 只负责读请求。这样就会存在一个问题，主节点挂了，需要运维人员手动修改配置，将从节点晋升为主节点，同时应用连接 Redis 的数据源信息也要修改。这样无法达到高可用，而哨兵模式解决这个问题，达到真正的高可用。  哨兵模式是Redis的高可用方式，是特殊的Redis服务，不提供数据读写服务，主要用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis哨兵模式">
+<meta property="og:url" content="https://izachwei.github.io/2022/11/09/Redis%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:site_name" content="唯&#39;s Blog">
+<meta property="og:description" content="什么是哨兵模式？ 在 Redis 主从架构下，Master 节点负责写数据，异步复制给从节点，Slave 只负责读请求。这样就会存在一个问题，主节点挂了，需要运维人员手动修改配置，将从节点晋升为主节点，同时应用连接 Redis 的数据源信息也要修改。这样无法达到高可用，而哨兵模式解决这个问题，达到真正的高可用。  哨兵模式是Redis的高可用方式，是特殊的Redis服务，不提供数据读写服务，主要用">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-11-09T15:19:41.000Z">
+<meta property="article:modified_time" content="2023-02-27T08:49:09.755Z">
+<meta property="article:author" content="Zach Wei">
+<meta property="article:tag" content="中间件">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://izachwei.github.io/2022/11/09/Redis%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Redis哨兵模式 | 唯's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">唯's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">笔者是一个热爱编程的 Java 程序员。</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+      
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/11/09/Redis%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Redis哨兵模式
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-11-09 23:19:41" itemprop="dateCreated datePublished" datetime="2022-11-09T23:19:41+08:00">2022-11-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">中间件</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="什么是哨兵模式？"><a href="#什么是哨兵模式？" class="headerlink" title="什么是哨兵模式？"></a>什么是哨兵模式？</h2><ul>
+<li><p>在 Redis 主从架构下，Master 节点负责写数据，异步复制给从节点，Slave 只负责读请求。这样就会存在一个问题，主节点挂了，需要运维人员手动修改配置，将从节点晋升为主节点，同时应用连接 Redis 的数据源信息也要修改。这样无法达到高可用，而哨兵模式解决这个问题，达到真正的高可用。</p>
+</li>
+<li><p>哨兵模式是Redis的高可用方式，是特殊的Redis服务，不提供数据读写服务，主要用来监控redis节点。Redis 客户端连接哨兵集群，哨兵集群中维护了Redis的节点信息，将主节点地址返回给客户端，后面的Redis的请求不再经过哨兵，直连Redis服务。当Redis主节点挂掉以后，Sentinel 在从节点选出新的主节点，同时通知客户端连接新的主节点，从而达到高可用。后续Redis服务的节点信息有变化，哨兵集群会将信息同步给客户端，客户端与哨兵建立一个订阅机制，订阅 Sentinel 发布的节点变动消息。</p>
+</li>
+</ul>
+<h2 id="哨兵模式的功能"><a href="#哨兵模式的功能" class="headerlink" title="哨兵模式的功能"></a>哨兵模式的功能</h2><ul>
+<li><p>监控 Redis 节点信息</p>
+</li>
+<li><p>通知各个 Redis 节点状态信息</p>
+</li>
+<li><p>自动故障转移</p>
+</li>
+</ul>
+<h2 id="哨兵模式工作原理"><a href="#哨兵模式工作原理" class="headerlink" title="哨兵模式工作原理"></a>哨兵模式工作原理</h2><ul>
+<li>哨兵模式是一个分布式系统，使用流言协议（gossip protocols）来传播 Master 下线消息、投票协议（agreement protocols）来实现主节点的选举。</li>
+</ul>
+<h3 id="心跳机制"><a href="#心跳机制" class="headerlink" title="心跳机制"></a>心跳机制</h3><ul>
+<li><p>Setinel 根据配置的 Redis 主节点信息，从 主节点 上获取所有从节点的信息，随后定时向所有 Redis 节点发送info命令，获取 Redis 节点信息以及拓扑结构。</p>
+</li>
+<li><p>Sentinel 与 Sentinel 间也会建立沟通机制，主 Sentinel 利用 Redis 发布&#x2F;订阅功能，向相应频道发送 Redis 节点信息， 其他 Sentinel 都会订阅这个频道拿到节点信息</p>
+</li>
+</ul>
+<h5 id="感知-Master-节点下线"><a href="#感知-Master-节点下线" class="headerlink" title="感知 Master 节点下线"></a>感知 Master 节点下线</h5><ul>
+<li><p>每个 Setinel 每隔1s 会向所有 Redis 节点以及其他的 Sentinel 发送 Ping 消息，用于心跳检测</p>
+</li>
+<li><p>如果 Master 回复 Ping 命令超过设置的阈值（默认为30s），Sentinel 将会认为将 master 标记为<strong>主观下线</strong></p>
+</li>
+<li><p>判断 Master 下线的 Sentinel 将会向其他 Sentinel 发送 entinel is-master-down-by-addr 消息，询问是否同意 master 下线</p>
+</li>
+<li><p>Sentinel 收到该消息，会根据发送过来 IP Port 自己判断 Master 是否存活，回复是否同意 master 下线</p>
+</li>
+<li><p>如果收到的同意master下线消息，大于 quorum（配置）的值，则将 master 标记为<strong>客观下线</strong></p>
+</li>
+<li><p>至此 Master 已经被判定为下线，在一般情况下，每个 Sentinel 每隔 10s 向所有的Master，Slave发送 INFO 命令。当Master 被 Sentinel 标记为客观下线时，Sentinel 向下线的 Master 的所有 Slave 发送 INFO 命令的频率会<strong>从 10 秒一次改为每秒一次</strong>。作用：发现最新的集群拓扑结构</p>
+</li>
+</ul>
+<h3 id="利用raft算法选举领头sentinel"><a href="#利用raft算法选举领头sentinel" class="headerlink" title="利用raft算法选举领头sentinel"></a>利用raft算法选举领头sentinel</h3><ul>
+<li>在判定 Master 下线之后，需要进行故障转移选举出新的Master，需要选举出哪个 Sentinel 来执行该操作，选举过程：</li>
+</ul>
+<blockquote>
+<ol>
+<li>判定 Master 下线的 Sentinel1 ，在将 Master 标记为客观下线之后，会其他Sentinel 发送消息，推举自己成为领头。</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="2">
+<li>投票规则，先到先得（网络）。Sentinel2 收到 Sentinel1 的消息后回复同意消息，后续假设收到 Sentinel3 的消息，将会拒绝。</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="3">
+<li>当 Sentinel 发现选自己的节点 超过了majority 的个数，那么自己将会成为领头节点</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="4">
+<li>假设没有一个sentinel 超过 majority 个数，然后会休眠一段时间，再次选举</li>
+</ol>
+</blockquote>
+<h3 id="故障转移"><a href="#故障转移" class="headerlink" title="故障转移"></a>故障转移</h3><ul>
+<li><p>在选出领头 sentinel后，就要进行 故障转移，这里涉及到如何在 多个 slave 节点选出 master 节点。</p>
+</li>
+<li><p>首先过滤一批不可用的 slave 节点，过滤规则：</p>
+</li>
+</ul>
+<blockquote>
+<ol>
+<li>剔除判断为下线的slaver 节点</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="2">
+<li>剔除有5s没有回复sentinel的info命令的slaver</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="3">
+<li>剔除与已经下线的主服务连接断开时间超过 down-after-milliseconds * 10 + master宕机时长 的slaver</li>
+</ol>
+</blockquote>
+<ul>
+<li>选主过程</li>
+</ul>
+<blockquote>
+<ol>
+<li>选择优先级最高的节点， redis.conf 中 replical-prority 值越小代表优先级越高</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="2">
+<li>优先级相同选择，选择 offset 大的，offset 代表了 主节点向从节点同步数据的偏移量，值越大同步的数据约新</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="3">
+<li>若 sffset 也相同，则选择 runid较 小的</li>
+</ol>
+</blockquote>
+<h3 id="修改配置（激活主节点）"><a href="#修改配置（激活主节点）" class="headerlink" title="修改配置（激活主节点）"></a>修改配置（激活主节点）</h3><ul>
+<li>主节点选择出来后，将会修改配置，让主节点生效</li>
+</ul>
+<blockquote>
+<ol>
+<li>sentinel 会向 选出来的从节点的执行 slave no one 命令，让其成为主节点</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="2">
+<li>向 其余从节点发送 slave 命令，让他们知道谁是 master</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="3">
+<li>如果之前的master重新恢复上线，领头sentinel 也会向其发送 slave 命令</li>
+</ol>
+</blockquote>
+<h3 id="客户端感知主节点"><a href="#客户端感知主节点" class="headerlink" title="客户端感知主节点"></a>客户端感知主节点</h3><ul>
+<li>在新的 master 重新上线之后，客户端如何感知主节点？</li>
+</ul>
+<blockquote>
+<ol>
+<li>领头Sentinel 在完成 故障转移之后，会向 pubsub 发送一条消息，客户端会订阅这条消息拿到最新的master节点信息</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="2">
+<li>客户端主动也会主动去拉取redis节点信息</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="3">
+<li>哨兵也提供了钩子逻辑，可以在配置文件写一段脚本，在故障转移完成之后会调用脚本，达到通知客户端的效果</li>
+</ol>
+</blockquote>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>哨兵的选举过程还是很复杂的，其中包含了分布式共识、分布式协商的机制都是用来保证故障恢复的准确性。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/" rel="tag"># 中间件</a>
+              <a href="/tags/Redis/" rel="tag"># Redis</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/11/07/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%BD%93%E7%B3%BB/" rel="prev" title="多线程体系">
+      <i class="fa fa-chevron-left"></i> 多线程体系
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/11/15/Apollo%E5%AE%9E%E7%8E%B0%E4%B8%8ESpring%E9%85%8D%E7%BD%AE%E7%BB%91%E5%AE%9A/" rel="next" title="Apollo实现与Spring配置绑定">
+      Apollo实现与Spring配置绑定 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">什么是哨兵模式？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%8A%9F%E8%83%BD"><span class="nav-number">2.</span> <span class="nav-text">哨兵模式的功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">哨兵模式工作原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%83%E8%B7%B3%E6%9C%BA%E5%88%B6"><span class="nav-number">3.1.</span> <span class="nav-text">心跳机制</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%84%9F%E7%9F%A5-Master-%E8%8A%82%E7%82%B9%E4%B8%8B%E7%BA%BF"><span class="nav-number">3.1.0.1.</span> <span class="nav-text">感知 Master 节点下线</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A9%E7%94%A8raft%E7%AE%97%E6%B3%95%E9%80%89%E4%B8%BE%E9%A2%86%E5%A4%B4sentinel"><span class="nav-number">3.2.</span> <span class="nav-text">利用raft算法选举领头sentinel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB"><span class="nav-number">3.3.</span> <span class="nav-text">故障转移</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%EF%BC%88%E6%BF%80%E6%B4%BB%E4%B8%BB%E8%8A%82%E7%82%B9%EF%BC%89"><span class="nav-number">3.4.</span> <span class="nav-text">修改配置（激活主节点）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%84%9F%E7%9F%A5%E4%B8%BB%E8%8A%82%E7%82%B9"><span class="nav-number">3.5.</span> <span class="nav-text">客户端感知主节点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zach Wei"
+      src="/images/my_love.jpg">
+  <p class="site-author-name" itemprop="name">Zach Wei</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">82</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/izachwei" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;izachwei" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:izachwei@163.com" title="E-Mail → mailto:izachwei@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/%E9%AD%8F%E5%BB%BA%E7%9A%84%E5%A4%A9%E9%A9%AC%E8%A1%8C%E7%A9%BA" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;魏建的天马行空" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://github.com/izachwei" title="https:&#x2F;&#x2F;github.com&#x2F;izachwei" rel="noopener" target="_blank">Title</a>
+        </li>
+    </ul>
+  </div>
+<!-- CloudCalendar -->
+<div class="widget-wrap" style="width: 90%;margin-left: auto;margin-right: auto; opacity: 0.97;">
+	<div class="widget" id="CloudCalendar"></div>
+</div>
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zach Wei</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script>
+<script src="/js/algolia-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+<!-- calendar widget -->
+
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/calendar.min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/languages.min.js"></script>
+    <script>
+    $(function() {
+        $('#CloudCalendar').aCalendar('zh-CN',
+            $.extend(
+                '', {
+                    single:true,
+                    root:'/calendar/'
+                }
+            )
+        );
+    });
+    </script>
+
+
+    </div>
+</body>
+</html>
