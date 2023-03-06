@@ -186,6 +186,199 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/12/%E5%88%86%E5%B8%83%E5%BC%8F%E5%8D%8F%E8%B0%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/12/%E5%88%86%E5%B8%83%E5%BC%8F%E5%8D%8F%E8%B0%83/" class="post-title-link" itemprop="url">分布式协调</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-12 23:32:55" itemprop="dateCreated datePublished" datetime="2023-01-12T23:32:55+08:00">2023-01-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">系统架构</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/Distributed/" itemprop="url" rel="index"><span itemprop="name">分布式技术</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>在分布式节点处理数据，例如多主复制。存在冲突问题</p>
+<h3 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h3><p><strong>1. 避免冲突</strong></p>
+<p>所谓解决问题最根本的方式则是尽可能不让它发生，如果能够在应用层保证对特定数据的请求只发生在一个节点上，这样就没有所谓的“写冲突”了。继续拿上面的协同编辑文档举例，如果我们把每个人的都在填有自己姓名表格的一行里面进行编辑，这样就可以最大程度地保证每个人的修改范围不会有重叠，冲突也就迎刃而解了。</p>
+<p><strong>2. 收敛于一致状态</strong></p>
+<p>然而，对更新标题这种情况而言，冲突是没法避免的，但还是需要有方法解决。对于单主节点模式而言，如果同一个字段有多次写入，那么最后写入的一定是最新的。ZK、KafkaController、KafkaReplica都有类似Epoch的方式去屏蔽过期的写操作，由于所有的写请求都经过同一个节点，顺序是绝对的，但对于多主节点而言，由于没有绝对顺序的保证，就只能试图用一些方式来决策相对顺序，使冲突最终收敛，这里提到了几种方法：</p>
+<p>给每个写请求分配Uniq-ID，例如一个时间戳，一个随机数，一个UUID或Hash值，最终取最高的ID作为最新的写入。如果基于时间戳，则称作最后写入者获胜（LWW），这种方式看上去非常直接且简单，并且非常流行。但很遗憾，文章一开始也提到了，分布式系统没有办法在机器间共享一套统一的系统时间，所以这个方案很有可能因为这个问题导致数据丢失（时钟漂移）。</p>
+<p>每个副本分配一个唯一的ID，ID高的更新优先级高于地域低的，这显然也会丢失数据。</p>
+<p>当然，我们可以用某种方式做拼接，或利用预先定义的格式保留冲突相关信息，然后由用户自行解决。</p>
+<p><strong>3. 用户自行处理</strong></p>
+<p>其实，把这个操作直接交给用户，让用户自己在读取或写入前进行冲突解决，这种例子也是屡见不鲜，Github采用就是这种方式。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/12/dubbo%E6%A0%B8%E5%BF%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/12/dubbo%E6%A0%B8%E5%BF%83/" class="post-title-link" itemprop="url">dubbo核心</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-12 18:16:09" itemprop="dateCreated datePublished" datetime="2023-01-12T18:16:09+08:00">2023-01-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">系统架构</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/Distributed/" itemprop="url" rel="index"><span itemprop="name">分布式技术</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/Distributed/dubbo/" itemprop="url" rel="index"><span itemprop="name">dubbo</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>在 Dubbo 的核心领域模型中：</p>
+<ul>
+<li><p>Protocol 是服务域，它是 Invoker 暴露和引用的主功能入口，它负责 Invoker 的生命周期管理。</p>
+</li>
+<li><p>Invoker 是实体域，它是 Dubbo 的核心模型，其它模型都向它靠拢，或转换成它，它代表一个可执行体，可向它发起 invoke 调用，它有可能是一个本地的实现，也可能是一个远程的实现，也可能一个集群实现。</p>
+</li>
+<li><p>Invocation 是会话域，它持有调用过程中的变量，比如方法名，参数等</p>
+</li>
+</ul>
+<img src="https://dubbo.incubator.apache.org/imgs/v3/concepts/invoke-arch.jpg">
+
+
+
+
+
+
+
+<h4 id="三个核心中心化组件"><a href="#三个核心中心化组件" class="headerlink" title="三个核心中心化组件"></a>三个核心中心化组件</h4><img src="https://dubbo.apache.org/imgs/v3/concepts/threecenters.png">
+
+
+
+<img src="../image/dubbo部署架构.jpg">
+
+
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/11/NAT%20DockerFile/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -773,85 +966,6 @@ public interface ProblemHandling extends
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/01/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/01/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/" class="post-title-link" itemprop="url">微服务架构</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-01 18:51:54" itemprop="dateCreated datePublished" datetime="2023-01-01T18:51:54+08:00">2023-01-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">系统架构</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">微服务</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>架构的优化就是一层加一层</p>
-<p>当耦合性太高的时候，就加一层，作为缓冲。 当合并有单点的时候，就分开。当分开有不能统一的时候，就合并。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/12/29/%E6%97%A0%E7%8A%B6%E6%80%81%E6%9C%8D%E5%8A%A1%20VS%20%E6%9C%89%E7%8A%B6%E6%80%81%E6%9C%8D%E5%8A%A1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1015,87 +1129,6 @@ public interface ProblemHandling extends
 </li>
 </ul>
 <p>所以单独出来做查询服务。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/12/27/SpringBoot%20%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF%E4%BC%98%E5%85%88%E7%BA%A7/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/12/27/SpringBoot%20%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF%E4%BC%98%E5%85%88%E7%BA%A7/" class="post-title-link" itemprop="url">SpringBoot 配置信息优先级</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-12-27 18:50:40" itemprop="dateCreated datePublished" datetime="2022-12-27T18:50:40+08:00">2022-12-27</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%A1%86%E6%9E%B6/" itemprop="url" rel="index"><span itemprop="name">框架</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%A1%86%E6%9E%B6/Spring-notes/" itemprop="url" rel="index"><span itemprop="name">Spring-notes</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">命令⾏参数 &gt; VM环境变量优先级 &gt; 操作系统环境变量 &gt; application.properties &gt; application.yml</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
 
       
     </div>

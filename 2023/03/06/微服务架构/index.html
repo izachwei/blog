@@ -20,20 +20,21 @@
     var CONFIG = {"hostname":"izachwei.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"7OR2X9NOEG","apiKey":"90c22c200a6b30d16a0ac11fb91cae0e","indexName":"wei_blog","hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="代码设计原则 SOLID ，迪米特原则（Law of Demeter）其中迪米特原则又叫最少知识原则，即一个类对自己依赖的类知道的越少越好。也就是说，对于被依赖的类不管多么复杂，都尽量将逻辑封装在类的内部。对外除了提供的public方法，不对外泄露任何信息。还有一个更简单的定义：只与直接朋友通信。 在平时开发中，在类，方法的设计上也尽量保持这个原则。A依赖B对象，A不直接调用B对象中依赖的对象，但">
+  <meta name="description" content="微服务架构架构的优化就是一层加一层 当耦合性太高的时候，就加一层，作为缓冲。 当合并有单点的时候，就分开。当分开有不能统一的时候，就合并。 单体应用转向微服务本质单一职责，关注点分离，业务解耦，服务隔离，技术异构，简化部署，易于伸缩扩容 本质：其演变最重要的驱动力时方便某个服务顺利的“死去”与“重生”。面向失败设计。 微服务治理组件强端点若管道（SOA -&gt; 微服务）">
 <meta property="og:type" content="article">
-<meta property="og:title" content="平常开发中的一些感悟">
-<meta property="og:url" content="https://izachwei.github.io/2022/12/10/%E5%B9%B3%E5%B8%B8%E5%BC%80%E5%8F%91%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E6%84%9F%E6%82%9F/index.html">
+<meta property="og:title" content="微服务架构">
+<meta property="og:url" content="https://izachwei.github.io/2023/03/06/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/index.html">
 <meta property="og:site_name" content="唯&#39;s Blog">
-<meta property="og:description" content="代码设计原则 SOLID ，迪米特原则（Law of Demeter）其中迪米特原则又叫最少知识原则，即一个类对自己依赖的类知道的越少越好。也就是说，对于被依赖的类不管多么复杂，都尽量将逻辑封装在类的内部。对外除了提供的public方法，不对外泄露任何信息。还有一个更简单的定义：只与直接朋友通信。 在平时开发中，在类，方法的设计上也尽量保持这个原则。A依赖B对象，A不直接调用B对象中依赖的对象，但">
+<meta property="og:description" content="微服务架构架构的优化就是一层加一层 当耦合性太高的时候，就加一层，作为缓冲。 当合并有单点的时候，就分开。当分开有不能统一的时候，就合并。 单体应用转向微服务本质单一职责，关注点分离，业务解耦，服务隔离，技术异构，简化部署，易于伸缩扩容 本质：其演变最重要的驱动力时方便某个服务顺利的“死去”与“重生”。面向失败设计。 微服务治理组件强端点若管道（SOA -&gt; 微服务）">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-12-10T12:26:37.000Z">
-<meta property="article:modified_time" content="2023-02-27T08:49:09.763Z">
+<meta property="article:published_time" content="2023-03-06T10:51:54.000Z">
+<meta property="article:modified_time" content="2023-03-06T13:06:29.559Z">
 <meta property="article:author" content="Zach Wei">
-<meta property="article:tag" content="代码设计">
+<meta property="article:tag" content="系统架构">
+<meta property="article:tag" content="微服务">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://izachwei.github.io/2022/12/10/%E5%B9%B3%E5%B8%B8%E5%BC%80%E5%8F%91%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E6%84%9F%E6%82%9F/">
+<link rel="canonical" href="https://izachwei.github.io/2023/03/06/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/">
 
 
 <script id="page-configurations">
@@ -46,7 +47,7 @@
   };
 </script>
 
-  <title>平常开发中的一些感悟 | 唯's Blog</title>
+  <title>微服务架构 | 唯's Blog</title>
   
 
 
@@ -192,7 +193,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/12/10/%E5%B9%B3%E5%B8%B8%E5%BC%80%E5%8F%91%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E6%84%9F%E6%82%9F/">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/03/06/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/my_love.jpg">
@@ -205,7 +206,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          平常开发中的一些感悟
+          微服务架构
         </h1>
 
         <div class="post-meta">
@@ -214,23 +215,21 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2022-12-10 20:26:37" itemprop="dateCreated datePublished" datetime="2022-12-10T20:26:37+08:00">2022-12-10</time>
+              <time title="创建时间：2023-03-06 18:51:54 / 修改时间：21:06:29" itemprop="dateCreated datePublished" datetime="2023-03-06T18:51:54+08:00">2023-03-06</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%BB%A3%E7%A0%81%E8%AE%BE%E8%AE%A1/" itemprop="url" rel="index"><span itemprop="name">代码设计</span></a>
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">系统架构</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">微服务</span></a>
                 </span>
             </span>
 
@@ -245,39 +244,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="代码设计原则-SOLID-，迪米特原则（Law-of-Demeter）"><a href="#代码设计原则-SOLID-，迪米特原则（Law-of-Demeter）" class="headerlink" title="代码设计原则 SOLID ，迪米特原则（Law of Demeter）"></a>代码设计原则 SOLID ，迪米特原则（Law of Demeter）</h2><p>其中迪米特原则又叫最少知识原则，即一个类对自己依赖的类知道的越少越好。也就是说，对于被依赖的类不管多么复杂，都尽量将逻辑封装在类的内部。对外除了提供的public方法，不对外泄露任何信息。还有一个更简单的定义：只与直接朋友通信。</p>
-<p>在平时开发中，在类，方法的设计上也尽量保持这个原则。A依赖B对象，A不直接调用B对象中依赖的对象，但完全参考这个原则开发，会导致类内部方法的膨胀。因此在设计需要自己做出权衡，但是其中的平衡点并不好找。后面读了《代码简洁之道》第六章中也有提到迪米特原则，说明了某些场景并不需要遵守这个原则，或者说该原则不适用这种场景，例如：A类依赖B类，B类可能是个数据结构，无对象行为，那么直接调用B内部的数据是可以的。然而在 Java 中因为定义私有变量的原因（内聚、封装），提供了大量的访问方法（get）、该值方法（set）</p>
-<p>其中还提到了 <code>隐藏结构</code>，接着上面那个例子，假设 A 依赖 B，B就是具有行为的对象，我们在定义 B 对外的行为，应该更加符合我们系统的业务行为。比如：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// A 拿到的B的某个值（可能在B内部经过大量计算）</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="variable">s</span> <span class="operator">=</span> A.B.getxxx</span><br><span class="line"></span><br><span class="line">    s....</span><br><span class="line"></span><br><span class="line"><span class="comment">// 好的定义,应该定义好对象行为</span></span><br><span class="line"></span><br><span class="line">  A.B.craeatexxx</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>这样满足了 迪米特原则，也不会导致 B 对象暴露内部过多的数据结构。</p>
-<h2 id="好的代码"><a href="#好的代码" class="headerlink" title="好的代码"></a>好的代码</h2><ul>
-<li><p>通常说到好的代码，指的都是：好的可读性，好的命名，干脆的抽象，应用设计模型，选择适合的架构，兼顾 可扩展、高可用、可监控等等。</p>
-</li>
-<li><p>我想说的是，要编写好的代码的前提一定是 开发者要<code>用心</code>，用心 便会思考命名、抽象、充分酌量架构的取舍，用心便会写出好的代码。</p>
-</li>
-</ul>
-<h2 id="系统架构"><a href="#系统架构" class="headerlink" title="系统架构"></a>系统架构</h2><ul>
-<li><p>系统架构，应该区分核心功能，附加功能，前期针对核心功能定义好架构、模型、流程。核心功能的定义决定了系统的稳定性，好的定义对于系统设计也就成功一半了，额外功能、边角功能也就水到渠成了。</p>
-</li>
-<li><p>避免过度设计，不要先做大的设计。</p>
-</li>
-<li><p>一个好的系统，一定离不开一套好的模型定义。梳理清楚系统中的核心模型，清楚的定义每个方法的类归属，无论对于代码的可读性、可交流性，还是和产品沟通，都有着莫大的好处。</p>
-</li>
-</ul>
-<h2 id="整洁代码"><a href="#整洁代码" class="headerlink" title="整洁代码"></a>整洁代码</h2><ul>
-<li>不要重复代码，只做一件事，表达力，小规模抽象</li>
-</ul>
-<h2 id="怎么理解重构？"><a href="#怎么理解重构？" class="headerlink" title="怎么理解重构？"></a>怎么理解重构？</h2><p>重构不是把整个系统推到重来，把一个功能代码重新设计也是重构，提取一个方法也是重构。</p>
-<p>重构是研发最重要的能力，重构的目的就是让代码符合设计原则，例如：单一原则。所有的方法可以是单一职责，即使是复杂的业务方法也是单一职责，那就是分发与聚合，典型的便是策略模式。</p>
-<h2 id="抽象"><a href="#抽象" class="headerlink" title="抽象"></a>抽象</h2><p>我的理解：抽象的本质是找事务的共性，找到共性便能抽取、抽象。</p>
-<p>之前做的导出报表的功能，Release 有 操作时间、操作人、操作类型，Confirm 也有操作时间、操作人、操作类型（approve同理），这里就能找到Release、Confirm、Approve针对报表导出这个功能的共性，进行抽象</p>
-<h2 id="可扩展性"><a href="#可扩展性" class="headerlink" title="可扩展性"></a>可扩展性</h2><p>其本质是隔离变化点。</p>
-<p>之前在做多环境部署时，考虑到后续新增环境的扩展性。对其部署流程进行抽象，隔离后续变化点。新增环境不影响现有系统的稳定性，可靠性，改动很小。</p>
-<h2 id="不要盲目追求性能，所谓的流行架构"><a href="#不要盲目追求性能，所谓的流行架构" class="headerlink" title="不要盲目追求性能，所谓的流行架构"></a>不要盲目追求性能，所谓的流行架构</h2><p>之前有个项目需要导出很全面的报表、还存在汇总计算的需求。因为当时项目牵扯到多方的数据源，如果实时去查询多个数据库聚合会导致接口响应慢，同时存在数据量大的情况甚至会拉垮服务。</p>
-<p>我们当时想了一套方案：建立一个新的数据源（MongoDB），通过 ETL 清洗一份新的数据结构存储在数据源。</p>
-<p>这里存在数据同步实时的问题，我们使用 Job 去同步新的数据源数据则会存在不准确。正对这个问题我们又想到 Flink 分布式实时处理引擎。</p>
-<p>仔细一想，我们需要实时吗？我们沟通了需求，报表的内容一般是只会查看上个月的项目信息。因此实时是个伪需求，不要为了用新技术，而新技术，技术是用来服务业务的。</p>
+        <h1 id="微服务架构"><a href="#微服务架构" class="headerlink" title="微服务架构"></a>微服务架构</h1><p>架构的优化就是一层加一层</p>
+<p>当耦合性太高的时候，就加一层，作为缓冲。 当合并有单点的时候，就分开。当分开有不能统一的时候，就合并。</p>
+<h3 id="单体应用转向微服务本质"><a href="#单体应用转向微服务本质" class="headerlink" title="单体应用转向微服务本质"></a>单体应用转向微服务本质</h3><p>单一职责，关注点分离，业务解耦，服务隔离，技术异构，简化部署，易于伸缩扩容</p>
+<p>本质：其演变最重要的驱动力时方便某个服务顺利的“死去”与“重生”。面向失败设计。</p>
+<h3 id="微服务治理组件"><a href="#微服务治理组件" class="headerlink" title="微服务治理组件"></a>微服务治理组件</h3><p>强端点若管道（SOA -&gt; 微服务）</p>
 
     </div>
 
@@ -287,7 +258,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E4%BB%A3%E7%A0%81%E8%AE%BE%E8%AE%A1/" rel="tag"># 代码设计</a>
+              <a href="/tags/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" rel="tag"># 系统架构</a>
+              <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" rel="tag"># 微服务</a>
           </div>
 
         
@@ -296,12 +268,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/12/04/%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1/" rel="prev" title="搭建代理服务">
-      <i class="fa fa-chevron-left"></i> 搭建代理服务
+    <a href="/2023/02/25/Spring%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/" rel="prev" title="Spring依赖注入">
+      <i class="fa fa-chevron-left"></i> Spring依赖注入
     </a></div>
       <div class="post-nav-item">
-    <a href="/2022/12/11/%E8%AF%BB%E5%8F%96%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6/" rel="next" title="读取资源文件">
-      读取资源文件 <i class="fa fa-chevron-right"></i>
+    <a href="/2023/03/06/%E5%B9%B3%E5%B8%B8%E5%BC%80%E5%8F%91%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E6%84%9F%E6%82%9F/" rel="next" title="平常开发中的一些感悟">
+      平常开发中的一些感悟 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -361,7 +333,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-SOLID-%EF%BC%8C%E8%BF%AA%E7%B1%B3%E7%89%B9%E5%8E%9F%E5%88%99%EF%BC%88Law-of-Demeter%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">代码设计原则 SOLID ，迪米特原则（Law of Demeter）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A5%BD%E7%9A%84%E4%BB%A3%E7%A0%81"><span class="nav-number">2.</span> <span class="nav-text">好的代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84"><span class="nav-number">3.</span> <span class="nav-text">系统架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E6%B4%81%E4%BB%A3%E7%A0%81"><span class="nav-number">4.</span> <span class="nav-text">整洁代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E7%90%86%E8%A7%A3%E9%87%8D%E6%9E%84%EF%BC%9F"><span class="nav-number">5.</span> <span class="nav-text">怎么理解重构？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%BD%E8%B1%A1"><span class="nav-number">6.</span> <span class="nav-text">抽象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E6%89%A9%E5%B1%95%E6%80%A7"><span class="nav-number">7.</span> <span class="nav-text">可扩展性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E8%A6%81%E7%9B%B2%E7%9B%AE%E8%BF%BD%E6%B1%82%E6%80%A7%E8%83%BD%EF%BC%8C%E6%89%80%E8%B0%93%E7%9A%84%E6%B5%81%E8%A1%8C%E6%9E%B6%E6%9E%84"><span class="nav-number">8.</span> <span class="nav-text">不要盲目追求性能，所谓的流行架构</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">微服务架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E4%BD%93%E5%BA%94%E7%94%A8%E8%BD%AC%E5%90%91%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9C%AC%E8%B4%A8"><span class="nav-number">1.0.1.</span> <span class="nav-text">单体应用转向微服务本质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E7%BB%84%E4%BB%B6"><span class="nav-number">1.0.2.</span> <span class="nav-text">微服务治理组件</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
