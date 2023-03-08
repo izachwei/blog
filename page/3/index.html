@@ -186,6 +186,341 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/18/Synchronized/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/18/Synchronized/" class="post-title-link" itemprop="url">Synchronized</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-18 19:38:37" itemprop="dateCreated datePublished" datetime="2023-01-18T19:38:37+08:00">2023-01-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Synchronized"><a href="#Synchronized" class="headerlink" title="Synchronized"></a>Synchronized</h2><h3 id="1-概念："><a href="#1-概念：" class="headerlink" title="1. 概念："></a>1. 概念：</h3><ul>
+<li>互斥锁，Java内置锁（隐式锁） 非公平 不可中断</li>
+</ul>
+<h3 id="2-应用："><a href="#2-应用：" class="headerlink" title="2. 应用："></a>2. 应用：</h3><ul>
+<li><p>作用方法：同步方法（this）</p>
+</li>
+<li><p>作用代码块：同步代码块（object）</p>
+</li>
+<li><p>作用静态方法：同步方法（锁的类对象）</p>
+</li>
+</ul>
+<h3 id="3-原理："><a href="#3-原理：" class="headerlink" title="3. 原理："></a>3. 原理：</h3><ul>
+<li><p>锁的粒度是对象</p>
+</li>
+<li><p>锁膨胀</p>
+</li>
+</ul>
+<blockquote>
+<ul>
+<li>无锁-&gt;偏向锁-&gt;轻量锁-&gt;重量级锁</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>锁升级不可逆</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>锁的标志 记录再 对象 markword</li>
+</ul>
+</blockquote>
+<ul>
+<li>锁消除</li>
+</ul>
+<blockquote>
+<ul>
+<li>逃逸分析： -XX:Do..</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>标量替换</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>对象可以再栈上分配</li>
+</ul>
+</blockquote>
+<ul>
+<li>锁粗化</li>
+</ul>
+<blockquote>
+<ul>
+<li>避免频繁枷锁</li>
+</ul>
+</blockquote>
+<ul>
+<li><p>自适应自旋锁</p>
+</li>
+<li><p>偏向锁</p>
+</li>
+<li><p>轻量级锁</p>
+</li>
+<li><p>锁升级</p>
+</li>
+</ul>
+<p>	</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/16/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0%E7%89%B9%E6%80%A7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/16/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0%E7%89%B9%E6%80%A7/" class="post-title-link" itemprop="url">数据库连接池特性</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-16 20:18:50" itemprop="dateCreated datePublished" datetime="2023-01-16T20:18:50+08:00">2023-01-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/" itemprop="url" rel="index"><span itemprop="name">数据库连接池</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="数据库连接池的模块设计"><a href="#数据库连接池的模块设计" class="headerlink" title="数据库连接池的模块设计"></a>数据库连接池的模块设计</h4><h5 id="DriverManager-与-DataSource-的区别"><a href="#DriverManager-与-DataSource-的区别" class="headerlink" title="DriverManager 与 DataSource 的区别"></a>DriverManager 与 DataSource 的区别</h5><ul>
+<li><p>DriverManger 使用 getConnection 获取数据库的连接，本质是与数据库建立连接</p>
+<blockquote>
+<ul>
+<li>建立数据库连接操作是很耗费资源的操作，产生较大的系统开销</li>
+</ul>
+</blockquote>
+</li>
+<li><p>因此有了连接池的引用，使用池化思想：</p>
+<blockquote>
+<ul>
+<li>提前创建好一些连接，供使用</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>将创建的资源缓存起来，避免频繁的创建连接，等待下一个使用者使用</li>
+</ul>
+</blockquote>
+</li>
+<li><p>DataSource 的引入</p>
+<blockquote>
+<ul>
+<li>本质是提供数据库连接的服务类（数据源）</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>对DriverManger进行封装，建立一个中间层（DateSource），将DriverManger创建的连接存入Pool，外部从Pool获取连接。</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    	应用程序 -&gt; DriverManager</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">--------------------------------------</span><br><span class="line"></span><br><span class="line">--------------------------------------</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        DriverManager</span><br><span class="line"></span><br><span class="line">                							    ↓</span><br><span class="line"></span><br><span class="line">    	应用程序 -&gt; DataSource  -&gt;  Pool </span><br><span class="line"></span><br><span class="line">	  &gt; * 用了这个中间层（DataSource）我们可以提供某些服务（连接池、分布式事务）</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>DataSource的形式是JNDI （Java Naming Directory Interface）</li>
+</ul>
+<blockquote>
+<ul>
+<li>数据源的概念在应用程序与数据库连接之间插入了一个中间层，进而可以实现连接池以及事务管理，并且以JNDI的形式，也能够以非常方便的形式使用。</li>
+</ul>
+</blockquote>
+<h5 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h5><ul>
+<li><p>DataSource 是基于应用程序与 DriverManager 抽象出来的中间层，解耦了应用程序与数据库的实际连接，类似代理模式可以添加更多的功能：连接池、分布式事务等。</p>
+<p>连接池与DataSource是两回事，只是目前市面上实现了DataSource都赋予了连接池、连接池管理的功能。</p>
+</li>
+</ul>
+<h4 id="HikariPool"><a href="#HikariPool" class="headerlink" title="HikariPool"></a>HikariPool</h4><h5 id="设计模型"><a href="#设计模型" class="headerlink" title="设计模型"></a>设计模型</h5><h6 id="核心类-HikariDataSource-继承自-DataSource"><a href="#核心类-HikariDataSource-继承自-DataSource" class="headerlink" title="核心类  HikariDataSource 继承自 DataSource"></a>核心类  HikariDataSource 继承自 DataSource</h6><h6 id="核心成员-HikariPool-pool（volatile-保证可见）实现连接池功能-继承自-PoolBase"><a href="#核心成员-HikariPool-pool（volatile-保证可见）实现连接池功能-继承自-PoolBase" class="headerlink" title="核心成员 HikariPool pool（volatile 保证可见）实现连接池功能 继承自 PoolBase"></a>核心成员 HikariPool pool（volatile 保证可见）实现连接池功能 继承自 PoolBase</h6><ul>
+<li><p>字段：</p>
+</li>
+<li><p>DataSource 用于创建数据库连接（DriverDataSource Driver创建连接）</p>
+</li>
+<li><p>connectionBag 用于缓存数据库连接</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**  </span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> 	设计亮点</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> 	快，减少并发 无锁并发  CAS</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> 	线程回收时，优先放在之前使用线程 ThreadLocal 方便下次使用 时间局部性原理。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> 	ThreadLocal&lt;List&lt;Connection&gt;&gt;</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> 	缓存线程使用 copyOnWriterList 写时复制，写与读同时操作时，不阻塞读</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> 	更新 PoolEntry 状态 使用 CAS</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<ul>
+<li><p>addConnectionExecutor 单线程线程池 用于建立数据库连接 -&gt; 线程池允许核心线程超时 <code>executor.allowCoreThreadTimeOut(true);</code></p>
+</li>
+<li><p>closeConnectionExecutor 单线程线程池 用于关闭数据库连接 -&gt;  线程池允许核心线程超时 <code>executor.allowCoreThreadTimeOut(true);</code></p>
+</li>
+<li><p>houseKeepingExecutorService 调度线程池 内部定时器，用于实现连接的超时淘汰、连接池的补充等工作。</p>
+</li>
+<li><p>addConnectionQueueReadOnlyView -&gt; addConnectionExecutor(线程池) 阻塞队列的集合 用来判断高并发时 超过MaxSize</p>
+</li>
+</ul>
+<blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">final</span> <span class="type">int</span> <span class="variable">maxPoolSize</span> <span class="operator">=</span> config.getMaximumPoolSize();</span><br><span class="line"></span><br><span class="line">LinkedBlockingQueue&lt;Runnable&gt; addConnectionQueue = <span class="keyword">new</span> <span class="title class_">LinkedBlockingQueue</span>&lt;&gt;(maxPoolSize);</span><br><span class="line"></span><br><span class="line"><span class="built_in">this</span>.addConnectionQueueReadOnlyView = unmodifiableCollection(addConnectionQueue);</span><br><span class="line"></span><br><span class="line"><span class="built_in">this</span>.addConnectionExecutor = createThreadPoolExecutor(addConnectionQueue, poolName + <span class="string">&quot; connection adder&quot;</span>, threadFactory, <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>.DiscardOldestPolicy());</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">* PoolEntryCreator，添加连接的任务，实现创建连接的具体逻辑。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### Pool entry</span><br><span class="line"></span><br><span class="line">POOL_ENTRY 作为一个连接节点</span><br><span class="line"></span><br><span class="line">通过提交一个 houseKeepingExecutorService 调度任务，来保证超过最大时间的空闲任务close</span><br><span class="line"></span><br><span class="line">#### ConnectionBag</span><br><span class="line"></span><br><span class="line">* sharedList  CopyOnWriteArrayList(读多写少) 缓存数据库连接（pool entry 保证类（ProxyConnection）</span><br><span class="line"></span><br><span class="line">* waiters 待获取连接数量</span><br><span class="line"></span><br><span class="line">* threadList 缓存当前线程数据库连接（针对同一 个线程返回获取连接，提升效率ThreadLocal）</span><br><span class="line"></span><br><span class="line">* handoffQueue 提升效率，并发频繁的场景，避免遍历 copyOnWirte 拿取缓存数据库连接</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">##### HikariPool getConnection 返回的是装饰/代理的Connection ，Poolentry中存放的是原生的数据库连接 ，</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">##### 使用 Javassist (字节码变成) 创建 ProxyFactory 用于创建 HikariProxyConnection （代理模式） 来装饰原生 Connection ，调用 Close 方法时不会真实的关闭close（连接池缓存连接）</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">###### Javassist 利用 Maven 生命周期 compile 时生成新的class文件</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">​```XML</span><br><span class="line"></span><br><span class="line">&lt;plugin&gt;</span><br><span class="line"></span><br><span class="line">  &lt;!-- Generate proxies --&gt;</span><br><span class="line"></span><br><span class="line">  &lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;</span><br><span class="line"></span><br><span class="line">  &lt;artifactId&gt;exec-maven-plugin&lt;/artifactId&gt;</span><br><span class="line"></span><br><span class="line">  &lt;version&gt;1.6.0&lt;/version&gt;</span><br><span class="line"></span><br><span class="line">  &lt;executions&gt;</span><br><span class="line"></span><br><span class="line">     &lt;execution&gt;</span><br><span class="line"></span><br><span class="line">        &lt;phase&gt;compile&lt;/phase&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- phase&gt;generate-test-sources&lt;/phase --&gt;</span><br><span class="line"></span><br><span class="line">        &lt;goals&gt;</span><br><span class="line"></span><br><span class="line">           &lt;goal&gt;java&lt;/goal&gt;</span><br><span class="line"></span><br><span class="line">        &lt;/goals&gt;</span><br><span class="line"></span><br><span class="line">     &lt;/execution&gt;</span><br><span class="line"></span><br><span class="line">  &lt;/executions&gt;</span><br><span class="line"></span><br><span class="line">  &lt;configuration&gt;</span><br><span class="line"></span><br><span class="line">     &lt;mainClass&gt;com.zaxxer.hikari.util.JavassistProxyFactory&lt;/mainClass&gt;</span><br><span class="line"></span><br><span class="line">  &lt;/configuration&gt;</span><br><span class="line"></span><br><span class="line">&lt;/plugin&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h5 id="配置参数"><a href="#配置参数" class="headerlink" title="配置参数"></a>配置参数</h5><ul>
+<li><p>maxLifeTime: 15m </p>
+<p>底层执行一个延时任务，延时 maxLifeTime 便执行，给 Connection 打上驱逐标记 poolEntry.markEvicted()，如果当前连接是空闲连接 state; STATE_NOT_IN_USE，则直接真实关闭当前连接。若不是 只有等待连接空闲后，在getConnection 时，判断是否存在evict 标记，进行连接close</p>
+</li>
+<li><p>idleTimeout: 10s</p>
+</li>
+<li><p>minIdle: 1</p>
+<p>底层使用一个定时线程池，执行一个定时任务默认 30ms 执行一次，扫描出空闲连接，并进行清理。（保证剩余的线程）</p>
+</li>
+</ul>
+<h5 id="tip-通过-Semaphore-信号量并发工具-实现线程池的暂停功能"><a href="#tip-通过-Semaphore-信号量并发工具-实现线程池的暂停功能" class="headerlink" title="tip 通过 Semaphore 信号量并发工具 实现线程池的暂停功能"></a>tip 通过 Semaphore 信号量并发工具 实现线程池的暂停功能</h5><ul>
+<li>核心思想：将信号量消耗完，获取信号量的最大值，，其余获取消耗量的线程都阻塞</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">suspend</span><span class="params">()</span></span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">  acquisitionSemaphore.acquireUninterruptibly(MAX_PERMITS);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="tip-PoolEntry-状态字段state"><a href="#tip-PoolEntry-状态字段state" class="headerlink" title="tip (PoolEntry 状态字段state)"></a>tip (PoolEntry 状态字段state)</h5><ul>
+<li>AtomicIntegerFieldUpdater 用于原子性（线程安全）更新类对象中的int字段</li>
+</ul>
+<h4 id="JDBCTemplate"><a href="#JDBCTemplate" class="headerlink" title="JDBCTemplate"></a>JDBCTemplate</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">JDBCTemplate (DataSource) -&gt; DataSourceUtil.getConnection(DataSource)</span><br><span class="line"></span><br><span class="line">    封装事务</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="tip-Collection-unmodifiableCollection"><a href="#tip-Collection-unmodifiableCollection" class="headerlink" title="tip Collection.unmodifiableCollection()"></a>tip Collection.unmodifiableCollection()</h4><ul>
+<li>创建&#x2F;封装 不可变集合 <code>UnmodifiableCollection</code> ，代理模式，重写修改的方法 抛出异常</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">add</span><span class="params">(E e)</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UnsupportedOperationException</span>();</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">remove</span><span class="params">(Object o)</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UnsupportedOperationException</span>();</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/12/%E5%88%86%E5%B8%83%E5%BC%8F%E5%8D%8F%E8%B0%83/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -962,188 +1297,6 @@ public interface ProblemHandling extends
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/12/29/%E6%97%A0%E7%8A%B6%E6%80%81%E6%9C%8D%E5%8A%A1%20VS%20%E6%9C%89%E7%8A%B6%E6%80%81%E6%9C%8D%E5%8A%A1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/12/29/%E6%97%A0%E7%8A%B6%E6%80%81%E6%9C%8D%E5%8A%A1%20VS%20%E6%9C%89%E7%8A%B6%E6%80%81%E6%9C%8D%E5%8A%A1/" class="post-title-link" itemprop="url">无状态服务 VS 有状态服务</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-12-29 20:43:38" itemprop="dateCreated datePublished" datetime="2022-12-29T20:43:38+08:00">2022-12-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%BA%91%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">云技术</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%BA%91%E6%8A%80%E6%9C%AF/k8s/" itemprop="url" rel="index"><span itemprop="name">k8s</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><ul>
-<li>无状态服务</li>
-</ul>
-<p>无状态服务不会在本地存储持久化数据.多个服务实例对于同一个用户请求的响应结果是完全一致的.这种多服务实例之间是没有依赖关系,比如web应用,在k8s控制器 中动态启停无状态服务的pod并不会对其它的pod产生影响.</p>
-<ul>
-<li>有状态服务</li>
-</ul>
-<p>有状态服务需要在本地存储持久化数据,典型的是分布式数据库的应用,分布式节点实例之间有依赖的拓扑关系.比如,主从关系. 如果K8S停止分布式集群中任 一实例pod,就可能会导致数据丢失或者集群的crash.</p>
-<blockquote>
-<p>通过使用 Headless Service + StatefulSet  来实现有状态服务，比如kafka集群，mysql集群，zk集群</p>
-</blockquote>
-<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/390440336">https://zhuanlan.zhihu.com/p/390440336</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/12/27/DDD%20%E7%B2%BE%E9%AB%93/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/12/27/DDD%20%E7%B2%BE%E9%AB%93/" class="post-title-link" itemprop="url">DDD 精髓</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-12-27 22:24:14" itemprop="dateCreated datePublished" datetime="2022-12-27T22:24:14+08:00">2022-12-27</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">系统架构</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/DDD-%E4%B8%8E-COLA/" itemprop="url" rel="index"><span itemprop="name">DDD 与 COLA</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>大家对 DDD 应该都不陌生了，或多或少都听说过一点，我这里记录一些平常了解学习到关于 DDD 优秀的设计思想</p>
-<h4 id="防腐层（Anti-Corruption）"><a href="#防腐层（Anti-Corruption）" class="headerlink" title="防腐层（Anti-Corruption）"></a>防腐层（Anti-Corruption）</h4><ul>
-<li><p>简单说，就是应用不要直接依赖外域的信息，要把外域的信息转换成自己领域上下文（Context）的实体再去使用，从而实现本域和外部依赖的解耦。</p>
-</li>
-<li><p>平常我们在代码 Coding 运用的一些设计模式，类似 门面模式 都跟防腐层的思想很像</p>
-</li>
-<li><p>之前我们项目中在权限设计这块也借鉴了防腐层的思想，公司权限系统定义了三个模型：Group、Role、Function，系统在设计按钮功能权限，最初想的直接跟 Role 关联，类似 Save 按钮 开发，测试能够操作，接口设计上 校验 Dev-Role 和 Test-Role 。这样设计有个缺点便是 Save 按钮的权限一旦变更，就需要修改代码，<strong>如果我们使用 Function 承担我们系统这个功能的防腐层</strong>，则改动就很轻量。上面那个例子，我们定义一个 Save_Function ，它关联了 Dev-Role Test -Role 角色，变更成 TPM - Role ，我们只需要在公司权限管理系统修改 Function 关联关系就可以。</p>
-</li>
-</ul>
-<h4 id="CQRS-查询与命令分离"><a href="#CQRS-查询与命令分离" class="headerlink" title="CQRS(查询与命令分离)"></a>CQRS(查询与命令分离)</h4><ul>
-<li><p>是一种设计模式。DDD 中经常被用于分离领域模型命令修改功能与查询功能。</p>
-</li>
-<li><p>在这一基础是上分析微服务的拆分，目前大型分布式系统，存在业务复杂、数据结构复杂。在富查询面前既要满足服务之间的隔离，又要满足查询功能的全面。为了不污染 DDD 模型保持其干净，</p>
-</li>
-</ul>
-<p>所以单独出来做查询服务。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1215,20 +1368,20 @@ public interface ProblemHandling extends
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-count">83</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-count">44</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-count">45</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

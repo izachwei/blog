@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"izachwei.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"7OR2X9NOEG","apiKey":"90c22c200a6b30d16a0ac11fb91cae0e","indexName":"wei_blog","hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="代码设计原则 SOLID ，迪米特原则（Law of Demeter）其中迪米特原则又叫最少知识原则，即一个类对自己依赖的类知道的越少越好。也就是说，对于被依赖的类不管多么复杂，都尽量将逻辑封装在类的内部。对外除了提供的public方法，不对外泄露任何信息。还有一个更简单的定义：只与直接朋友通信。 在平时开发中，在类，方法的设计上也尽量保持这个原则。A依赖B对象，A不直接调用B对象中依赖的对象，但">
+  <meta name="description" content="平常开发中的一些代码设计感悟代码设计原则 SOLID ，迪米特原则（Law of Demeter）其中迪米特原则又叫最少知识原则，即一个类对自己依赖的类知道的越少越好。也就是说，对于被依赖的类不管多么复杂，都尽量将逻辑封装在类的内部。对外除了提供的public方法，不对外泄露任何信息。还有一个更简单的定义：只与直接朋友通信。 在平时开发中，在类，方法的设计上也尽量保持这个原则。A依赖B对象，A不直">
 <meta property="og:type" content="article">
 <meta property="og:title" content="平常开发中的一些感悟">
 <meta property="og:url" content="https://izachwei.github.io/2023/03/06/%E5%B9%B3%E5%B8%B8%E5%BC%80%E5%8F%91%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E6%84%9F%E6%82%9F/index.html">
 <meta property="og:site_name" content="唯&#39;s Blog">
-<meta property="og:description" content="代码设计原则 SOLID ，迪米特原则（Law of Demeter）其中迪米特原则又叫最少知识原则，即一个类对自己依赖的类知道的越少越好。也就是说，对于被依赖的类不管多么复杂，都尽量将逻辑封装在类的内部。对外除了提供的public方法，不对外泄露任何信息。还有一个更简单的定义：只与直接朋友通信。 在平时开发中，在类，方法的设计上也尽量保持这个原则。A依赖B对象，A不直接调用B对象中依赖的对象，但">
+<meta property="og:description" content="平常开发中的一些代码设计感悟代码设计原则 SOLID ，迪米特原则（Law of Demeter）其中迪米特原则又叫最少知识原则，即一个类对自己依赖的类知道的越少越好。也就是说，对于被依赖的类不管多么复杂，都尽量将逻辑封装在类的内部。对外除了提供的public方法，不对外泄露任何信息。还有一个更简单的定义：只与直接朋友通信。 在平时开发中，在类，方法的设计上也尽量保持这个原则。A依赖B对象，A不直">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-03-06T12:26:37.000Z">
-<meta property="article:modified_time" content="2023-03-06T13:04:46.309Z">
+<meta property="article:modified_time" content="2023-03-08T13:25:45.476Z">
 <meta property="article:author" content="Zach Wei">
 <meta property="article:tag" content="代码设计">
 <meta name="twitter:card" content="summary">
@@ -214,10 +214,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-03-06 20:26:37 / 修改时间：21:04:46" itemprop="dateCreated datePublished" datetime="2023-03-06T20:26:37+08:00">2023-03-06</time>
+              <time title="创建时间：2023-03-06 20:26:37" itemprop="dateCreated datePublished" datetime="2023-03-06T20:26:37+08:00">2023-03-06</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-03-08 21:25:45" itemprop="dateModified" datetime="2023-03-08T21:25:45+08:00">2023-03-08</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -239,10 +245,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="代码设计原则-SOLID-，迪米特原则（Law-of-Demeter）"><a href="#代码设计原则-SOLID-，迪米特原则（Law-of-Demeter）" class="headerlink" title="代码设计原则 SOLID ，迪米特原则（Law of Demeter）"></a>代码设计原则 SOLID ，迪米特原则（Law of Demeter）</h2><p>其中迪米特原则又叫最少知识原则，即一个类对自己依赖的类知道的越少越好。也就是说，对于被依赖的类不管多么复杂，都尽量将逻辑封装在类的内部。对外除了提供的public方法，不对外泄露任何信息。还有一个更简单的定义：只与直接朋友通信。</p>
+        <h1 id="平常开发中的一些代码设计感悟"><a href="#平常开发中的一些代码设计感悟" class="headerlink" title="平常开发中的一些代码设计感悟"></a>平常开发中的一些代码设计感悟</h1><h2 id="代码设计原则-SOLID-，迪米特原则（Law-of-Demeter）"><a href="#代码设计原则-SOLID-，迪米特原则（Law-of-Demeter）" class="headerlink" title="代码设计原则 SOLID ，迪米特原则（Law of Demeter）"></a>代码设计原则 SOLID ，迪米特原则（Law of Demeter）</h2><p>其中迪米特原则又叫最少知识原则，即一个类对自己依赖的类知道的越少越好。也就是说，对于被依赖的类不管多么复杂，都尽量将逻辑封装在类的内部。对外除了提供的public方法，不对外泄露任何信息。还有一个更简单的定义：只与直接朋友通信。</p>
 <p>在平时开发中，在类，方法的设计上也尽量保持这个原则。A依赖B对象，A不直接调用B对象中依赖的对象，但完全参考这个原则开发，会导致类内部方法的膨胀。因此在设计需要自己做出权衡，但是其中的平衡点并不好找。后面读了《代码简洁之道》第六章中也有提到迪米特原则，说明了某些场景并不需要遵守这个原则，或者说该原则不适用这种场景，例如：A类依赖B类，B类可能是个数据结构，无对象行为，那么直接调用B内部的数据是可以的。然而在 Java 中因为定义私有变量的原因（内聚、封装），提供了大量的访问方法（get）、该值方法（set）</p>
 <p>其中还提到了 <code>隐藏结构</code>，接着上面那个例子，假设 A 依赖 B，B就是具有行为的对象，我们在定义 B 对外的行为，应该更加符合我们系统的业务行为。比如：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// A 拿到的B的某个值（可能在B内部经过大量计算）</span></span><br><span class="line"><span class="type">int</span> <span class="variable">s</span> <span class="operator">=</span> A.B.getxxx</span><br><span class="line">    s....</span><br><span class="line"><span class="comment">// 好的定义,应该定义好对象行为</span></span><br><span class="line">  A.B.craeatexxx</span><br><span class="line">   </span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// A 拿到的B的某个值（可能在B内部经过大量计算）</span></span><br><span class="line"><span class="type">int</span> <span class="variable">s</span> <span class="operator">=</span> A.B.getxxx</span><br><span class="line">        s....</span><br><span class="line"><span class="comment">// 好的定义,应该定义好对象行为</span></span><br><span class="line">        A.B.craeatexxx</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>这样满足了 迪米特原则，也不会导致 B 对象暴露内部过多的数据结构。</p>
 <h2 id="好的代码"><a href="#好的代码" class="headerlink" title="好的代码"></a>好的代码</h2><ul>
@@ -291,10 +297,13 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/03/06/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/" rel="prev" title="微服务架构">
-      <i class="fa fa-chevron-left"></i> 微服务架构
+    <a href="/2023/02/25/Spring%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/" rel="prev" title="Spring依赖注入">
+      <i class="fa fa-chevron-left"></i> Spring依赖注入
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2023/03/07/API%E8%AE%BE%E8%AE%A1%E8%AF%84%E5%AE%A1%E6%B8%85%E5%8D%95/" rel="next" title="API设计评审清单">
+      API设计评审清单 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -353,7 +362,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-SOLID-%EF%BC%8C%E8%BF%AA%E7%B1%B3%E7%89%B9%E5%8E%9F%E5%88%99%EF%BC%88Law-of-Demeter%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">代码设计原则 SOLID ，迪米特原则（Law of Demeter）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A5%BD%E7%9A%84%E4%BB%A3%E7%A0%81"><span class="nav-number">2.</span> <span class="nav-text">好的代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84"><span class="nav-number">3.</span> <span class="nav-text">系统架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E6%B4%81%E4%BB%A3%E7%A0%81"><span class="nav-number">4.</span> <span class="nav-text">整洁代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E7%90%86%E8%A7%A3%E9%87%8D%E6%9E%84%EF%BC%9F"><span class="nav-number">5.</span> <span class="nav-text">怎么理解重构？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%BD%E8%B1%A1"><span class="nav-number">6.</span> <span class="nav-text">抽象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E8%A6%81%E7%9B%B2%E7%9B%AE%E8%BF%BD%E6%B1%82%E6%80%A7%E8%83%BD%EF%BC%8C%E6%89%80%E8%B0%93%E7%9A%84%E6%B5%81%E8%A1%8C%E6%9E%B6%E6%9E%84-KISS-%E4%BF%9D%E6%8C%81%E7%AE%80%E5%8D%95"><span class="nav-number">7.</span> <span class="nav-text">不要盲目追求性能，所谓的流行架构 (KISS[保持简单])</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Unix%E5%93%B2%E5%AD%A6"><span class="nav-number">8.</span> <span class="nav-text">Unix哲学</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%95%E7%94%B3%E5%87%BA%E6%9D%A5%E7%9A%84%E5%85%B3%E4%BA%8E%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E7%9A%84%E6%A0%BC%E8%A8%80%EF%BC%9A"><span class="nav-number">8.0.1.</span> <span class="nav-text">引申出来的关于程序设计的格言：</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B9%B3%E5%B8%B8%E5%BC%80%E5%8F%91%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BB%A3%E7%A0%81%E8%AE%BE%E8%AE%A1%E6%84%9F%E6%82%9F"><span class="nav-number">1.</span> <span class="nav-text">平常开发中的一些代码设计感悟</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-SOLID-%EF%BC%8C%E8%BF%AA%E7%B1%B3%E7%89%B9%E5%8E%9F%E5%88%99%EF%BC%88Law-of-Demeter%EF%BC%89"><span class="nav-number">1.1.</span> <span class="nav-text">代码设计原则 SOLID ，迪米特原则（Law of Demeter）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A5%BD%E7%9A%84%E4%BB%A3%E7%A0%81"><span class="nav-number">1.2.</span> <span class="nav-text">好的代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84"><span class="nav-number">1.3.</span> <span class="nav-text">系统架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E6%B4%81%E4%BB%A3%E7%A0%81"><span class="nav-number">1.4.</span> <span class="nav-text">整洁代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E7%90%86%E8%A7%A3%E9%87%8D%E6%9E%84%EF%BC%9F"><span class="nav-number">1.5.</span> <span class="nav-text">怎么理解重构？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%BD%E8%B1%A1"><span class="nav-number">1.6.</span> <span class="nav-text">抽象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E8%A6%81%E7%9B%B2%E7%9B%AE%E8%BF%BD%E6%B1%82%E6%80%A7%E8%83%BD%EF%BC%8C%E6%89%80%E8%B0%93%E7%9A%84%E6%B5%81%E8%A1%8C%E6%9E%B6%E6%9E%84-KISS-%E4%BF%9D%E6%8C%81%E7%AE%80%E5%8D%95"><span class="nav-number">1.7.</span> <span class="nav-text">不要盲目追求性能，所谓的流行架构 (KISS[保持简单])</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Unix%E5%93%B2%E5%AD%A6"><span class="nav-number">1.8.</span> <span class="nav-text">Unix哲学</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%95%E7%94%B3%E5%87%BA%E6%9D%A5%E7%9A%84%E5%85%B3%E4%BA%8E%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E7%9A%84%E6%A0%BC%E8%A8%80%EF%BC%9A"><span class="nav-number">1.8.0.1.</span> <span class="nav-text">引申出来的关于程序设计的格言：</span></a></li></ol></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -369,20 +378,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-count">83</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-count">44</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-count">45</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
