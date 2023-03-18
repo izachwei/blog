@@ -186,6 +186,1044 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/02/13/%E5%BC%80%E5%8F%91%20SDK%20%E9%80%9A%E8%BF%87%E7%BD%91%E7%BB%9C%E8%BF%9B%E8%A1%8C%E5%A4%A7%E6%96%87%E4%BB%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/02/13/%E5%BC%80%E5%8F%91%20SDK%20%E9%80%9A%E8%BF%87%E7%BD%91%E7%BB%9C%E8%BF%9B%E8%A1%8C%E5%A4%A7%E6%96%87%E4%BB%B6/" class="post-title-link" itemprop="url">开发 SDK 通过网络进行大文件</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-02-13 19:39:58" itemprop="dateCreated datePublished" datetime="2023-02-13T19:39:58+08:00">2023-02-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">系统架构</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" itemprop="url" rel="index"><span itemprop="name">系统设计</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>按照上述四个方面进行方案设计：</p>
+<ol>
+<li><h4 id="场景功能"><a href="#场景功能" class="headerlink" title="场景功能"></a>场景功能</h4></li>
+</ol>
+<p>大文件、网络传输</p>
+<p>大文件传输分为 数据同源 和 异构 两种方案</p>
+<p>异构则需要考虑存储协议的定义优化 （序列化、反序列）</p>
+<p>存储协议 -&gt; 网络协议 -&gt; 流式处理</p>
+<p>考虑异常、断点续传、保证完整性</p>
+<p>文件保存的安全性：备份？读取文件考虑效率？</p>
+<ol start="2">
+<li><h4 id="服务"><a href="#服务" class="headerlink" title="服务"></a>服务</h4></li>
+</ol>
+<p>Client 、Server 、存储层、Manager（分片信息管理 、聚合、分布式存储等）</p>
+<ol start="3">
+<li><h4 id="存储"><a href="#存储" class="headerlink" title="存储"></a>存储</h4></li>
+</ol>
+<p>大文件存储肯定是尽量打散、降低单节点的网络压力、每个节点内部根据数据类型管理他的内存存储结构（avro（序列化系统）、parquet（列示存储））、使用分布式文件存储系统：HDFS</p>
+<ol start="4">
+<li><h4 id="流程设计"><a href="#流程设计" class="headerlink" title="流程设计"></a>流程设计</h4></li>
+</ol>
+<ul>
+<li><p>客户端拆分大文件生成多个文件分片，调用服务端生成一个文件上传任务（分片相关信息）返回本次分片上传唯一标识</p>
+</li>
+<li><p>发送完成后，服务端根据判断数据上传是否完整，如果完整，则进行数据块合成得到原始文件</p>
+</li>
+<li><p>要求点对点传输、基于 TCP 长连接流式传输，服务端 buffer -&gt; flush ，利用 buffer 建立可监控、可控速的网络流传输。生产 消费模型。</p>
+</li>
+<li><p>为了保证内存不溢出、使用有有界内存队列 BlockingArrayQueue ,控制网络流传输速率，写入 系统缓存 ，定时统一写入数据库。网络IO</p>
+</li>
+<li><p>如何实现断点续传</p>
+</li>
+</ul>
+<blockquote>
+<p>一般实现方式有两种：</p>
+</blockquote>
+<blockquote>
+</blockquote>
+<blockquote>
+<ul>
+<li>服务器端返回，告知从哪开始</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>浏览器端自行处理</li>
+</ul>
+</blockquote>
+<blockquote>
+</blockquote>
+<blockquote>
+<p>上传过程中将文件在服务器写为临时文件，等全部写完了（文件上传完），将此临时文件重命名为正式文件即可</p>
+</blockquote>
+<blockquote>
+</blockquote>
+<blockquote>
+<p>如果中途上传中断过，下次上传的时候根据当前临时文件大小，作为在客户端读取文件的偏移量，从此位置继续读取文件数据块，上传到服务器从此偏移量继续写入文件即可</p>
+</blockquote>
+<p>分片写 、多线程 、切片传输（压缩数据、考虑异常、断点续传、保证完整性）、检验 SHA1、UDP 分片 分组、考虑网络I&#x2F;O 磁盘I&#x2F;O 瓶颈</p>
+<p>网络的传输考虑使用 Netty 框架 NIO</p>
+<p>异常情况的回滚 ：使用数据库的事务，每个大文件的接收，创建一个大事务、每个分片写入数据库、存在问题回滚大事务</p>
+<p>分片：</p>
+<blockquote>
+<p>定义分片信息的数据结构</p>
+</blockquote>
+<blockquote>
+</blockquote>
+<blockquote>
+<p>分片要考虑网络的实时传输 动态改变分片大小</p>
+</blockquote>
+<p>为什么选择 TCP ？</p>
+<blockquote>
+<p>TCP 面向字节流、可靠</p>
+</blockquote>
+<p>丢包？数据传输异常中断？</p>
+<blockquote>
+<p>SHA1 校验 文件内容完整性、重传</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/02/12/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E5%B9%B3%E5%8F%B0%E6%90%AD%E5%BB%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/02/12/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E5%B9%B3%E5%8F%B0%E6%90%AD%E5%BB%BA/" class="post-title-link" itemprop="url">自动化测试平台搭建</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-02-12 18:06:56" itemprop="dateCreated datePublished" datetime="2023-02-12T18:06:56+08:00">2023-02-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">自动化测试</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="项目目标：零学习成本、低维护、高可用的自动化测试方案"><a href="#项目目标：零学习成本、低维护、高可用的自动化测试方案" class="headerlink" title="项目目标：零学习成本、低维护、高可用的自动化测试方案"></a>项目目标：零学习成本、低维护、高可用的自动化测试方案</h3><ul>
+<li><p><strong>易用性</strong>：工具&#x2F;平台的上手难度，使用复杂度应该尽可能的低，因为自动化测试的目的是提效人力，而不是增加人力负担。</p>
+</li>
+<li><p><strong>平台支持</strong>：移动端至少需要覆盖移动端和网页端双平台，同时基于外卖的业务特点，不仅需要对Native支持，也需要支持Mach（自研局部动态化框架）、H5、React Native、美团小程序等技术栈。</p>
+</li>
+<li><p><strong>稳定性</strong>：自动化测试用例的执行需要有足够的稳定性和准确性，测试过程中不应因测试工具本身的不稳定而出现稳定性问题。</p>
+</li>
+<li><p><strong>维护成本</strong>：维护成本很大程度上决定了测试工作量的大小，因需求产生变动或架构重构等问题时，用例的维护成本应该尽可能的小。</p>
+</li>
+<li><p><strong>可扩展性</strong>：当测试方案不能满足测试需求时，工具&#x2F;平台应具备可扩展的能力。</p>
+</li>
+</ul>
+<p><img src="C:\Users\ZW35\AppData\Roaming\Typora\typora-user-images\image-20221111144436624.png" alt="image-20221111144436624"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/02/11/%E8%8E%B7%E5%8F%96%E6%9B%9D%E5%85%89%E9%87%8FTop100%E7%9A%84%E5%B8%96%E5%AD%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/02/11/%E8%8E%B7%E5%8F%96%E6%9B%9D%E5%85%89%E9%87%8FTop100%E7%9A%84%E5%B8%96%E5%AD%90/" class="post-title-link" itemprop="url">获取曝光量Top100的帖子</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-02-11 19:21:10" itemprop="dateCreated datePublished" datetime="2023-02-11T19:21:10+08:00">2023-02-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">系统架构</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" itemprop="url" rel="index"><span itemprop="name">系统设计</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>用户每次在首页推荐获取10个帖子，下拉刷新，每次刷新产生的帖子记录成日志，日志内容包含10个帖子的id，日志的信息会发送到 MQ ，用于消费。</p>
+<h3 id="需求："><a href="#需求：" class="headerlink" title="需求："></a>需求：</h3><ul>
+<li><p>给用户展示最近 24 小时曝光 top 100 的帖子，注意24小时是一个滑动窗口：每次读取都是最近24小时的曝光统计结果（不用精确到秒，最大延迟不应该超过10分钟）</p>
+</li>
+<li><p>线上用户读取结果时，接口时延 P99 应该控制在 200ms 以下（忽略高并发问题，假设 qps&#x3D;1）</p>
+</li>
+<li><p>数量级：4000 万日志，4 亿条曝光，100万帖子</p>
+</li>
+</ul>
+<h3 id="定义服务"><a href="#定义服务" class="headerlink" title="定义服务"></a>定义服务</h3><ul>
+<li>帖子推荐服务</li>
+</ul>
+<h3 id="存储"><a href="#存储" class="headerlink" title="存储"></a>存储</h3><ul>
+<li>结合数据量大、但是对 QPS 要求不高，接口响应时间要求高。</li>
+</ul>
+<h3 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h3><h4 id="方案1"><a href="#方案1" class="headerlink" title="方案1"></a>方案1</h4><ul>
+<li>消费MQ,按10分钟维度去建立缓存，例如：id_202211251620 ，value就上一个窗口减去24小时前的窗口值，窗口期累积，并比较判断是否能计入top100 的zset，用户取zset就行</li>
+</ul>
+<h4 id="方案2"><a href="#方案2" class="headerlink" title="方案2"></a>方案2</h4><ul>
+<li>经典 Flink 计算 topn 问题</li>
+</ul>
+<h4 id="方案3"><a href="#方案3" class="headerlink" title="方案3"></a>方案3</h4><ul>
+<li>两个流 一个曝光流 一个过期流 一个加1 一个减1</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/31/DDD%20%E4%B8%8E%20COLA%20%E6%9E%B6%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/31/DDD%20%E4%B8%8E%20COLA%20%E6%9E%B6%E6%9E%84/" class="post-title-link" itemprop="url">DDD 与 COLA 架构</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-31 18:58:30" itemprop="dateCreated datePublished" datetime="2023-01-31T18:58:30+08:00">2023-01-31</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">系统架构</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/DDD-%E4%B8%8E-COLA/" itemprop="url" rel="index"><span itemprop="name">DDD 与 COLA</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="架构设计原则"><a href="#架构设计原则" class="headerlink" title="架构设计原则"></a>架构设计原则</h4><p>原则是指导思想，就像听党指挥能打胜仗一样，需要熟记于心，做方案评估时挨个对照，看是否满足，以下基本原则很是认可。</p>
+<ul>
+<li><p>合适优于领先</p>
+</li>
+<li><p>演进优于快成</p>
+</li>
+<li><p>简单优于复杂</p>
+</li>
+</ul>
+<h4 id="Cola-是什么？"><a href="#Cola-是什么？" class="headerlink" title="Cola 是什么？"></a>Cola 是什么？</h4><p>Cola是阿里开源框架，可以说是DDD的实现。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/21a874e232e54784915bfb69235d9e86~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt="image.png"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5e841aed1981494293791ffa72385a59~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt="image.png"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/29/Jira%20Transition%20Req/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/29/Jira%20Transition%20Req/" class="post-title-link" itemprop="url">Jira Transition Req</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-29 22:04:20" itemprop="dateCreated datePublished" datetime="2023-01-29T22:04:20+08:00">2023-01-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dev-toos/" itemprop="url" rel="index"><span itemprop="name">开发工具</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dev-toos/jira/" itemprop="url" rel="index"><span itemprop="name">jira</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="测试数据"><a href="#测试数据" class="headerlink" title="测试数据"></a>测试数据</h4><h5 id="EDI"><a href="#EDI" class="headerlink" title="EDI"></a>EDI</h5><ul>
+<li><p>EDI-14248</p>
+</li>
+<li><p>EDI-14249</p>
+</li>
+<li><p>EDI-14288</p>
+</li>
+<li><p>EDI-14289</p>
+</li>
+<li><p>EDI-14290</p>
+</li>
+<li><p>EDI-14293</p>
+</li>
+<li><p>EDI-14294</p>
+</li>
+</ul>
+<h5 id="PE"><a href="#PE" class="headerlink" title="PE"></a>PE</h5><ul>
+<li><p>SAODEV-1425</p>
+</li>
+<li><p>SAODEV-1435</p>
+</li>
+<li><p>SAODEV-1436</p>
+</li>
+<li><p>SAODEV-1440</p>
+</li>
+<li><p>SAODEV-1441</p>
+</li>
+<li><p>SAODEV-1442</p>
+</li>
+<li><p>SAODEV-1443</p>
+</li>
+<li><p>SAODEV-1457</p>
+</li>
+<li></li>
+</ul>
+<h4 id="Req"><a href="#Req" class="headerlink" title="Req"></a>Req</h4><ul>
+<li><p>url: <a target="_blank" rel="noopener" href="https://jira.newegg.org/rest/api/2/issue/SAODEV-1424/transitions">https://jira.newegg.org/rest/api/2/issue/SAODEV-1424/transitions</a></p>
+</li>
+<li><p>method: POST</p>
+</li>
+<li><p>user: projectx</p>
+</li>
+<li><p>pwd: projectX4jira</p>
+</li>
+</ul>
+<h5 id="start-requirement"><a href="#start-requirement" class="headerlink" title="start requirement"></a>start requirement</h5><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;fields&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;customfield_14803&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;zw35&quot;</span></span><br><span class="line"></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;timetracking&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">            <span class="attr">&quot;originalEstimate&quot;</span><span class="punctuation">:</span> <span class="string">&quot;20h&quot;</span></span><br><span class="line"></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;transition&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;721&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>live bug</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;transition&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;721&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>Q: is key project 这个字段目前是否还需要？ <code>影响功能实现具体的设计</code></li>
+</ul>
+<h5 id="Complete-Requirement-undone"><a href="#Complete-Requirement-undone" class="headerlink" title="Complete Requirement undone"></a>Complete Requirement <code>undone</code></h5><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;transition&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;731&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;fields&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;customfield_14316&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2022-08-05&quot;</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;customfield_13402&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2022-08-05&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>error msg:</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;errorMessages&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;errors&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;customfield_14316&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Plan Launch Date is required.&quot;</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;customfield_13402&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Plan Release Date is required.&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="Start-Develop"><a href="#Start-Develop" class="headerlink" title="Start Develop"></a>Start Develop</h5><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;transition&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;741&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="Complete-Develop-undone"><a href="#Complete-Develop-undone" class="headerlink" title="Complete Develop undone"></a>Complete Develop <code>undone</code></h5><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;transition&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;751&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;fields&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">    	 <span class="attr">&quot;customfield_14620&quot;</span><span class="punctuation">:</span> <span class="string">&quot;zw35&quot;</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;fixVersions&quot;</span><span class="punctuation">:</span> <span class="string">&quot;123&quot;</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;customfield_14621&quot;</span><span class="punctuation">:</span> <span class="string">&quot;jd53&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>error msg:</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;errorMessages&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;errors&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;customfield_14620&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Developers is required.&quot;</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;fixVersions&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Fix Version/s is required.&quot;</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;customfield_14621&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Testers is required.&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="Release"><a href="#Release" class="headerlink" title="Release"></a>Release</h5><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;transition&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;761&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;fields&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;customfield_13404&quot;</span><span class="punctuation">:</span><span class="string">&quot;2022-08-02 14:27:00&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="Start-UAT"><a href="#Start-UAT" class="headerlink" title="Start UAT"></a>Start UAT</h5><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;transition&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;771&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="Complete-UAT"><a href="#Complete-UAT" class="headerlink" title="Complete UAT"></a>Complete UAT</h5><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;transition&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;781&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="Approve-to-Launch"><a href="#Approve-to-Launch" class="headerlink" title="Approve to Launch"></a>Approve to Launch</h5><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;transition&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;891&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="Launch"><a href="#Launch" class="headerlink" title="Launch"></a>Launch</h5><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;transition&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;791&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;fields&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;customfield_14319&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2022-08-02 14:27:00&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="Confirm"><a href="#Confirm" class="headerlink" title="Confirm"></a>Confirm</h5><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;transition&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;881&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;fields&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;customfield_14924&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2022-08-02 14:27:00&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="非-SOX-的"><a href="#非-SOX-的" class="headerlink" title="非 SOX 的"></a>非 SOX 的</h2><h5 id="Start-PRE-Testing"><a href="#Start-PRE-Testing" class="headerlink" title="Start PRE Testing"></a>Start PRE Testing</h5><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;transition&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;771&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="Complete-PRE-Testing"><a href="#Complete-PRE-Testing" class="headerlink" title="Complete PRE Testing"></a>Complete PRE Testing</h5><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;transition&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;781&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="Approve-to-Launch-1"><a href="#Approve-to-Launch-1" class="headerlink" title="Approve to Launch"></a>Approve to Launch</h5><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;transition&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;791&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;fields&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;customfield_14319&quot;</span><span class="punctuation">:</span><span class="string">&quot;2022-08-02&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="Cancel"><a href="#Cancel" class="headerlink" title="Cancel"></a>Cancel</h5><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;transition&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;711&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;fields&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;customfield_14700&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span><span class="string">&quot;14400&quot;</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="attr">&quot;value&quot;</span><span class="punctuation">:</span> <span class="string">&quot;zw35&quot;</span></span><br><span class="line"></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;update&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;comment&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line"></span><br><span class="line">            <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">                <span class="attr">&quot;add&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                    <span class="attr">&quot;body&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Bug has been fixed.&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                <span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line">        <span class="punctuation">]</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><ul>
+<li>Q: is key project 这个字段目前是否还需要？ <code>影响功能实现具体的设计</code></li>
+</ul>
+<blockquote>
+<p>A: 该字段已取消</p>
+</blockquote>
+<ul>
+<li>Save：触发变成 UAT ， Accept：触发变成 Ready For Launch？ Save 操作会在 Staging 前面的任意环节，此时的Jira 状态不固定的，更新 UAT 状态肯定会失败。</li>
+</ul>
+<blockquote>
+<p>A: Staging validation 触发 UAT</p>
+</blockquote>
+<ul>
+<li>非 SOX 项目允许跳过某些状态，例如跳过 Staging , Released 状态哪个操作去更新？</li>
+</ul>
+<blockquote>
+<p>A: ignore 操作时 去更新 Jira 状态（Ignore Staging 环节，更新 Staging 环节的Jira状态）</p>
+</blockquote>
+<ul>
+<li>EM 的情况？跳过 Approve ，状态怎么更新？</li>
+</ul>
+<blockquote>
+<p>A: EM 项目统一在 Launch 以后更新状态</p>
+</blockquote>
+<ul>
+<li>Edit Release &#x2F; 添加 addition 的情况，jira 状态需要回滚么？</li>
+</ul>
+<blockquote>
+<p>A: 不需要，同时 Jira 也不支持</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/28/Log-structured/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/28/Log-structured/" class="post-title-link" itemprop="url">Log-structured</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-28 18:18:17" itemprop="dateCreated datePublished" datetime="2023-01-28T18:18:17+08:00">2023-01-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">系统架构</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/Distributed/" itemprop="url" rel="index"><span itemprop="name">分布式技术</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Log-structured 在分布式系统、数据系统都有 Log-Stuctured 结构的应用，大家所熟知的 MongoDB 和 HBase 这类的 NoSQL 数据库，它们的底层存储数据结构其实也是 Log-Structured 结构</p>
+<h3 id="解决什么问题"><a href="#解决什么问题" class="headerlink" title="解决什么问题"></a>解决什么问题</h3><p>为了解决并发写操作，在高并发下同时更新某个值，需要加锁保证数据一致性，操作安全，那有没有方法可以不用顾及写操作的高并发问题，同时也可以最终获得一个准确的结果呢？答案就是使用 Log-Structured 结构。</p>
+<p>Log-structured</p>
+<p>Log-Structured结构，有时候也会被称作是 Append-only Sequence of Data ，因为所有的写操作都会不停地添加进这个数据结构中，而不会更新原来已有的值，这也是 Log-Structured 结构的一大特性。</p>
+<p>存在的问题</p>
+<ul>
+<li><p>无限制的写入，数组在内存中无限的增长，如何处理？</p>
+</li>
+<li><p>每次获取结果，都需要遍历一遍数据，时间复杂度非常高，那该怎么优化？</p>
+</li>
+<li><p>平衡树如何被应用在这里面的</p>
+</li>
+</ul>
+<h4 id="Log-Structurd-结构的优化"><a href="#Log-Structurd-结构的优化" class="headerlink" title="Log-Structurd 结构的优化"></a>Log-Structurd 结构的优化</h4><ul>
+<li><p>拆分成多个 Segment ，Segment 大小固定，Segment 1 写满之后，新的数据将写入新的 Segment 2 中</p>
+</li>
+<li><p>利用 Compaction 后台线程，将不同的 Segments 合并在一起</p>
+</li>
+<li><p>Compaction 合并完成之后，合并的结果放在了新的 Segment 中，合并前的Segment 便删除</p>
+</li>
+</ul>
+<h3 id="SSTable-和-LSM-树"><a href="#SSTable-和-LSM-树" class="headerlink" title="SSTable 和 LSM 树"></a>SSTable 和 LSM 树</h3><ul>
+<li>SSTable（Sorted String Table）数据结构是在 Log-Structured 结构的基础上，多加了一条规则，就是所有保存在 Log-Structured 结构里的数据都是键值对，并且键必须是字符串，在经过了 Compaction 操作之后，所有的 Compacted Segment 里保存的键值对都必须按照字符排序。</li>
+</ul>
+<h3 id="LSM树"><a href="#LSM树" class="headerlink" title="LSM树"></a>LSM树</h3><p>LSM树（Log Structured Merge Tree，结构化合并树）的思想非常朴素，就是将对数据的修改增量保持在内存中，达到指定的大小限制后将这些修改操作批量写入磁盘（由此提升了写性能），是一种基于硬盘的数据结构，与B-tree相比，能显著地减少硬盘磁盘臂的开销。当然凡事有利有弊，LSM树和B+树相比，LSM树牺牲了部分读性能，用来大幅提高写性能。</p>
+<h4 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h4><ul>
+<li><p>采用 Lucence 作为后台索引引擎的开源搜索框架，像 ElasticSearch 和 Solr，底层用的就是 LSM 树</p>
+</li>
+<li><p>有一种特殊情况：所搜索的数据不在保存的数据中，而想要判断数据是否存在该 Segment 中就需要遍历整个 Segment，针对这种情况，搜索引擎底层还加一个 Bloom Filter 这个数据结构。</p>
+</li>
+</ul>
+<h3 id="WAL-Write-Ahead-Log-预写日志"><a href="#WAL-Write-Ahead-Log-预写日志" class="headerlink" title="WAL(Write Ahead Log) 预写日志"></a>WAL(Write Ahead Log) 预写日志</h3>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/24/JVM%20%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/24/JVM%20%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/" class="post-title-link" itemprop="url">JVM 内存模型</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-24 23:46:13" itemprop="dateCreated datePublished" datetime="2023-01-24T23:46:13+08:00">2023-01-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><p>本地方法栈</p>
+</li>
+<li><p>虚拟机栈</p>
+</li>
+<li><p>堆</p>
+</li>
+<li><p>程序计数器</p>
+</li>
+<li><p>方法区（元空间）</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/19/%E5%AE%B9%E5%99%A8%E5%8C%96%E6%8A%80%E6%9C%AF%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/19/%E5%AE%B9%E5%99%A8%E5%8C%96%E6%8A%80%E6%9C%AF%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">容器化技术解决了什么问题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-19 21:49:22" itemprop="dateCreated datePublished" datetime="2023-01-19T21:49:22+08:00">2023-01-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%BA%91%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">云技术</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="容器化技术解决了什么问题？"><a href="#容器化技术解决了什么问题？" class="headerlink" title="容器化技术解决了什么问题？"></a>容器化技术解决了什么问题？</h2><h3 id="进程之间环境、资源隔离"><a href="#进程之间环境、资源隔离" class="headerlink" title="进程之间环境、资源隔离"></a>进程之间环境、资源隔离</h3><ul>
+<li>沙箱机制，容器虚拟自己的系统</li>
+</ul>
+<h3 id="服务器资源合理分配利用"><a href="#服务器资源合理分配利用" class="headerlink" title="服务器资源合理分配利用"></a>服务器资源合理分配利用</h3><ul>
+<li>定义服务器中多个服务，某个服务所占用的资源可以选择扩容缩容</li>
+</ul>
+<h3 id="符合服务现代敏捷思想，devops-快速迭代"><a href="#符合服务现代敏捷思想，devops-快速迭代" class="headerlink" title="符合服务现代敏捷思想，devops 快速迭代"></a>符合服务现代敏捷思想，devops 快速迭代</h3><ul>
+<li>一是让开发环境尽量贴近生产环境，二是快速搭建开发环境。现在Docker可以轻易的让几十个服务在Docker中跑起来，从而大大提升开发效率</li>
+</ul>
+<h3 id="服务运行环境保持一致"><a href="#服务运行环境保持一致" class="headerlink" title="服务运行环境保持一致"></a>服务运行环境保持一致</h3><ul>
+<li>用的是同一个镜像，容器中环境一致</li>
+</ul>
+<h3 id="扩展、迁移简单"><a href="#扩展、迁移简单" class="headerlink" title="扩展、迁移简单"></a>扩展、迁移简单</h3><p>* </p>
+<h2 id="容器化的底层原理"><a href="#容器化的底层原理" class="headerlink" title="容器化的底层原理"></a>容器化的底层原理</h2><ul>
+<li>依赖 Linux Container 技术 ，核心两个组件 Namespace、Cgroups</li>
+</ul>
+<h3 id="Namespace"><a href="#Namespace" class="headerlink" title="Namespace"></a>Namespace</h3><ul>
+<li>提供资源隔离，定义全新运行环境的能力。linux kernel clone 方法，容器本质还是一个进程</li>
+</ul>
+<h3 id="Cgroups"><a href="#Cgroups" class="headerlink" title="Cgroups"></a>Cgroups</h3><ul>
+<li>提供限制资源使用上限的能力。例如：CPU、内存、磁盘等</li>
+</ul>
+<h4 id="容器化时代："><a href="#容器化时代：" class="headerlink" title="容器化时代："></a>容器化时代：</h4><h4 id="1、虚拟化解决的问题：是物理层面的隔离"><a href="#1、虚拟化解决的问题：是物理层面的隔离" class="headerlink" title="1、虚拟化解决的问题：是物理层面的隔离"></a>1、<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E8%99%9A%E6%8B%9F%E5%8C%96&spm=1001.2101.3001.7020">虚拟化</a>解决的问题：是物理层面的隔离</h4><h4 id="2、容器化解决的问题：是应用层面的隔离"><a href="#2、容器化解决的问题：是应用层面的隔离" class="headerlink" title="2、容器化解决的问题：是应用层面的隔离"></a>2、容器化解决的问题：是应用层面的隔离</h4>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/19/SSO%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/19/SSO%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95/" class="post-title-link" itemprop="url">SSO单点登录</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-19 18:37:44" itemprop="dateCreated datePublished" datetime="2023-01-19T18:37:44+08:00">2023-01-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">系统架构</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" itemprop="url" rel="index"><span itemprop="name">系统设计</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>OAuth2 (Open Authorization，开放授权)，第三方服务无需知道用户的账号及密码，就可获取到用户的授权信息（Token）</p>
+<p>例如：</p>
+<p>微信开发平台接入</p>
+<p><img src="https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/1704794951/p132466.png" alt="image.png"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/18/Synchronized/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -328,975 +1366,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/16/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0%E7%89%B9%E6%80%A7/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/16/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0%E7%89%B9%E6%80%A7/" class="post-title-link" itemprop="url">数据库连接池特性</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-16 20:18:50" itemprop="dateCreated datePublished" datetime="2023-01-16T20:18:50+08:00">2023-01-16</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/" itemprop="url" rel="index"><span itemprop="name">数据库连接池</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="数据库连接池的模块设计"><a href="#数据库连接池的模块设计" class="headerlink" title="数据库连接池的模块设计"></a>数据库连接池的模块设计</h4><h5 id="DriverManager-与-DataSource-的区别"><a href="#DriverManager-与-DataSource-的区别" class="headerlink" title="DriverManager 与 DataSource 的区别"></a>DriverManager 与 DataSource 的区别</h5><ul>
-<li><p>DriverManger 使用 getConnection 获取数据库的连接，本质是与数据库建立连接</p>
-<blockquote>
-<ul>
-<li>建立数据库连接操作是很耗费资源的操作，产生较大的系统开销</li>
-</ul>
-</blockquote>
-</li>
-<li><p>因此有了连接池的引用，使用池化思想：</p>
-<blockquote>
-<ul>
-<li>提前创建好一些连接，供使用</li>
-</ul>
-</blockquote>
-<blockquote>
-<ul>
-<li>将创建的资源缓存起来，避免频繁的创建连接，等待下一个使用者使用</li>
-</ul>
-</blockquote>
-</li>
-<li><p>DataSource 的引入</p>
-<blockquote>
-<ul>
-<li>本质是提供数据库连接的服务类（数据源）</li>
-</ul>
-</blockquote>
-<blockquote>
-<ul>
-<li>对DriverManger进行封装，建立一个中间层（DateSource），将DriverManger创建的连接存入Pool，外部从Pool获取连接。</li>
-</ul>
-</blockquote>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    	应用程序 -&gt; DriverManager</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">--------------------------------------</span><br><span class="line"></span><br><span class="line">--------------------------------------</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        DriverManager</span><br><span class="line"></span><br><span class="line">                							    ↓</span><br><span class="line"></span><br><span class="line">    	应用程序 -&gt; DataSource  -&gt;  Pool </span><br><span class="line"></span><br><span class="line">	  &gt; * 用了这个中间层（DataSource）我们可以提供某些服务（连接池、分布式事务）</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
-<li>DataSource的形式是JNDI （Java Naming Directory Interface）</li>
-</ul>
-<blockquote>
-<ul>
-<li>数据源的概念在应用程序与数据库连接之间插入了一个中间层，进而可以实现连接池以及事务管理，并且以JNDI的形式，也能够以非常方便的形式使用。</li>
-</ul>
-</blockquote>
-<h5 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h5><ul>
-<li><p>DataSource 是基于应用程序与 DriverManager 抽象出来的中间层，解耦了应用程序与数据库的实际连接，类似代理模式可以添加更多的功能：连接池、分布式事务等。</p>
-<p>连接池与DataSource是两回事，只是目前市面上实现了DataSource都赋予了连接池、连接池管理的功能。</p>
-</li>
-</ul>
-<h4 id="HikariPool"><a href="#HikariPool" class="headerlink" title="HikariPool"></a>HikariPool</h4><h5 id="设计模型"><a href="#设计模型" class="headerlink" title="设计模型"></a>设计模型</h5><h6 id="核心类-HikariDataSource-继承自-DataSource"><a href="#核心类-HikariDataSource-继承自-DataSource" class="headerlink" title="核心类  HikariDataSource 继承自 DataSource"></a>核心类  HikariDataSource 继承自 DataSource</h6><h6 id="核心成员-HikariPool-pool（volatile-保证可见）实现连接池功能-继承自-PoolBase"><a href="#核心成员-HikariPool-pool（volatile-保证可见）实现连接池功能-继承自-PoolBase" class="headerlink" title="核心成员 HikariPool pool（volatile 保证可见）实现连接池功能 继承自 PoolBase"></a>核心成员 HikariPool pool（volatile 保证可见）实现连接池功能 继承自 PoolBase</h6><ul>
-<li><p>字段：</p>
-</li>
-<li><p>DataSource 用于创建数据库连接（DriverDataSource Driver创建连接）</p>
-</li>
-<li><p>connectionBag 用于缓存数据库连接</p>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**  </span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> 	设计亮点</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> 	快，减少并发 无锁并发  CAS</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> 	线程回收时，优先放在之前使用线程 ThreadLocal 方便下次使用 时间局部性原理。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> 	ThreadLocal&lt;List&lt;Connection&gt;&gt;</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> 	缓存线程使用 copyOnWriterList 写时复制，写与读同时操作时，不阻塞读</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> 	更新 PoolEntry 状态 使用 CAS</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<ul>
-<li><p>addConnectionExecutor 单线程线程池 用于建立数据库连接 -&gt; 线程池允许核心线程超时 <code>executor.allowCoreThreadTimeOut(true);</code></p>
-</li>
-<li><p>closeConnectionExecutor 单线程线程池 用于关闭数据库连接 -&gt;  线程池允许核心线程超时 <code>executor.allowCoreThreadTimeOut(true);</code></p>
-</li>
-<li><p>houseKeepingExecutorService 调度线程池 内部定时器，用于实现连接的超时淘汰、连接池的补充等工作。</p>
-</li>
-<li><p>addConnectionQueueReadOnlyView -&gt; addConnectionExecutor(线程池) 阻塞队列的集合 用来判断高并发时 超过MaxSize</p>
-</li>
-</ul>
-<blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">final</span> <span class="type">int</span> <span class="variable">maxPoolSize</span> <span class="operator">=</span> config.getMaximumPoolSize();</span><br><span class="line"></span><br><span class="line">LinkedBlockingQueue&lt;Runnable&gt; addConnectionQueue = <span class="keyword">new</span> <span class="title class_">LinkedBlockingQueue</span>&lt;&gt;(maxPoolSize);</span><br><span class="line"></span><br><span class="line"><span class="built_in">this</span>.addConnectionQueueReadOnlyView = unmodifiableCollection(addConnectionQueue);</span><br><span class="line"></span><br><span class="line"><span class="built_in">this</span>.addConnectionExecutor = createThreadPoolExecutor(addConnectionQueue, poolName + <span class="string">&quot; connection adder&quot;</span>, threadFactory, <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>.DiscardOldestPolicy());</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">* PoolEntryCreator，添加连接的任务，实现创建连接的具体逻辑。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### Pool entry</span><br><span class="line"></span><br><span class="line">POOL_ENTRY 作为一个连接节点</span><br><span class="line"></span><br><span class="line">通过提交一个 houseKeepingExecutorService 调度任务，来保证超过最大时间的空闲任务close</span><br><span class="line"></span><br><span class="line">#### ConnectionBag</span><br><span class="line"></span><br><span class="line">* sharedList  CopyOnWriteArrayList(读多写少) 缓存数据库连接（pool entry 保证类（ProxyConnection）</span><br><span class="line"></span><br><span class="line">* waiters 待获取连接数量</span><br><span class="line"></span><br><span class="line">* threadList 缓存当前线程数据库连接（针对同一 个线程返回获取连接，提升效率ThreadLocal）</span><br><span class="line"></span><br><span class="line">* handoffQueue 提升效率，并发频繁的场景，避免遍历 copyOnWirte 拿取缓存数据库连接</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">##### HikariPool getConnection 返回的是装饰/代理的Connection ，Poolentry中存放的是原生的数据库连接 ，</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">##### 使用 Javassist (字节码变成) 创建 ProxyFactory 用于创建 HikariProxyConnection （代理模式） 来装饰原生 Connection ，调用 Close 方法时不会真实的关闭close（连接池缓存连接）</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">###### Javassist 利用 Maven 生命周期 compile 时生成新的class文件</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">​```XML</span><br><span class="line"></span><br><span class="line">&lt;plugin&gt;</span><br><span class="line"></span><br><span class="line">  &lt;!-- Generate proxies --&gt;</span><br><span class="line"></span><br><span class="line">  &lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;</span><br><span class="line"></span><br><span class="line">  &lt;artifactId&gt;exec-maven-plugin&lt;/artifactId&gt;</span><br><span class="line"></span><br><span class="line">  &lt;version&gt;1.6.0&lt;/version&gt;</span><br><span class="line"></span><br><span class="line">  &lt;executions&gt;</span><br><span class="line"></span><br><span class="line">     &lt;execution&gt;</span><br><span class="line"></span><br><span class="line">        &lt;phase&gt;compile&lt;/phase&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- phase&gt;generate-test-sources&lt;/phase --&gt;</span><br><span class="line"></span><br><span class="line">        &lt;goals&gt;</span><br><span class="line"></span><br><span class="line">           &lt;goal&gt;java&lt;/goal&gt;</span><br><span class="line"></span><br><span class="line">        &lt;/goals&gt;</span><br><span class="line"></span><br><span class="line">     &lt;/execution&gt;</span><br><span class="line"></span><br><span class="line">  &lt;/executions&gt;</span><br><span class="line"></span><br><span class="line">  &lt;configuration&gt;</span><br><span class="line"></span><br><span class="line">     &lt;mainClass&gt;com.zaxxer.hikari.util.JavassistProxyFactory&lt;/mainClass&gt;</span><br><span class="line"></span><br><span class="line">  &lt;/configuration&gt;</span><br><span class="line"></span><br><span class="line">&lt;/plugin&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h5 id="配置参数"><a href="#配置参数" class="headerlink" title="配置参数"></a>配置参数</h5><ul>
-<li><p>maxLifeTime: 15m </p>
-<p>底层执行一个延时任务，延时 maxLifeTime 便执行，给 Connection 打上驱逐标记 poolEntry.markEvicted()，如果当前连接是空闲连接 state; STATE_NOT_IN_USE，则直接真实关闭当前连接。若不是 只有等待连接空闲后，在getConnection 时，判断是否存在evict 标记，进行连接close</p>
-</li>
-<li><p>idleTimeout: 10s</p>
-</li>
-<li><p>minIdle: 1</p>
-<p>底层使用一个定时线程池，执行一个定时任务默认 30ms 执行一次，扫描出空闲连接，并进行清理。（保证剩余的线程）</p>
-</li>
-</ul>
-<h5 id="tip-通过-Semaphore-信号量并发工具-实现线程池的暂停功能"><a href="#tip-通过-Semaphore-信号量并发工具-实现线程池的暂停功能" class="headerlink" title="tip 通过 Semaphore 信号量并发工具 实现线程池的暂停功能"></a>tip 通过 Semaphore 信号量并发工具 实现线程池的暂停功能</h5><ul>
-<li>核心思想：将信号量消耗完，获取信号量的最大值，，其余获取消耗量的线程都阻塞</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">suspend</span><span class="params">()</span></span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">  acquisitionSemaphore.acquireUninterruptibly(MAX_PERMITS);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h5 id="tip-PoolEntry-状态字段state"><a href="#tip-PoolEntry-状态字段state" class="headerlink" title="tip (PoolEntry 状态字段state)"></a>tip (PoolEntry 状态字段state)</h5><ul>
-<li>AtomicIntegerFieldUpdater 用于原子性（线程安全）更新类对象中的int字段</li>
-</ul>
-<h4 id="JDBCTemplate"><a href="#JDBCTemplate" class="headerlink" title="JDBCTemplate"></a>JDBCTemplate</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">JDBCTemplate (DataSource) -&gt; DataSourceUtil.getConnection(DataSource)</span><br><span class="line"></span><br><span class="line">    封装事务</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="tip-Collection-unmodifiableCollection"><a href="#tip-Collection-unmodifiableCollection" class="headerlink" title="tip Collection.unmodifiableCollection()"></a>tip Collection.unmodifiableCollection()</h4><ul>
-<li>创建&#x2F;封装 不可变集合 <code>UnmodifiableCollection</code> ，代理模式，重写修改的方法 抛出异常</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">add</span><span class="params">(E e)</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UnsupportedOperationException</span>();</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">remove</span><span class="params">(Object o)</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UnsupportedOperationException</span>();</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/12/%E5%88%86%E5%B8%83%E5%BC%8F%E5%8D%8F%E8%B0%83/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/12/%E5%88%86%E5%B8%83%E5%BC%8F%E5%8D%8F%E8%B0%83/" class="post-title-link" itemprop="url">分布式协调</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-12 23:32:55" itemprop="dateCreated datePublished" datetime="2023-01-12T23:32:55+08:00">2023-01-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">系统架构</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/Distributed/" itemprop="url" rel="index"><span itemprop="name">分布式技术</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>在分布式节点处理数据，例如多主复制。存在冲突问题</p>
-<h3 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h3><p><strong>1. 避免冲突</strong></p>
-<p>所谓解决问题最根本的方式则是尽可能不让它发生，如果能够在应用层保证对特定数据的请求只发生在一个节点上，这样就没有所谓的“写冲突”了。继续拿上面的协同编辑文档举例，如果我们把每个人的都在填有自己姓名表格的一行里面进行编辑，这样就可以最大程度地保证每个人的修改范围不会有重叠，冲突也就迎刃而解了。</p>
-<p><strong>2. 收敛于一致状态</strong></p>
-<p>然而，对更新标题这种情况而言，冲突是没法避免的，但还是需要有方法解决。对于单主节点模式而言，如果同一个字段有多次写入，那么最后写入的一定是最新的。ZK、KafkaController、KafkaReplica都有类似Epoch的方式去屏蔽过期的写操作，由于所有的写请求都经过同一个节点，顺序是绝对的，但对于多主节点而言，由于没有绝对顺序的保证，就只能试图用一些方式来决策相对顺序，使冲突最终收敛，这里提到了几种方法：</p>
-<p>给每个写请求分配Uniq-ID，例如一个时间戳，一个随机数，一个UUID或Hash值，最终取最高的ID作为最新的写入。如果基于时间戳，则称作最后写入者获胜（LWW），这种方式看上去非常直接且简单，并且非常流行。但很遗憾，文章一开始也提到了，分布式系统没有办法在机器间共享一套统一的系统时间，所以这个方案很有可能因为这个问题导致数据丢失（时钟漂移）。</p>
-<p>每个副本分配一个唯一的ID，ID高的更新优先级高于地域低的，这显然也会丢失数据。</p>
-<p>当然，我们可以用某种方式做拼接，或利用预先定义的格式保留冲突相关信息，然后由用户自行解决。</p>
-<p><strong>3. 用户自行处理</strong></p>
-<p>其实，把这个操作直接交给用户，让用户自己在读取或写入前进行冲突解决，这种例子也是屡见不鲜，Github采用就是这种方式。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/12/dubbo%E6%A0%B8%E5%BF%83/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/12/dubbo%E6%A0%B8%E5%BF%83/" class="post-title-link" itemprop="url">dubbo核心</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-12 18:16:09" itemprop="dateCreated datePublished" datetime="2023-01-12T18:16:09+08:00">2023-01-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">系统架构</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/Distributed/" itemprop="url" rel="index"><span itemprop="name">分布式技术</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/Distributed/dubbo/" itemprop="url" rel="index"><span itemprop="name">dubbo</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>在 Dubbo 的核心领域模型中：</p>
-<ul>
-<li><p>Protocol 是服务域，它是 Invoker 暴露和引用的主功能入口，它负责 Invoker 的生命周期管理。</p>
-</li>
-<li><p>Invoker 是实体域，它是 Dubbo 的核心模型，其它模型都向它靠拢，或转换成它，它代表一个可执行体，可向它发起 invoke 调用，它有可能是一个本地的实现，也可能是一个远程的实现，也可能一个集群实现。</p>
-</li>
-<li><p>Invocation 是会话域，它持有调用过程中的变量，比如方法名，参数等</p>
-</li>
-</ul>
-<img src="https://dubbo.incubator.apache.org/imgs/v3/concepts/invoke-arch.jpg">
-
-
-
-
-
-
-
-<h4 id="三个核心中心化组件"><a href="#三个核心中心化组件" class="headerlink" title="三个核心中心化组件"></a>三个核心中心化组件</h4><img src="https://dubbo.apache.org/imgs/v3/concepts/threecenters.png">
-
-
-
-<img src="../image/dubbo部署架构.jpg">
-
-
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/11/NAT%20DockerFile/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/11/NAT%20DockerFile/" class="post-title-link" itemprop="url">NAT DockerFile</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-11 18:26:23" itemprop="dateCreated datePublished" datetime="2023-01-11T18:26:23+08:00">2023-01-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%BA%91%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">云技术</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%BA%91%E6%8A%80%E6%9C%AF/docker/" itemprop="url" rel="index"><span itemprop="name">docker</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li>Backend</li>
-</ul>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">rm -rf docker/$PROJECT_NAME</span><br><span class="line"></span><br><span class="line">mkdir -p docker/$PROJECT_NAME</span><br><span class="line"></span><br><span class="line">cp -r target/$PROJECT_NAME-<span class="number">1.0</span>.<span class="number">0</span>.jar docker/$PROJECT_NAME/</span><br><span class="line"></span><br><span class="line">cp -r certificate docker/$PROJECT_NAME/</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">cd docker</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建 Dockerfile</span></span><br><span class="line"></span><br><span class="line">cat &lt;&lt;EOF &gt; Dockerfile</span><br><span class="line"></span><br><span class="line"><span class="keyword">FROM</span> harbor.newegg.org/base/openjdk:<span class="number">8</span>-jdk-alpine</span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> apk add --no-cache tini</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ENTRYPOINT</span><span class="language-bash"> [<span class="string">&quot;/sbin/tini&quot;</span>, <span class="string">&quot;--&quot;</span>]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">VOLUME</span><span class="language-bash"> [<span class="string">&quot;/usr/bin/mvn&quot;</span>]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">MAINTAINER</span> DAE</span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> <span class="variable">$PROJECT_NAME</span> /opt/<span class="variable">$PROJECT_NAME</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> /opt/<span class="variable">$PROJECT_NAME</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">ls</span> /usr/lib/jvm/java-1.8-openjdk/ | <span class="built_in">echo</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">ls</span> /opt/<span class="variable">$PROJECT_NAME</span> </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">Run</span><span class="language-bash"> <span class="built_in">cd</span> /usr/lib/jvm/java-1.8-openjdk/jre/lib/security/ &amp;&amp; <span class="built_in">echo</span> <span class="built_in">yes</span> | keytool -import -<span class="built_in">alias</span> NeweggWebGateway -storepass changeit -keystore cacerts -file /opt/<span class="variable">$PROJECT_NAME</span>/certificate/PROXY.cer</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">8080</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">CMD</span><span class="language-bash"> [<span class="string">&quot;java&quot;</span>, <span class="string">&quot;-jar&quot;</span>, <span class="string">&quot;<span class="variable">$PROJECT_NAME</span>-1.0.0.jar&quot;</span>, \</span></span><br><span class="line"><span class="language-bash"></span></span><br><span class="line">  <span class="string">&quot;--spring.profiles.active=gdev&quot;</span>, \</span><br><span class="line"></span><br><span class="line">  <span class="string">&quot;--server.port=8080&quot;</span>, \</span><br><span class="line"></span><br><span class="line">  <span class="string">&quot;--springfox.documentation.swagger.v2.host=gdev-services.newegg.space/$DISCOVER_ID&quot;</span>, \</span><br><span class="line"></span><br><span class="line">  <span class="string">&quot;--jasypt.encryptor.password=NAT@GDEV&quot;</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">EOF</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
-<li>Console</li>
-</ul>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">deploy_env=gdev</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">FROM</span> harbor.newegg.org/base/nginx:stable-alpine</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">LABEL</span><span class="language-bash"> authors=<span class="string">&quot;Kent &lt;kent.l.tan@newegg.com&gt;&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">MAINTAINER</span> DAE</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">mkdir</span> /ng-alain</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> /ng-alain</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Just copy the dist directory and nginx config file </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> ./dist ./dist</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> _nginx/<span class="variable">$&#123;deploy_env&#125;</span>.conf /etc/nginx/conf.d/nginx.conf</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">rm</span> -rf /usr/share/nginx/html/*</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> /dist /usr/share/nginx/html</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">CMD</span><span class="language-bash"> [ <span class="string">&quot;nginx&quot;</span>, <span class="string">&quot;-g&quot;</span>, <span class="string">&quot;daemon off;&quot;</span>]</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">deploy_env=prod</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">echo -e <span class="string">&quot;&gt;&gt; $(date --rfc-3339=s) begin build app&quot;</span></span><br><span class="line"></span><br><span class="line">./node_modules/@angular/cli/bin/ng build --prod</span><br><span class="line"></span><br><span class="line">node ./_rels/replace-html.js prd</span><br><span class="line"></span><br><span class="line">echo -e <span class="string">&quot;&gt;&gt; $(date --rfc-3339=s) end build app \n&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">rm -f run.sh</span><br><span class="line"></span><br><span class="line">touch run.sh</span><br><span class="line"></span><br><span class="line">chmod <span class="number">777</span> run.sh </span><br><span class="line"></span><br><span class="line">echo <span class="string">&#x27;#!/bin/bash&#x27;</span> &gt;&gt; run.sh</span><br><span class="line"></span><br><span class="line">echo <span class="string">&#x27;nginx -c /etc/nginx/nginx.conf&#x27;</span> &gt;&gt; run.sh</span><br><span class="line"></span><br><span class="line">echo <span class="string">&#x27;nginx -s reload&#x27;</span> &gt;&gt; run.sh</span><br><span class="line"></span><br><span class="line">echo <span class="string">&#x27;/usr/bin/nginx-prometheus-exporter -nginx.scrape-uri http://127.0.0.1:8080/stub_status&#x27;</span> &gt;&gt; run.sh</span><br><span class="line"></span><br><span class="line">echo <span class="string">&#x27;tail -f /dev/null&#x27;</span> &gt;&gt; run.sh</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># generate dockerfile</span></span><br><span class="line"></span><br><span class="line">echo -e <span class="string">&quot;&gt;&gt; $(date --rfc-3339=s) begin generate dockerfile&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">FROM</span> dev-harbor.newegg.org/sao/nginx-pe:<span class="number">0.0</span>.<span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">USER</span> root</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">LABEL</span><span class="language-bash"> authors=<span class="string">&quot;platform engineering &lt;nesc-cd.mis.platformengineering@newegg.com&gt;&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">MAINTAINER</span> DAE</span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> _nginx/<span class="variable">$&#123;deploy_env&#125;</span>.conf /etc/nginx/conf.d/default.conf</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> /dist /usr/share/nginx/html</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> run.sh /usr/bin/run.sh</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">chown</span> nginx:nginx -R /etc/nginx/conf.d</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">chown</span> nginx:nginx -R /usr/share/nginx/html</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">chown</span> nginx:nginx -R /usr/bin/nginx-prometheus-exporter</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">chown</span> nginx:nginx /usr/bin/run.sh</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">USER</span> nginx</span><br><span class="line"></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">8080</span> <span class="number">9113</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">CMD</span><span class="language-bash"> [<span class="string">&quot;/bin/sh&quot;</span>, <span class="string">&quot;/usr/bin/run.sh&quot;</span>]</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/11/%E6%89%8B%E5%8A%A8%E8%A7%A6%E5%8F%91GC/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/11/%E6%89%8B%E5%8A%A8%E8%A7%A6%E5%8F%91GC/" class="post-title-link" itemprop="url">手动触发GC</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-11 18:20:31" itemprop="dateCreated datePublished" datetime="2023-01-11T18:20:31+08:00">2023-01-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="代码层面"><a href="#代码层面" class="headerlink" title="代码层面"></a>代码层面</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">System.gc();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="Java-应用层面"><a href="#Java-应用层面" class="headerlink" title="Java 应用层面"></a>Java 应用层面</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">jmap -histo:live pid</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>注：这个命令实际是用来统计展示当前堆内存区域存活的对象</p>
-</li>
-<li><p><code>jmap -dump:live</code> 以及 <code>jmap -histo:live</code> 都会触发Full GC</p>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/07/problem-spring-web%20%E7%AC%94%E8%AE%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/07/problem-spring-web%20%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">problem-spring-web 笔记</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-07 22:51:17" itemprop="dateCreated datePublished" datetime="2023-01-07T22:51:17+08:00">2023-01-07</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%A1%86%E6%9E%B6/" itemprop="url" rel="index"><span itemprop="name">框架</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="核心原理"><a href="#核心原理" class="headerlink" title="核心原理"></a>核心原理</h3><ul>
-<li>底层依赖 Spring MVC  ControllerAdvice</li>
-</ul>
-<h5 id="ControllerAdvice"><a href="#ControllerAdvice" class="headerlink" title="ControllerAdvice"></a>ControllerAdvice</h5><ul>
-<li>看名字就知道，类似 AOP Advice 功能，但是底层实现不是动态代理，依赖</li>
-</ul>
-<h6 id="三种功能"><a href="#三种功能" class="headerlink" title="三种功能"></a>三种功能</h6><ul>
-<li><p>@ModelAttribute</p>
-<blockquote>
-<ul>
-<li>修改 Model 参数</li>
-</ul>
-</blockquote>
-</li>
-<li><p>@ExceptionHandler</p>
-<blockquote>
-<ul>
-<li>处理全局异常</li>
-</ul>
-</blockquote>
-</li>
-<li><p>@InitBinder</p>
-<blockquote>
-<ul>
-<li>全局参数的绑定</li>
-</ul>
-</blockquote>
-<blockquote>
-<ul>
-<li></li>
-</ul>
-</blockquote>
-</li>
-</ul>
-<h5 id="Problem-使用-ExceptionHandler"><a href="#Problem-使用-ExceptionHandler" class="headerlink" title="Problem 使用 @ExceptionHandler"></a>Problem 使用 @ExceptionHandler</h5><ul>
-<li><p>定义了 核心类 <code>ProblemHandling</code> , 该接口继承了定好的各种异常类型的ExceptionHandler 默认实现</p>
-</li>
-<li><pre><code class="java">
-public interface ProblemHandling extends
-
-        GeneralAdviceTrait,
-
-        HttpAdviceTrait,
-
-        IOAdviceTrait,
-
-        RoutingAdviceTrait,
-
-        SecurityAdviceTrait,
-
-        ValidationAdviceTrait &#123;
-
-
-
-&#125;
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">* ```java</span><br><span class="line"></span><br><span class="line">  public interface ProblemAdviceTrait extends AdviceTrait &#123;</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">      @API(status = INTERNAL)</span><br><span class="line"></span><br><span class="line">      @ExceptionHandler</span><br><span class="line"></span><br><span class="line">      default ResponseEntity&lt;Problem&gt; handleProblem(</span><br><span class="line"></span><br><span class="line">              final ThrowableProblem problem,</span><br><span class="line"></span><br><span class="line">              final NativeWebRequest request) &#123;</span><br><span class="line"></span><br><span class="line">          return create(problem, request);</span><br><span class="line"></span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-</code></pre>
-</li>
-<li></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/06/Hippo4j/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/06/Hippo4j/" class="post-title-link" itemprop="url">Hippo4j</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-06 23:14:44" itemprop="dateCreated datePublished" datetime="2023-01-06T23:14:44+08:00">2023-01-06</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%A1%86%E6%9E%B6/" itemprop="url" rel="index"><span itemprop="name">框架</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><ul>
-<li><p>动态可观测线程池框架</p>
-</li>
-<li><p>Hippo-4J 通过对 JDK 线程池增强，以及扩展三方框架底层线程池等功能，为业务系统提高线上运行保障能力。</p>
-</li>
-</ul>
-<p>⚡️ 动态变更 - 应用运行时动态变更线程池参数，包括不限于：核心、最大线程数、阻塞队列容量、拒绝策略等；</p>
-<p>…</p>
-<h3 id="核心原理-（以-Nacos-为例）"><a href="#核心原理-（以-Nacos-为例）" class="headerlink" title="核心原理 （以 Nacos 为例）"></a>核心原理 （以 Nacos 为例）</h3><ul>
-<li><p>通过 Spring 的事件机制 </p>
-</li>
-<li><p>NacosRefresherHandler (<code>AbstractCoreThreadPoolDynamicRefresh</code>) 使用 Spring Bean 生命周期的钩子方法 afterPropertiesSet 添加 nacos(<code>configServer</code>） 配置 Nacos 变更的监听器 -&gt;  Web容器线程池(TomcatWebThreadPoolHandler)&#x2F;ThreadPoolExecutor 参数变更 发布事件 <code>Hippo4jCoreDynamicRefreshEvent</code> , 由监听器 <code>WebExecutorListener</code>&#x2F;<code>ExecutorsListener</code> 监听事件，获取 Spring BeanFactory 中对应线程池实例 修改参数</p>
-</li>
-</ul>
-<h4 id="ExecutorsListener"><a href="#ExecutorsListener" class="headerlink" title="ExecutorsListener"></a>ExecutorsListener</h4><ul>
-<li>利用 Spring BeanPostProcessor <code>DynamicThreadPoolPostProcessor</code> , postProcessAfterInitialization 生命周期方法向全局线程池管理工具 <code>GlobalThreadPoolManage</code> 和全局线程池核心参数配置 <code>GlobalCoreThreadPoolManage</code> 注册 对应的线程池 和 线程池参数，后续修改参数直接通过 poolId 拿取对应实例进行修改参数</li>
-</ul>
-<h3 id="该框架大量使用了-Spring-的特性，条件加载是springboot自动配置的刚需"><a href="#该框架大量使用了-Spring-的特性，条件加载是springboot自动配置的刚需" class="headerlink" title="该框架大量使用了 Spring 的特性，条件加载是springboot自动配置的刚需"></a>该框架大量使用了 Spring 的特性，条件加载是springboot自动配置的刚需</h3><h5 id="MarkerConfiguration"><a href="#MarkerConfiguration" class="headerlink" title="MarkerConfiguration"></a>MarkerConfiguration</h5><ul>
-<li>starter 自动装配类 <code>DynamicThreadPoolCoreAutoConfiguration</code>, <code>@ConditionalOnBean(MarkerConfiguration.Marker.class)</code> 通过 ConditionalOnBean 主键实现开关式引入Hippo4j，@EnableDynamicThreadPool 通过 <code>@Import(&#123;BeforeCheckConfiguration.class, MarkerConfiguration.class&#125;)</code>导入 MarkerConfiguration 开关标志类</li>
-</ul>
-<h3 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h3><h4 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h4><ul>
-<li><code>ConfigParserHandler</code> -&gt; <code>ConfigParser</code></li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> Map&lt;Object, Object&gt; <span class="title function_">parseConfig</span><span class="params">(String content, ConfigFileTypeEnum type)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (ConfigParser parser : PARSERS) &#123;</span><br><span class="line"></span><br><span class="line">	    <span class="keyword">if</span> (parser.supports(type)) &#123;</span><br><span class="line"></span><br><span class="line">	        <span class="keyword">return</span> parser.doParse(content);</span><br><span class="line"></span><br><span class="line">	    &#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> Collections.emptyMap();</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="tip"><a href="#tip" class="headerlink" title="tip"></a>tip</h4><ul>
-<li>利用 <code>SPI</code> 扩展机制来提供 <code>ConfigParser</code> 的实现</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span> <span class="title function_">ConfigParserHandler</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">    ServiceLoader&lt;ConfigParser&gt; loader = ServiceLoader.load(ConfigParser.class);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (ConfigParser configParser : loader) &#123;</span><br><span class="line"></span><br><span class="line">        PARSERS.add(configParser);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    PARSERS.add(<span class="keyword">new</span> <span class="title class_">PropertiesConfigParser</span>());</span><br><span class="line"></span><br><span class="line">    PARSERS.add(<span class="keyword">new</span> <span class="title class_">YamlConfigParser</span>());</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="建造者模式"><a href="#建造者模式" class="headerlink" title="建造者模式"></a>建造者模式</h4><p>Builder</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/04/Nacos%E6%9C%8D%E5%8A%A1%E9%9B%86%E7%BE%A4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/04/Nacos%E6%9C%8D%E5%8A%A1%E9%9B%86%E7%BE%A4/" class="post-title-link" itemprop="url">Nacos服务集群</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-04 18:09:28" itemprop="dateCreated datePublished" datetime="2023-01-04T18:09:28+08:00">2023-01-04</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">中间件</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/Nacos/" itemprop="url" rel="index"><span itemprop="name">Nacos</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="运行模式"><a href="#运行模式" class="headerlink" title="运行模式"></a>运行模式</h2><h3 id="AC（默认）"><a href="#AC（默认）" class="headerlink" title="AC（默认）"></a>AC（默认）</h3><p>只支持创建临时节点 -&gt; 数据同步协议 Distro</p>
-<h3 id="CP"><a href="#CP" class="headerlink" title="CP"></a>CP</h3><p>只支持创建持久化节点 -&gt; Raft协议 </p>
-<h3 id="MIXED"><a href="#MIXED" class="headerlink" title="MIXED"></a>MIXED</h3><h2 id="持久化节点与临时节点"><a href="#持久化节点与临时节点" class="headerlink" title="持久化节点与临时节点"></a>持久化节点与临时节点</h2><p>临时节点： 注册实例 发送心跳信息，server端维护实例信息，心跳断了，server端摘除，实例重新上线，变化重新注册。</p>
-<p>持久化节点：实例的注册会持久化节点信息，服务的下线，server端不会直接删除实例信息，而是维护实例状态为down</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/02/ConcurrentHashMap/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/02/ConcurrentHashMap/" class="post-title-link" itemprop="url">ConcurrentHashMap</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-02 19:26:21" itemprop="dateCreated datePublished" datetime="2023-01-02T19:26:21+08:00">2023-01-02</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/%E5%B9%B6%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">并发</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>ConcurrentHashMap 的一些方法是线程安全的，一些不是。其中线程安全的包括：get、put、remove、containsKey。线程不安全的包括：size、clear、isEmpty。</p>
-<p>其中 get 方法虽然是线程安全的，但是方法中并没有加锁。底层通过 volatile 保证读取的时的可见性（node.val）。Node 若是红黑树，则会加上读写锁进行查询。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1368,20 +1437,20 @@ public interface ProblemHandling extends
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-count">89</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-count">46</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-count">54</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

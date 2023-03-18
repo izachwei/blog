@@ -186,6 +186,896 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/16/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0%E7%89%B9%E6%80%A7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/16/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0%E7%89%B9%E6%80%A7/" class="post-title-link" itemprop="url">数据库连接池特性</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-16 20:18:50" itemprop="dateCreated datePublished" datetime="2023-01-16T20:18:50+08:00">2023-01-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/" itemprop="url" rel="index"><span itemprop="name">数据库连接池</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="数据库连接池的模块设计"><a href="#数据库连接池的模块设计" class="headerlink" title="数据库连接池的模块设计"></a>数据库连接池的模块设计</h4><h5 id="DriverManager-与-DataSource-的区别"><a href="#DriverManager-与-DataSource-的区别" class="headerlink" title="DriverManager 与 DataSource 的区别"></a>DriverManager 与 DataSource 的区别</h5><ul>
+<li><p>DriverManger 使用 getConnection 获取数据库的连接，本质是与数据库建立连接</p>
+<blockquote>
+<ul>
+<li>建立数据库连接操作是很耗费资源的操作，产生较大的系统开销</li>
+</ul>
+</blockquote>
+</li>
+<li><p>因此有了连接池的引用，使用池化思想：</p>
+<blockquote>
+<ul>
+<li>提前创建好一些连接，供使用</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>将创建的资源缓存起来，避免频繁的创建连接，等待下一个使用者使用</li>
+</ul>
+</blockquote>
+</li>
+<li><p>DataSource 的引入</p>
+<blockquote>
+<ul>
+<li>本质是提供数据库连接的服务类（数据源）</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>对DriverManger进行封装，建立一个中间层（DateSource），将DriverManger创建的连接存入Pool，外部从Pool获取连接。</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    	应用程序 -&gt; DriverManager</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">--------------------------------------</span><br><span class="line"></span><br><span class="line">--------------------------------------</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        DriverManager</span><br><span class="line"></span><br><span class="line">                							    ↓</span><br><span class="line"></span><br><span class="line">    	应用程序 -&gt; DataSource  -&gt;  Pool </span><br><span class="line"></span><br><span class="line">	  &gt; * 用了这个中间层（DataSource）我们可以提供某些服务（连接池、分布式事务）</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>DataSource的形式是JNDI （Java Naming Directory Interface）</li>
+</ul>
+<blockquote>
+<ul>
+<li>数据源的概念在应用程序与数据库连接之间插入了一个中间层，进而可以实现连接池以及事务管理，并且以JNDI的形式，也能够以非常方便的形式使用。</li>
+</ul>
+</blockquote>
+<h5 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h5><ul>
+<li><p>DataSource 是基于应用程序与 DriverManager 抽象出来的中间层，解耦了应用程序与数据库的实际连接，类似代理模式可以添加更多的功能：连接池、分布式事务等。</p>
+<p>连接池与DataSource是两回事，只是目前市面上实现了DataSource都赋予了连接池、连接池管理的功能。</p>
+</li>
+</ul>
+<h4 id="HikariPool"><a href="#HikariPool" class="headerlink" title="HikariPool"></a>HikariPool</h4><h5 id="设计模型"><a href="#设计模型" class="headerlink" title="设计模型"></a>设计模型</h5><h6 id="核心类-HikariDataSource-继承自-DataSource"><a href="#核心类-HikariDataSource-继承自-DataSource" class="headerlink" title="核心类  HikariDataSource 继承自 DataSource"></a>核心类  HikariDataSource 继承自 DataSource</h6><h6 id="核心成员-HikariPool-pool（volatile-保证可见）实现连接池功能-继承自-PoolBase"><a href="#核心成员-HikariPool-pool（volatile-保证可见）实现连接池功能-继承自-PoolBase" class="headerlink" title="核心成员 HikariPool pool（volatile 保证可见）实现连接池功能 继承自 PoolBase"></a>核心成员 HikariPool pool（volatile 保证可见）实现连接池功能 继承自 PoolBase</h6><ul>
+<li><p>字段：</p>
+</li>
+<li><p>DataSource 用于创建数据库连接（DriverDataSource Driver创建连接）</p>
+</li>
+<li><p>connectionBag 用于缓存数据库连接</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**  </span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> 	设计亮点</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> 	快，减少并发 无锁并发  CAS</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> 	线程回收时，优先放在之前使用线程 ThreadLocal 方便下次使用 时间局部性原理。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> 	ThreadLocal&lt;List&lt;Connection&gt;&gt;</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> 	缓存线程使用 copyOnWriterList 写时复制，写与读同时操作时，不阻塞读</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> 	更新 PoolEntry 状态 使用 CAS</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<ul>
+<li><p>addConnectionExecutor 单线程线程池 用于建立数据库连接 -&gt; 线程池允许核心线程超时 <code>executor.allowCoreThreadTimeOut(true);</code></p>
+</li>
+<li><p>closeConnectionExecutor 单线程线程池 用于关闭数据库连接 -&gt;  线程池允许核心线程超时 <code>executor.allowCoreThreadTimeOut(true);</code></p>
+</li>
+<li><p>houseKeepingExecutorService 调度线程池 内部定时器，用于实现连接的超时淘汰、连接池的补充等工作。</p>
+</li>
+<li><p>addConnectionQueueReadOnlyView -&gt; addConnectionExecutor(线程池) 阻塞队列的集合 用来判断高并发时 超过MaxSize</p>
+</li>
+</ul>
+<blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">final</span> <span class="type">int</span> <span class="variable">maxPoolSize</span> <span class="operator">=</span> config.getMaximumPoolSize();</span><br><span class="line"></span><br><span class="line">LinkedBlockingQueue&lt;Runnable&gt; addConnectionQueue = <span class="keyword">new</span> <span class="title class_">LinkedBlockingQueue</span>&lt;&gt;(maxPoolSize);</span><br><span class="line"></span><br><span class="line"><span class="built_in">this</span>.addConnectionQueueReadOnlyView = unmodifiableCollection(addConnectionQueue);</span><br><span class="line"></span><br><span class="line"><span class="built_in">this</span>.addConnectionExecutor = createThreadPoolExecutor(addConnectionQueue, poolName + <span class="string">&quot; connection adder&quot;</span>, threadFactory, <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>.DiscardOldestPolicy());</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">* PoolEntryCreator，添加连接的任务，实现创建连接的具体逻辑。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### Pool entry</span><br><span class="line"></span><br><span class="line">POOL_ENTRY 作为一个连接节点</span><br><span class="line"></span><br><span class="line">通过提交一个 houseKeepingExecutorService 调度任务，来保证超过最大时间的空闲任务close</span><br><span class="line"></span><br><span class="line">#### ConnectionBag</span><br><span class="line"></span><br><span class="line">* sharedList  CopyOnWriteArrayList(读多写少) 缓存数据库连接（pool entry 保证类（ProxyConnection）</span><br><span class="line"></span><br><span class="line">* waiters 待获取连接数量</span><br><span class="line"></span><br><span class="line">* threadList 缓存当前线程数据库连接（针对同一 个线程返回获取连接，提升效率ThreadLocal）</span><br><span class="line"></span><br><span class="line">* handoffQueue 提升效率，并发频繁的场景，避免遍历 copyOnWirte 拿取缓存数据库连接</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">##### HikariPool getConnection 返回的是装饰/代理的Connection ，Poolentry中存放的是原生的数据库连接 ，</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">##### 使用 Javassist (字节码变成) 创建 ProxyFactory 用于创建 HikariProxyConnection （代理模式） 来装饰原生 Connection ，调用 Close 方法时不会真实的关闭close（连接池缓存连接）</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">###### Javassist 利用 Maven 生命周期 compile 时生成新的class文件</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">​```XML</span><br><span class="line"></span><br><span class="line">&lt;plugin&gt;</span><br><span class="line"></span><br><span class="line">  &lt;!-- Generate proxies --&gt;</span><br><span class="line"></span><br><span class="line">  &lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;</span><br><span class="line"></span><br><span class="line">  &lt;artifactId&gt;exec-maven-plugin&lt;/artifactId&gt;</span><br><span class="line"></span><br><span class="line">  &lt;version&gt;1.6.0&lt;/version&gt;</span><br><span class="line"></span><br><span class="line">  &lt;executions&gt;</span><br><span class="line"></span><br><span class="line">     &lt;execution&gt;</span><br><span class="line"></span><br><span class="line">        &lt;phase&gt;compile&lt;/phase&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- phase&gt;generate-test-sources&lt;/phase --&gt;</span><br><span class="line"></span><br><span class="line">        &lt;goals&gt;</span><br><span class="line"></span><br><span class="line">           &lt;goal&gt;java&lt;/goal&gt;</span><br><span class="line"></span><br><span class="line">        &lt;/goals&gt;</span><br><span class="line"></span><br><span class="line">     &lt;/execution&gt;</span><br><span class="line"></span><br><span class="line">  &lt;/executions&gt;</span><br><span class="line"></span><br><span class="line">  &lt;configuration&gt;</span><br><span class="line"></span><br><span class="line">     &lt;mainClass&gt;com.zaxxer.hikari.util.JavassistProxyFactory&lt;/mainClass&gt;</span><br><span class="line"></span><br><span class="line">  &lt;/configuration&gt;</span><br><span class="line"></span><br><span class="line">&lt;/plugin&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h5 id="配置参数"><a href="#配置参数" class="headerlink" title="配置参数"></a>配置参数</h5><ul>
+<li><p>maxLifeTime: 15m </p>
+<p>底层执行一个延时任务，延时 maxLifeTime 便执行，给 Connection 打上驱逐标记 poolEntry.markEvicted()，如果当前连接是空闲连接 state; STATE_NOT_IN_USE，则直接真实关闭当前连接。若不是 只有等待连接空闲后，在getConnection 时，判断是否存在evict 标记，进行连接close</p>
+</li>
+<li><p>idleTimeout: 10s</p>
+</li>
+<li><p>minIdle: 1</p>
+<p>底层使用一个定时线程池，执行一个定时任务默认 30ms 执行一次，扫描出空闲连接，并进行清理。（保证剩余的线程）</p>
+</li>
+</ul>
+<h5 id="tip-通过-Semaphore-信号量并发工具-实现线程池的暂停功能"><a href="#tip-通过-Semaphore-信号量并发工具-实现线程池的暂停功能" class="headerlink" title="tip 通过 Semaphore 信号量并发工具 实现线程池的暂停功能"></a>tip 通过 Semaphore 信号量并发工具 实现线程池的暂停功能</h5><ul>
+<li>核心思想：将信号量消耗完，获取信号量的最大值，，其余获取消耗量的线程都阻塞</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">suspend</span><span class="params">()</span></span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">  acquisitionSemaphore.acquireUninterruptibly(MAX_PERMITS);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="tip-PoolEntry-状态字段state"><a href="#tip-PoolEntry-状态字段state" class="headerlink" title="tip (PoolEntry 状态字段state)"></a>tip (PoolEntry 状态字段state)</h5><ul>
+<li>AtomicIntegerFieldUpdater 用于原子性（线程安全）更新类对象中的int字段</li>
+</ul>
+<h4 id="JDBCTemplate"><a href="#JDBCTemplate" class="headerlink" title="JDBCTemplate"></a>JDBCTemplate</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">JDBCTemplate (DataSource) -&gt; DataSourceUtil.getConnection(DataSource)</span><br><span class="line"></span><br><span class="line">    封装事务</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="tip-Collection-unmodifiableCollection"><a href="#tip-Collection-unmodifiableCollection" class="headerlink" title="tip Collection.unmodifiableCollection()"></a>tip Collection.unmodifiableCollection()</h4><ul>
+<li>创建&#x2F;封装 不可变集合 <code>UnmodifiableCollection</code> ，代理模式，重写修改的方法 抛出异常</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">add</span><span class="params">(E e)</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UnsupportedOperationException</span>();</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">remove</span><span class="params">(Object o)</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UnsupportedOperationException</span>();</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/12/%E5%88%86%E5%B8%83%E5%BC%8F%E5%8D%8F%E8%B0%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/12/%E5%88%86%E5%B8%83%E5%BC%8F%E5%8D%8F%E8%B0%83/" class="post-title-link" itemprop="url">分布式协调</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-12 23:32:55" itemprop="dateCreated datePublished" datetime="2023-01-12T23:32:55+08:00">2023-01-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">系统架构</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/Distributed/" itemprop="url" rel="index"><span itemprop="name">分布式技术</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>在分布式节点处理数据，例如多主复制。存在冲突问题</p>
+<h3 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h3><p><strong>1. 避免冲突</strong></p>
+<p>所谓解决问题最根本的方式则是尽可能不让它发生，如果能够在应用层保证对特定数据的请求只发生在一个节点上，这样就没有所谓的“写冲突”了。继续拿上面的协同编辑文档举例，如果我们把每个人的都在填有自己姓名表格的一行里面进行编辑，这样就可以最大程度地保证每个人的修改范围不会有重叠，冲突也就迎刃而解了。</p>
+<p><strong>2. 收敛于一致状态</strong></p>
+<p>然而，对更新标题这种情况而言，冲突是没法避免的，但还是需要有方法解决。对于单主节点模式而言，如果同一个字段有多次写入，那么最后写入的一定是最新的。ZK、KafkaController、KafkaReplica都有类似Epoch的方式去屏蔽过期的写操作，由于所有的写请求都经过同一个节点，顺序是绝对的，但对于多主节点而言，由于没有绝对顺序的保证，就只能试图用一些方式来决策相对顺序，使冲突最终收敛，这里提到了几种方法：</p>
+<p>给每个写请求分配Uniq-ID，例如一个时间戳，一个随机数，一个UUID或Hash值，最终取最高的ID作为最新的写入。如果基于时间戳，则称作最后写入者获胜（LWW），这种方式看上去非常直接且简单，并且非常流行。但很遗憾，文章一开始也提到了，分布式系统没有办法在机器间共享一套统一的系统时间，所以这个方案很有可能因为这个问题导致数据丢失（时钟漂移）。</p>
+<p>每个副本分配一个唯一的ID，ID高的更新优先级高于地域低的，这显然也会丢失数据。</p>
+<p>当然，我们可以用某种方式做拼接，或利用预先定义的格式保留冲突相关信息，然后由用户自行解决。</p>
+<p><strong>3. 用户自行处理</strong></p>
+<p>其实，把这个操作直接交给用户，让用户自己在读取或写入前进行冲突解决，这种例子也是屡见不鲜，Github采用就是这种方式。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/12/dubbo%E6%A0%B8%E5%BF%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/12/dubbo%E6%A0%B8%E5%BF%83/" class="post-title-link" itemprop="url">dubbo核心</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-12 18:16:09" itemprop="dateCreated datePublished" datetime="2023-01-12T18:16:09+08:00">2023-01-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">系统架构</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/Distributed/" itemprop="url" rel="index"><span itemprop="name">分布式技术</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/Distributed/dubbo/" itemprop="url" rel="index"><span itemprop="name">dubbo</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>在 Dubbo 的核心领域模型中：</p>
+<ul>
+<li><p>Protocol 是服务域，它是 Invoker 暴露和引用的主功能入口，它负责 Invoker 的生命周期管理。</p>
+</li>
+<li><p>Invoker 是实体域，它是 Dubbo 的核心模型，其它模型都向它靠拢，或转换成它，它代表一个可执行体，可向它发起 invoke 调用，它有可能是一个本地的实现，也可能是一个远程的实现，也可能一个集群实现。</p>
+</li>
+<li><p>Invocation 是会话域，它持有调用过程中的变量，比如方法名，参数等</p>
+</li>
+</ul>
+<img src="https://dubbo.incubator.apache.org/imgs/v3/concepts/invoke-arch.jpg">
+
+
+
+
+
+
+
+<h4 id="三个核心中心化组件"><a href="#三个核心中心化组件" class="headerlink" title="三个核心中心化组件"></a>三个核心中心化组件</h4><img src="https://dubbo.apache.org/imgs/v3/concepts/threecenters.png">
+
+
+
+<img src="../image/dubbo部署架构.jpg">
+
+
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/11/NAT%20DockerFile/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/NAT%20DockerFile/" class="post-title-link" itemprop="url">NAT DockerFile</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 18:26:23" itemprop="dateCreated datePublished" datetime="2023-01-11T18:26:23+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%BA%91%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">云技术</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%BA%91%E6%8A%80%E6%9C%AF/docker/" itemprop="url" rel="index"><span itemprop="name">docker</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li>Backend</li>
+</ul>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">rm -rf docker/$PROJECT_NAME</span><br><span class="line"></span><br><span class="line">mkdir -p docker/$PROJECT_NAME</span><br><span class="line"></span><br><span class="line">cp -r target/$PROJECT_NAME-<span class="number">1.0</span>.<span class="number">0</span>.jar docker/$PROJECT_NAME/</span><br><span class="line"></span><br><span class="line">cp -r certificate docker/$PROJECT_NAME/</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">cd docker</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建 Dockerfile</span></span><br><span class="line"></span><br><span class="line">cat &lt;&lt;EOF &gt; Dockerfile</span><br><span class="line"></span><br><span class="line"><span class="keyword">FROM</span> harbor.newegg.org/base/openjdk:<span class="number">8</span>-jdk-alpine</span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> apk add --no-cache tini</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ENTRYPOINT</span><span class="language-bash"> [<span class="string">&quot;/sbin/tini&quot;</span>, <span class="string">&quot;--&quot;</span>]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">VOLUME</span><span class="language-bash"> [<span class="string">&quot;/usr/bin/mvn&quot;</span>]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">MAINTAINER</span> DAE</span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> <span class="variable">$PROJECT_NAME</span> /opt/<span class="variable">$PROJECT_NAME</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> /opt/<span class="variable">$PROJECT_NAME</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">ls</span> /usr/lib/jvm/java-1.8-openjdk/ | <span class="built_in">echo</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">ls</span> /opt/<span class="variable">$PROJECT_NAME</span> </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">Run</span><span class="language-bash"> <span class="built_in">cd</span> /usr/lib/jvm/java-1.8-openjdk/jre/lib/security/ &amp;&amp; <span class="built_in">echo</span> <span class="built_in">yes</span> | keytool -import -<span class="built_in">alias</span> NeweggWebGateway -storepass changeit -keystore cacerts -file /opt/<span class="variable">$PROJECT_NAME</span>/certificate/PROXY.cer</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">8080</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">CMD</span><span class="language-bash"> [<span class="string">&quot;java&quot;</span>, <span class="string">&quot;-jar&quot;</span>, <span class="string">&quot;<span class="variable">$PROJECT_NAME</span>-1.0.0.jar&quot;</span>, \</span></span><br><span class="line"><span class="language-bash"></span></span><br><span class="line">  <span class="string">&quot;--spring.profiles.active=gdev&quot;</span>, \</span><br><span class="line"></span><br><span class="line">  <span class="string">&quot;--server.port=8080&quot;</span>, \</span><br><span class="line"></span><br><span class="line">  <span class="string">&quot;--springfox.documentation.swagger.v2.host=gdev-services.newegg.space/$DISCOVER_ID&quot;</span>, \</span><br><span class="line"></span><br><span class="line">  <span class="string">&quot;--jasypt.encryptor.password=NAT@GDEV&quot;</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">EOF</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>Console</li>
+</ul>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">deploy_env=gdev</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">FROM</span> harbor.newegg.org/base/nginx:stable-alpine</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">LABEL</span><span class="language-bash"> authors=<span class="string">&quot;Kent &lt;kent.l.tan@newegg.com&gt;&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">MAINTAINER</span> DAE</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">mkdir</span> /ng-alain</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> /ng-alain</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Just copy the dist directory and nginx config file </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> ./dist ./dist</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> _nginx/<span class="variable">$&#123;deploy_env&#125;</span>.conf /etc/nginx/conf.d/nginx.conf</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">rm</span> -rf /usr/share/nginx/html/*</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> /dist /usr/share/nginx/html</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">CMD</span><span class="language-bash"> [ <span class="string">&quot;nginx&quot;</span>, <span class="string">&quot;-g&quot;</span>, <span class="string">&quot;daemon off;&quot;</span>]</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">deploy_env=prod</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">echo -e <span class="string">&quot;&gt;&gt; $(date --rfc-3339=s) begin build app&quot;</span></span><br><span class="line"></span><br><span class="line">./node_modules/@angular/cli/bin/ng build --prod</span><br><span class="line"></span><br><span class="line">node ./_rels/replace-html.js prd</span><br><span class="line"></span><br><span class="line">echo -e <span class="string">&quot;&gt;&gt; $(date --rfc-3339=s) end build app \n&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">rm -f run.sh</span><br><span class="line"></span><br><span class="line">touch run.sh</span><br><span class="line"></span><br><span class="line">chmod <span class="number">777</span> run.sh </span><br><span class="line"></span><br><span class="line">echo <span class="string">&#x27;#!/bin/bash&#x27;</span> &gt;&gt; run.sh</span><br><span class="line"></span><br><span class="line">echo <span class="string">&#x27;nginx -c /etc/nginx/nginx.conf&#x27;</span> &gt;&gt; run.sh</span><br><span class="line"></span><br><span class="line">echo <span class="string">&#x27;nginx -s reload&#x27;</span> &gt;&gt; run.sh</span><br><span class="line"></span><br><span class="line">echo <span class="string">&#x27;/usr/bin/nginx-prometheus-exporter -nginx.scrape-uri http://127.0.0.1:8080/stub_status&#x27;</span> &gt;&gt; run.sh</span><br><span class="line"></span><br><span class="line">echo <span class="string">&#x27;tail -f /dev/null&#x27;</span> &gt;&gt; run.sh</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># generate dockerfile</span></span><br><span class="line"></span><br><span class="line">echo -e <span class="string">&quot;&gt;&gt; $(date --rfc-3339=s) begin generate dockerfile&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">FROM</span> dev-harbor.newegg.org/sao/nginx-pe:<span class="number">0.0</span>.<span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">USER</span> root</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">LABEL</span><span class="language-bash"> authors=<span class="string">&quot;platform engineering &lt;nesc-cd.mis.platformengineering@newegg.com&gt;&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">MAINTAINER</span> DAE</span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> _nginx/<span class="variable">$&#123;deploy_env&#125;</span>.conf /etc/nginx/conf.d/default.conf</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> /dist /usr/share/nginx/html</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> run.sh /usr/bin/run.sh</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">chown</span> nginx:nginx -R /etc/nginx/conf.d</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">chown</span> nginx:nginx -R /usr/share/nginx/html</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">chown</span> nginx:nginx -R /usr/bin/nginx-prometheus-exporter</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">chown</span> nginx:nginx /usr/bin/run.sh</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">USER</span> nginx</span><br><span class="line"></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">8080</span> <span class="number">9113</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">CMD</span><span class="language-bash"> [<span class="string">&quot;/bin/sh&quot;</span>, <span class="string">&quot;/usr/bin/run.sh&quot;</span>]</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/11/%E6%89%8B%E5%8A%A8%E8%A7%A6%E5%8F%91GC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/%E6%89%8B%E5%8A%A8%E8%A7%A6%E5%8F%91GC/" class="post-title-link" itemprop="url">手动触发GC</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 18:20:31" itemprop="dateCreated datePublished" datetime="2023-01-11T18:20:31+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="代码层面"><a href="#代码层面" class="headerlink" title="代码层面"></a>代码层面</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">System.gc();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Java-应用层面"><a href="#Java-应用层面" class="headerlink" title="Java 应用层面"></a>Java 应用层面</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">jmap -histo:live pid</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>注：这个命令实际是用来统计展示当前堆内存区域存活的对象</p>
+</li>
+<li><p><code>jmap -dump:live</code> 以及 <code>jmap -histo:live</code> 都会触发Full GC</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/07/problem-spring-web%20%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/07/problem-spring-web%20%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">problem-spring-web 笔记</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-07 22:51:17" itemprop="dateCreated datePublished" datetime="2023-01-07T22:51:17+08:00">2023-01-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%A1%86%E6%9E%B6/" itemprop="url" rel="index"><span itemprop="name">框架</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="核心原理"><a href="#核心原理" class="headerlink" title="核心原理"></a>核心原理</h3><ul>
+<li>底层依赖 Spring MVC  ControllerAdvice</li>
+</ul>
+<h5 id="ControllerAdvice"><a href="#ControllerAdvice" class="headerlink" title="ControllerAdvice"></a>ControllerAdvice</h5><ul>
+<li>看名字就知道，类似 AOP Advice 功能，但是底层实现不是动态代理，依赖</li>
+</ul>
+<h6 id="三种功能"><a href="#三种功能" class="headerlink" title="三种功能"></a>三种功能</h6><ul>
+<li><p>@ModelAttribute</p>
+<blockquote>
+<ul>
+<li>修改 Model 参数</li>
+</ul>
+</blockquote>
+</li>
+<li><p>@ExceptionHandler</p>
+<blockquote>
+<ul>
+<li>处理全局异常</li>
+</ul>
+</blockquote>
+</li>
+<li><p>@InitBinder</p>
+<blockquote>
+<ul>
+<li>全局参数的绑定</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li></li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<h5 id="Problem-使用-ExceptionHandler"><a href="#Problem-使用-ExceptionHandler" class="headerlink" title="Problem 使用 @ExceptionHandler"></a>Problem 使用 @ExceptionHandler</h5><ul>
+<li><p>定义了 核心类 <code>ProblemHandling</code> , 该接口继承了定好的各种异常类型的ExceptionHandler 默认实现</p>
+</li>
+<li><pre><code class="java">
+public interface ProblemHandling extends
+
+        GeneralAdviceTrait,
+
+        HttpAdviceTrait,
+
+        IOAdviceTrait,
+
+        RoutingAdviceTrait,
+
+        SecurityAdviceTrait,
+
+        ValidationAdviceTrait &#123;
+
+
+
+&#125;
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">* ```java</span><br><span class="line"></span><br><span class="line">  public interface ProblemAdviceTrait extends AdviceTrait &#123;</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">      @API(status = INTERNAL)</span><br><span class="line"></span><br><span class="line">      @ExceptionHandler</span><br><span class="line"></span><br><span class="line">      default ResponseEntity&lt;Problem&gt; handleProblem(</span><br><span class="line"></span><br><span class="line">              final ThrowableProblem problem,</span><br><span class="line"></span><br><span class="line">              final NativeWebRequest request) &#123;</span><br><span class="line"></span><br><span class="line">          return create(problem, request);</span><br><span class="line"></span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+</code></pre>
+</li>
+<li></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/06/Hippo4j/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/06/Hippo4j/" class="post-title-link" itemprop="url">Hippo4j</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-06 23:14:44" itemprop="dateCreated datePublished" datetime="2023-01-06T23:14:44+08:00">2023-01-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%A1%86%E6%9E%B6/" itemprop="url" rel="index"><span itemprop="name">框架</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><ul>
+<li><p>动态可观测线程池框架</p>
+</li>
+<li><p>Hippo-4J 通过对 JDK 线程池增强，以及扩展三方框架底层线程池等功能，为业务系统提高线上运行保障能力。</p>
+</li>
+</ul>
+<p>⚡️ 动态变更 - 应用运行时动态变更线程池参数，包括不限于：核心、最大线程数、阻塞队列容量、拒绝策略等；</p>
+<p>…</p>
+<h3 id="核心原理-（以-Nacos-为例）"><a href="#核心原理-（以-Nacos-为例）" class="headerlink" title="核心原理 （以 Nacos 为例）"></a>核心原理 （以 Nacos 为例）</h3><ul>
+<li><p>通过 Spring 的事件机制 </p>
+</li>
+<li><p>NacosRefresherHandler (<code>AbstractCoreThreadPoolDynamicRefresh</code>) 使用 Spring Bean 生命周期的钩子方法 afterPropertiesSet 添加 nacos(<code>configServer</code>） 配置 Nacos 变更的监听器 -&gt;  Web容器线程池(TomcatWebThreadPoolHandler)&#x2F;ThreadPoolExecutor 参数变更 发布事件 <code>Hippo4jCoreDynamicRefreshEvent</code> , 由监听器 <code>WebExecutorListener</code>&#x2F;<code>ExecutorsListener</code> 监听事件，获取 Spring BeanFactory 中对应线程池实例 修改参数</p>
+</li>
+</ul>
+<h4 id="ExecutorsListener"><a href="#ExecutorsListener" class="headerlink" title="ExecutorsListener"></a>ExecutorsListener</h4><ul>
+<li>利用 Spring BeanPostProcessor <code>DynamicThreadPoolPostProcessor</code> , postProcessAfterInitialization 生命周期方法向全局线程池管理工具 <code>GlobalThreadPoolManage</code> 和全局线程池核心参数配置 <code>GlobalCoreThreadPoolManage</code> 注册 对应的线程池 和 线程池参数，后续修改参数直接通过 poolId 拿取对应实例进行修改参数</li>
+</ul>
+<h3 id="该框架大量使用了-Spring-的特性，条件加载是springboot自动配置的刚需"><a href="#该框架大量使用了-Spring-的特性，条件加载是springboot自动配置的刚需" class="headerlink" title="该框架大量使用了 Spring 的特性，条件加载是springboot自动配置的刚需"></a>该框架大量使用了 Spring 的特性，条件加载是springboot自动配置的刚需</h3><h5 id="MarkerConfiguration"><a href="#MarkerConfiguration" class="headerlink" title="MarkerConfiguration"></a>MarkerConfiguration</h5><ul>
+<li>starter 自动装配类 <code>DynamicThreadPoolCoreAutoConfiguration</code>, <code>@ConditionalOnBean(MarkerConfiguration.Marker.class)</code> 通过 ConditionalOnBean 主键实现开关式引入Hippo4j，@EnableDynamicThreadPool 通过 <code>@Import(&#123;BeforeCheckConfiguration.class, MarkerConfiguration.class&#125;)</code>导入 MarkerConfiguration 开关标志类</li>
+</ul>
+<h3 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h3><h4 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h4><ul>
+<li><code>ConfigParserHandler</code> -&gt; <code>ConfigParser</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> Map&lt;Object, Object&gt; <span class="title function_">parseConfig</span><span class="params">(String content, ConfigFileTypeEnum type)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (ConfigParser parser : PARSERS) &#123;</span><br><span class="line"></span><br><span class="line">	    <span class="keyword">if</span> (parser.supports(type)) &#123;</span><br><span class="line"></span><br><span class="line">	        <span class="keyword">return</span> parser.doParse(content);</span><br><span class="line"></span><br><span class="line">	    &#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> Collections.emptyMap();</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="tip"><a href="#tip" class="headerlink" title="tip"></a>tip</h4><ul>
+<li>利用 <code>SPI</code> 扩展机制来提供 <code>ConfigParser</code> 的实现</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span> <span class="title function_">ConfigParserHandler</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">    ServiceLoader&lt;ConfigParser&gt; loader = ServiceLoader.load(ConfigParser.class);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (ConfigParser configParser : loader) &#123;</span><br><span class="line"></span><br><span class="line">        PARSERS.add(configParser);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    PARSERS.add(<span class="keyword">new</span> <span class="title class_">PropertiesConfigParser</span>());</span><br><span class="line"></span><br><span class="line">    PARSERS.add(<span class="keyword">new</span> <span class="title class_">YamlConfigParser</span>());</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="建造者模式"><a href="#建造者模式" class="headerlink" title="建造者模式"></a>建造者模式</h4><p>Builder</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/01/04/Nacos%E6%9C%8D%E5%8A%A1%E9%9B%86%E7%BE%A4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/04/Nacos%E6%9C%8D%E5%8A%A1%E9%9B%86%E7%BE%A4/" class="post-title-link" itemprop="url">Nacos服务集群</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-04 18:09:28" itemprop="dateCreated datePublished" datetime="2023-01-04T18:09:28+08:00">2023-01-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">中间件</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/Nacos/" itemprop="url" rel="index"><span itemprop="name">Nacos</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="运行模式"><a href="#运行模式" class="headerlink" title="运行模式"></a>运行模式</h2><h3 id="AC（默认）"><a href="#AC（默认）" class="headerlink" title="AC（默认）"></a>AC（默认）</h3><p>只支持创建临时节点 -&gt; 数据同步协议 Distro</p>
+<h3 id="CP"><a href="#CP" class="headerlink" title="CP"></a>CP</h3><p>只支持创建持久化节点 -&gt; Raft协议 </p>
+<h3 id="MIXED"><a href="#MIXED" class="headerlink" title="MIXED"></a>MIXED</h3><h2 id="持久化节点与临时节点"><a href="#持久化节点与临时节点" class="headerlink" title="持久化节点与临时节点"></a>持久化节点与临时节点</h2><p>临时节点： 注册实例 发送心跳信息，server端维护实例信息，心跳断了，server端摘除，实例重新上线，变化重新注册。</p>
+<p>持久化节点：实例的注册会持久化节点信息，服务的下线，server端不会直接删除实例信息，而是维护实例状态为down</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/12/29/%E6%97%A0%E7%8A%B6%E6%80%81%E6%9C%8D%E5%8A%A1%20VS%20%E6%9C%89%E7%8A%B6%E6%80%81%E6%9C%8D%E5%8A%A1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -364,756 +1254,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/12/27/SpringBoot%20%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF%E4%BC%98%E5%85%88%E7%BA%A7/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/12/27/SpringBoot%20%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF%E4%BC%98%E5%85%88%E7%BA%A7/" class="post-title-link" itemprop="url">SpringBoot 配置信息优先级</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-12-27 18:50:40" itemprop="dateCreated datePublished" datetime="2022-12-27T18:50:40+08:00">2022-12-27</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%A1%86%E6%9E%B6/" itemprop="url" rel="index"><span itemprop="name">框架</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%A1%86%E6%9E%B6/Spring-notes/" itemprop="url" rel="index"><span itemprop="name">Spring-notes</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">命令⾏参数 &gt; VM环境变量优先级 &gt; 操作系统环境变量 &gt; application.properties &gt; application.yml</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/12/25/%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%98%E7%BB%84%E6%88%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/12/25/%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%98%E7%BB%84%E6%88%90/" class="post-title-link" itemprop="url">对象内存组成</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-12-25 19:22:25" itemprop="dateCreated datePublished" datetime="2022-12-25T19:22:25+08:00">2022-12-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="一，对象头"><a href="#一，对象头" class="headerlink" title="一，对象头"></a><a target="_blank" rel="noopener" href="https://blog.csdn.net/lkforce/article/details/81128115#t0">一，对象头</a></h2><h3 id="1，Mark-Word"><a href="#1，Mark-Word" class="headerlink" title="1，Mark Word"></a><a target="_blank" rel="noopener" href="https://blog.csdn.net/lkforce/article/details/81128115#t1">1，Mark Word</a></h3><h3 id="2，指向类的指针"><a href="#2，指向类的指针" class="headerlink" title="2，指向类的指针"></a><a target="_blank" rel="noopener" href="https://blog.csdn.net/lkforce/article/details/81128115#t2">2，指向类的指针</a></h3><h3 id="3，数组长度"><a href="#3，数组长度" class="headerlink" title="3，数组长度"></a><a target="_blank" rel="noopener" href="https://blog.csdn.net/lkforce/article/details/81128115#t3">3，数组长度</a></h3><h3 id="二，实例数据"><a href="#二，实例数据" class="headerlink" title="二，实例数据"></a><a target="_blank" rel="noopener" href="https://blog.csdn.net/lkforce/article/details/81128115#t4">二，实例数据</a></h3><h3 id="三，对齐填充字节"><a href="#三，对齐填充字节" class="headerlink" title="[三，对齐填充字节]"></a>[三，对齐填充字节]</h3>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/12/21/JVM%E5%86%B7%E7%9F%A5%E8%AF%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/12/21/JVM%E5%86%B7%E7%9F%A5%E8%AF%86/" class="post-title-link" itemprop="url">JVM冷知识</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-12-21 20:43:23" itemprop="dateCreated datePublished" datetime="2022-12-21T20:43:23+08:00">2022-12-21</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="JVM进程内存大小大致为："><a href="#JVM进程内存大小大致为：" class="headerlink" title="JVM进程内存大小大致为："></a>JVM进程内存大小大致为：</h3><ul>
-<li>非heap（非heap&#x3D;元空间+栈内存+…）+heap+JVM进程运行所需内存+其他数据等。</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/12/16/Java%20%E5%AE%89%E5%85%A8%E7%82%B9%E6%8A%80%E6%9C%AF/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/12/16/Java%20%E5%AE%89%E5%85%A8%E7%82%B9%E6%8A%80%E6%9C%AF/" class="post-title-link" itemprop="url">Java 安全点技术</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-12-16 23:48:20" itemprop="dateCreated datePublished" datetime="2022-12-16T23:48:20+08:00">2022-12-16</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="进入安全点时java线程可能存在不同的状态，这里需要处理所有的可能情况："><a href="#进入安全点时java线程可能存在不同的状态，这里需要处理所有的可能情况：" class="headerlink" title="进入安全点时java线程可能存在不同的状态，这里需要处理所有的可能情况："></a>进入安全点时java线程可能存在不同的状态，这里需要处理所有的可能情况：</h4><ul>
-<li><p>（1）处于解释执行字节码的状态中，解释器在通过字节码派发表（dispatch table）获取到下一条字节码的时候会主动检查安全点的状态；</p>
-</li>
-<li><p>（2）处于执行native代码的状态，也就是执行JNI，此时，VMThread不会等待线程进入安全点，执行JNI退出后线程需要主动检查安全点状态，如果此时安全点位置被标记了，那么就不能继续执行，需要等待安全点位置被清除后才能继续执行；</p>
-</li>
-<li><p>（3）处于编译代码执行中，那么编译器会在合适的位置（比如循环、方法调用等）插入读取全局Safepoint Polling内存页的指令，如果此时安全点位置被标记了，那么Safepoint Polling内存页会变成不可读，此时线程会因为读取了不可读的内存也而陷入内核，事先注册好的信号处理程序就会处理这个信号并让线程进入安全点。</p>
-</li>
-<li><p>（4）线程本身处于blocked状态，比如线程在等待锁，那么线程的阻塞状态将不会结束直到安全点标志被清除掉；</p>
-</li>
-<li><p>（5）当线程处于(1)&#x2F;(2)&#x2F;(3)三种状态的切换中，那么切换前会先检查安全点的状态，如果此时要求进入安全点，那么切换将不被允许，需要等待直到安全点状态清除；</p>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/12/15/Java%E5%BC%95%E7%94%A8%E5%85%B3%E7%B3%BB/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/12/15/Java%E5%BC%95%E7%94%A8%E5%85%B3%E7%B3%BB/" class="post-title-link" itemprop="url">Java引用关系</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-12-15 19:28:23" itemprop="dateCreated datePublished" datetime="2022-12-15T19:28:23+08:00">2022-12-15</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="强引用-默认"><a href="#强引用-默认" class="headerlink" title="强引用  默认"></a>强引用  默认</h3><ul>
-<li>A a &#x3D; new A();</li>
-</ul>
-<h3 id="软引用"><a href="#软引用" class="headerlink" title="软引用"></a>软引用</h3><ul>
-<li>在垃圾回收器 GC 时，内存不够用的情况下 会回收此类对象</li>
-</ul>
-<h3 id="弱引用"><a href="#弱引用" class="headerlink" title="弱引用"></a>弱引用</h3><ul>
-<li>当 JVM 进行垃圾回收时，<strong>无论内存是否充足</strong>，都会回收被弱引用关联的对象。</li>
-</ul>
-<h3 id="虚引用"><a href="#虚引用" class="headerlink" title="虚引用"></a>虚引用</h3><ul>
-<li><p>最弱的引用，JDK 堆外内存使用了此类引用 <code>DirectByteBuffer</code> -&gt; <code>Cleane</code>对象 </p>
-</li>
-<li><pre><code class="java">
-DirectByteBuffer 
-
-    Cleaner extends PhantomReference
-
-        使用 虚引用 ReferenceQueue 机制来清除 堆外内存
-</code></pre>
-</li>
-<li></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/12/11/%E8%AF%BB%E5%8F%96%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/12/11/%E8%AF%BB%E5%8F%96%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6/" class="post-title-link" itemprop="url">读取资源文件</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-12-11 23:32:06" itemprop="dateCreated datePublished" datetime="2022-12-11T23:32:06+08:00">2022-12-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/IO/" itemprop="url" rel="index"><span itemprop="name">IO</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="绝对路径"><a href="#绝对路径" class="headerlink" title="绝对路径"></a>绝对路径</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;D://test.txt&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="相对路径-项目根目录"><a href="#相对路径-项目根目录" class="headerlink" title="相对路径 - 项目根目录"></a>相对路径 - 项目根目录</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;test.txt&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="读取-Java-工程中-Resource-资源文件"><a href="#读取-Java-工程中-Resource-资源文件" class="headerlink" title="读取 Java  工程中 Resource  资源文件"></a>读取 Java  工程中 Resource  资源文件</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法1</span></span><br><span class="line"></span><br><span class="line">URL fileURL=<span class="built_in">this</span>.getClass().getResource(<span class="string">&quot;/resource/res.txt&quot;</span>);   </span><br><span class="line"></span><br><span class="line">System.out.println(fileURL.getFile());  </span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//返回读取指定资源的输入流  </span></span><br><span class="line"></span><br><span class="line">InputStream is=<span class="built_in">this</span>.getClass().getResourceAsStream(<span class="string">&quot;/resource/res.txt&quot;</span>); </span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/12/04/%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/12/04/%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1/" class="post-title-link" itemprop="url">搭建代理服务</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-12-04 22:18:06" itemprop="dateCreated datePublished" datetime="2022-12-04T22:18:06+08:00">2022-12-04</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%A1%86%E6%9E%B6/" itemprop="url" rel="index"><span itemprop="name">框架</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>使用 v2ray 来实现代理访问，v2ray 功能很强大我这里只使用 VMess 传输代理</p>
-<p><a target="_blank" rel="noopener" href="https://guide.v2fly.org/basics/vmess.html">https://guide.v2fly.org/basics/vmess.html</a></p>
-<p>以上部署方式为 Docker</p>
-<h3 id="服务端部署"><a href="#服务端部署" class="headerlink" title="服务端部署"></a>服务端部署</h3><ol>
-<li><p>拉取镜像：sudo docker pull v2fly&#x2F;v2fly-core</p>
-</li>
-<li><p>提前准备日志文件 access.log、error.log 。例如：touch &#x2F;opt&#x2F;v2test&#x2F;logs&#x2F;access.log</p>
-</li>
-<li><p>创建配置文件，配置文件目录自定义（要跟 docker run 目录挂载目录保持一致）：vim &#x2F;opt&#x2F;v2test&#x2F;config.json</p>
-</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt; &#123;</span><br><span class="line"></span><br><span class="line">&gt;         &quot;log&quot;: &#123;</span><br><span class="line"></span><br><span class="line">&gt;                                 &quot;loglevel&quot;: &quot;debug&quot;,</span><br><span class="line"></span><br><span class="line">&gt;                                                 &quot;access&quot;: &quot;/etc/v2ray/logs/access.log&quot;,</span><br><span class="line"></span><br><span class="line">&gt;                                                                 &quot;error&quot;: &quot;/etc/v2ray/logs/error.log&quot;</span><br><span class="line"></span><br><span class="line">&gt;                                                                         &#125;,</span><br><span class="line"></span><br><span class="line">&gt;         &quot;inbounds&quot;:[</span><br><span class="line"></span><br><span class="line">&gt;                 &#123;</span><br><span class="line"></span><br><span class="line">&gt;                         &quot;port&quot;: 8080,</span><br><span class="line"></span><br><span class="line">&gt;                         &quot;protocol&quot;: &quot;vmess&quot;,</span><br><span class="line"></span><br><span class="line">&gt;                         &quot;settings&quot;:&#123;</span><br><span class="line"></span><br><span class="line">&gt;                                 &quot;clients&quot;:[</span><br><span class="line"></span><br><span class="line">&gt;                                         &#123;</span><br><span class="line"></span><br><span class="line">&gt;                                         &quot;id&quot;: &quot;023017b3-101d-453e-b92d-fc67b21969d5&quot;,</span><br><span class="line"></span><br><span class="line">&gt;                                         &quot;alterId&quot;: 0</span><br><span class="line"></span><br><span class="line">&gt;                                         &#125;</span><br><span class="line"></span><br><span class="line">&gt;                                 ]</span><br><span class="line"></span><br><span class="line">&gt;                         &#125;</span><br><span class="line"></span><br><span class="line">&gt;</span><br><span class="line"></span><br><span class="line">&gt;                 &#125;</span><br><span class="line"></span><br><span class="line">&gt;         ],</span><br><span class="line"></span><br><span class="line">&gt;         &quot;outbounds&quot;: [</span><br><span class="line"></span><br><span class="line">&gt;                 &#123;</span><br><span class="line"></span><br><span class="line">&gt;                         &quot;protocol&quot;: &quot;freedom&quot;,</span><br><span class="line"></span><br><span class="line">&gt;                         &quot;settings&quot;: &#123;&#125;</span><br><span class="line"></span><br><span class="line">&gt;                 &#125;</span><br><span class="line"></span><br><span class="line">&gt;         ]</span><br><span class="line"></span><br><span class="line">&gt;</span><br><span class="line"></span><br><span class="line">&gt; &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>“id” 的生成策略是uuid，可以使用linux自带程序生成：cat &#x2F;proc&#x2F;sys&#x2F;kernel&#x2F;random&#x2F;uuid</p>
-</blockquote>
-<blockquote>
-</blockquote>
-<blockquote>
-<p>这里的id相当于访问密码，客户端连接配置要输入该值</p>
-</blockquote>
-<ol start="3">
-<li>启动 v2fly 容器： docker run –env v2ray.vmess.aead.forced&#x3D;false  -d –name v2ray -e TZ&#x3D;Asia&#x2F;Shanghai -v &#x2F;opt&#x2F;v2test:&#x2F;etc&#x2F;v2ray -p 8080:8080 –restart always v2fly&#x2F;v2fly-core run -c &#x2F;etc&#x2F;v2ray&#x2F;config.json</li>
-</ol>
-<blockquote>
-<p>这里用三个关键点: </p>
-</blockquote>
-<blockquote>
-</blockquote>
-<blockquote>
-<ol>
-<li>–env v2ray.vmess.aead.forced&#x3D;false  关闭该策略，”alterId”: 0 这里很关键，被坑惨了</li>
-</ol>
-</blockquote>
-<blockquote>
-<ol start="2">
-<li>-p 8080:8080 暴露的端口号 要和配置文件中一致</li>
-</ol>
-</blockquote>
-<blockquote>
-<ol start="3">
-<li>-v &#x2F;opt&#x2F;v2test:&#x2F;etc&#x2F;v2ray 挂载配置文件</li>
-</ol>
-</blockquote>
-<ol start="4">
-<li>按照上述步骤，正常情况是没问题的。如果有异常，进入配置文件中配置的log路径，查看日志。例如：<code>tail -f /opt/v2test/error.log</code></li>
-</ol>
-<h3 id="客户端配置"><a href="#客户端配置" class="headerlink" title="客户端配置"></a>客户端配置</h3><p>客户端配置，这里介绍 ios 系统操作方式（其他系统参考：<a target="_blank" rel="noopener" href="https://www.v2ray.com/awesome/tools.html%EF%BC%89">https://www.v2ray.com/awesome/tools.html）</a></p>
-<ol>
-<li><p>苹果手机安装软件 oneClick</p>
-</li>
-<li><p>添加配置，选择 VMESS，IP 端口 ID alertId 要和上述配置文件保持一致，流设定 tcp 默认。</p>
-</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/11/27/Kafka%E7%BA%BF%E4%B8%8A%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/11/27/Kafka%E7%BA%BF%E4%B8%8A%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">Kafka线上问题</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-11-27 18:18:32" itemprop="dateCreated datePublished" datetime="2022-11-27T18:18:32+08:00">2022-11-27</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">中间件</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/Kafka/" itemprop="url" rel="index"><span itemprop="name">Kafka</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="消费客户端（Consumer）频繁出现Rebalance"><a href="#消费客户端（Consumer）频繁出现Rebalance" class="headerlink" title="消费客户端（Consumer）频繁出现Rebalance"></a>消费客户端（Consumer）频繁出现Rebalance</h2><p>心跳超时会引发Rebalance，可以通过参数调整、提高消费速度等方法解决。</p>
-<h4 id="最多一次（At-most-once"><a href="#最多一次（At-most-once" class="headerlink" title=".最多一次（At-most-once)"></a>.最多一次（At-most-once)</h4><p>最多一次其实非常容易保证的，UDP 这种传输层的协议其实保证的就是最多一次消息投递，消息的发送者只会尝试发送该消息一次，并不会关心该消息是否得到了远程节点的响应。</p>
-<p>无论该请求是否发送给了接受者，发送者都不会重新发送这条消息；这其实就是最最基本的消息投递语义，然而消息可能由于网络或者节点的故障出现丢失。</p>
-<p><strong>这本质上是一种尽力而为的方法。</strong></p>
-<h4 id="至少一次（At-least-once）"><a href="#至少一次（At-least-once）" class="headerlink" title="至少一次（At-least-once）"></a>至少一次（At-least-once）</h4><p>为了解决最多一次时的消息丢失问题，消息的发送者需要在网络出现超时重新发送相同的消息，也就是引入超时重试的机制，在发送者发出消息会监听消息的响应，如果超过了一定时间也没有得到响应就会重新发送该消息，直到得到确定的响应结果。</p>
-<p>对于最少一次的投递语义，我们不仅需要引入超时重试机制，还需要关心每一次请求的响应，只有这样才能确保消息不会丢失，但是却可能会造成<strong>消息的重复</strong>，这就是最少一次在解决消息丢失后引入的新问题。</p>
-<h4 id="精确一次（Exactly-once）"><a href="#精确一次（Exactly-once）" class="headerlink" title="精确一次（Exactly-once）"></a>精确一次（Exactly-once）</h4><p>虽然最少一次解决了最多一次的消息丢失问题，但是由于重试却带来了另一个问题 - 消息重复，也就是接受者可能会多次收到同一条消息；从理论上来说，在分布式系统中想要解决消息重复的问题是不可能的，很多消息服务提供了正好一次的 QoS 其实是在接收端进行了去重。</p>
-<p>消息去重需要生产者生产消息时加入去重的 <code>key</code>，消费者可以通过唯一的 <code>key</code> 来判断当前消息是否是重复消息，从消息发送者的角度来看，实现正好一次的投递是不可能的，但是从整体来看，我们可以通过唯一 <code>key</code> 或者<strong>重入幂等</strong>的方式对消息进行『去重』。</p>
-<p>消息的重复是不可能避免的，除非我们允许消息的丢失，然而相比于丢失消息，重复发送消息其实是一种更能让人接受的处理方式，因为一旦消息丢失就无法找回，但是消息重复却可以通过其他方法来避免副作用。</p>
-<h3 id="提高消费速度"><a href="#提高消费速度" class="headerlink" title="提高消费速度"></a>提高消费速度</h3><p>提高消费速度有以下两个办法：</p>
-<ul>
-<li><p>增加Consumer实例个数。</p>
-<p>可以在进程内直接增加（需要保证每个实例对应一个线程，否则没有太大意义），也可以部署多个消费实例进程；需要注意的是，实例个数超过分区数量后就不再能提高速度，将会有消费实例不工作。</p>
-</li>
-<li><p>增加消费线程。</p>
-<p>增加Consumer实例本质上也是增加线程的方式来提升速度，因此更加重要的性能提升方式是增加消费线程，最基本的步骤如下：</p>
-<ol>
-<li><p>定义一个线程池。</p>
-</li>
-<li><p>Poll数据。</p>
-</li>
-<li><p>把数据提交到线程池进行并发处理。</p>
-</li>
-<li><p>等并发结果返回成功后，再次poll数据执行。</p>
-</li>
-</ol>
-</li>
-</ul>
-<h3 id="消息过滤"><a href="#消息过滤" class="headerlink" title="消息过滤"></a>消息过滤</h3><p>消息队列Kafka版自身没有消息过滤的语义。实践中可以采取以下两个办法：</p>
-<ul>
-<li><p>如果过滤的种类不多，可以采取多个Topic的方式达到过滤的目的。</p>
-</li>
-<li><p>如果过滤的种类多，则最好在客户端业务层面自行过滤。</p>
-</li>
-</ul>
-<p>实践中请根据业务具体情况进行选择，也可以综合运用上面两种办法。</p>
-<h4 id="提升发送性能"><a href="#提升发送性能" class="headerlink" title="提升发送性能"></a>提升发送性能</h4><ul>
-<li>建议您设置<code>batch.size=16384</code>和<code>linger.ms=1000</code>。</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1185,20 +1325,20 @@ DirectByteBuffer
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-count">89</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-count">46</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-count">54</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
