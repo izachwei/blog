@@ -186,6 +186,525 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/05/15/%E8%AF%AD%E5%BD%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/05/15/%E8%AF%AD%E5%BD%95/" class="post-title-link" itemprop="url">语录</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-05-15 21:35:12 / 修改时间：21:35:42" itemprop="dateCreated datePublished" datetime="2023-05-15T21:35:12+08:00">2023-05-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/share/" itemprop="url" rel="index"><span itemprop="name">杂谈</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li>任何软件工具都应该遵循一个原则：做对的操作应该很容易，做错的操作应该很难。</li>
+</ul>
+<blockquote>
+<p>– <a target="_blank" rel="noopener" href="https://charity.wtf/2022/09/30/the-future-of-ops-is-platform-engineering/">《论平台工程》</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/05/15/ggr%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/05/15/ggr%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA/" class="post-title-link" itemprop="url">ggr服务搭建</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-05-15 21:33:42 / 修改时间：21:34:43" itemprop="dateCreated datePublished" datetime="2023-05-15T21:33:42+08:00">2023-05-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">自动化测试</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="创建一个-GGR-容器实例"><a href="#创建一个-GGR-容器实例" class="headerlink" title="创建一个 GGR 容器实例"></a>创建一个 GGR 容器实例</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name ggr -p 8088:4444 -e TZ=America/Los_Angeles -v /etc/grid-router/:/etc/grid-router/akamai/:ro aerokube/ggr:1.5.4</span><br></pre></td></tr></table></figure>
+
+<h2 id="如何更新-GGR-配置文件？"><a href="#如何更新-GGR-配置文件？" class="headerlink" title="如何更新 GGR 配置文件？"></a>如何更新 GGR 配置文件？</h2><p>如上面命令文件目录的影射，配置文件的根目录：&#x2F;etc&#x2F;grid-router&#x2F;</p>
+<h3 id="配置文件所在目录地址"><a href="#配置文件所在目录地址" class="headerlink" title="配置文件所在目录地址"></a>配置文件所在目录地址</h3><p>hubLink: <a target="_blank" rel="noopener" href="http://test:123456@10.1.49.12:8083/wd/hub">http://test:123456@10.1.49.12:8083/wd/hub</a></p>
+<p><strong>&#x2F;etc&#x2F;grid-router&#x2F;quota&#x2F;test.xml</strong></p>
+<p>文件名 test，便是用户名 。</p>
+<p><strong>&#x2F;etc&#x2F;grid-router&#x2F;users.htpasswd</strong></p>
+<p>用于指定用户名-密码。</p>
+<h3 id="配置文件各个节点说明"><a href="#配置文件各个节点说明" class="headerlink" title="配置文件各个节点说明"></a>配置文件各个节点说明</h3><p><strong><browser> 对应浏览器的信息，新增浏览器则新增该节点。</strong></p>
+<p><strong><version> 对应浏览器的版本，新增浏览器版本则新增该节点。</strong></p>
+<p><strong><host>每个 Host 节点 name 指定 selenoid IP 地址，port 指定 selenoid 服务端口，count 指定轮询权重。</strong></p>
+<p>具体文件内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;qa:browsers xmlns:qa=&quot;urn:config.gridrouter.qatools.ru&quot;&gt; &lt;browser name=&quot;chrome&quot; defaultVersion=&quot;latest&quot;&gt;    &lt;version number=&quot;latest&quot;&gt;        &lt;region name=&quot;1&quot;&gt;                        &lt;host name=&quot;172.16.139.28&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.29&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.26&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.27&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.25&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.37&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;        &lt;/region&gt;    &lt;/version&gt;     &lt;version number=&quot;98.0&quot;&gt;        &lt;region name=&quot;1&quot;&gt;                        &lt;host name=&quot;172.16.139.28&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.29&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.26&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.27&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.25&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.37&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;        &lt;/region&gt;    &lt;/version&gt;    &lt;version number=&quot;90.0&quot;&gt;        &lt;region name=&quot;1&quot;&gt;                        &lt;host name=&quot;172.16.139.28&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.29&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.26&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.27&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.25&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.37&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;        &lt;/region&gt;    &lt;/version&gt;    &lt;version number=&quot;83.0&quot;&gt;        &lt;region name=&quot;1&quot;&gt;                        &lt;host name=&quot;172.16.139.28&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.29&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.26&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.27&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.25&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.37&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;        &lt;/region&gt;    &lt;/version&gt;    &lt;version number=&quot;80.0&quot;&gt;        &lt;region name=&quot;1&quot;&gt;                        &lt;host name=&quot;172.16.139.28&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.29&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.26&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.27&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.25&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.37&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;        &lt;/region&gt;    &lt;/version&gt;    &lt;version number=&quot;70.0&quot;&gt;        &lt;region name=&quot;1&quot;&gt;                        &lt;host name=&quot;172.16.139.28&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.29&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.26&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.27&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.25&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.37&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;        &lt;/region&gt;    &lt;/version&gt;    &lt;version number=&quot;65.0&quot;&gt;        &lt;region name=&quot;1&quot;&gt;                        &lt;host name=&quot;172.16.139.28&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.29&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.26&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.27&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.25&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.37&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;        &lt;/region&gt;    &lt;/version&gt; &lt;/browser&gt; &lt;browser name=&quot;MicrosoftEdge&quot; defaultVersion=&quot;108.0&quot;&gt;    &lt;version number=&quot;108.0&quot;&gt;        &lt;region name=&quot;1&quot;&gt;                        &lt;host name=&quot;172.16.139.28&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.29&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.26&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.27&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.25&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.37&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;        &lt;/region&gt;    &lt;/version&gt; &lt;/browser&gt; &lt;browser name=&quot;firefox&quot; defaultVersion=&quot;107.0&quot;&gt;    &lt;version number=&quot;107.0&quot;&gt;        &lt;region name=&quot;1&quot;&gt;                        &lt;host name=&quot;172.16.139.28&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.29&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.26&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.27&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.25&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;                        &lt;host name=&quot;172.16.139.37&quot; port=&quot;8081&quot; count=&quot;1&quot;/&gt;        &lt;/region&gt;    &lt;/version&gt; &lt;/browser&gt; &lt;/qa:browsers&gt; </span><br></pre></td></tr></table></figure>
+
+<h3 id="GGR-配置如何不停机更新？"><a href="#GGR-配置如何不停机更新？" class="headerlink" title="GGR 配置如何不停机更新？"></a>GGR 配置如何不停机更新？</h3><p>在平常新增浏览器，或者在某个 selenoid 新增浏览器版本，则需要更新配置文件新增 <version>节点，这种操作相对来说是频繁的。如果是冷更新配置，修改后配置文件重启 GGR 则会影响线上正在运行的 Job。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// 修改配置文件 vim /etc/grid-router/quota/test.xml // 发送更新配置指令（官方提供的方法） docker kill -s HUP ggr</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/05/15/%E6%9E%B6%E6%9E%84%E5%9B%BE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/05/15/%E6%9E%B6%E6%9E%84%E5%9B%BE/" class="post-title-link" itemprop="url">架构图</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-05-15 21:33:00 / 修改时间：21:33:33" itemprop="dateCreated datePublished" datetime="2023-05-15T21:33:00+08:00">2023-05-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">系统架构</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="如何画出好的架构图"><a href="#如何画出好的架构图" class="headerlink" title="如何画出好的架构图"></a>如何画出好的架构图</h2><h3 id="4R原则"><a href="#4R原则" class="headerlink" title="4R原则"></a>4R原则</h3><ol>
+<li>Rank(顶层架构)</li>
+<li>Role</li>
+<li>Rule</li>
+<li>Relation</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/05/15/K8S%E4%B8%AD%E7%9A%84HPA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/05/15/K8S%E4%B8%AD%E7%9A%84HPA/" class="post-title-link" itemprop="url">K8S中的HPA.md</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-05-15 21:31:06 / 修改时间：21:31:59" itemprop="dateCreated datePublished" datetime="2023-05-15T21:31:06+08:00">2023-05-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Distributed/" itemprop="url" rel="index"><span itemprop="name">分布式技术</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>HPA（Horizontal Pod Autoscaling） 水平自动伸缩</p>
+<p>为了保证 HPA 稳定，需要确保程序能够快速启动：</p>
+<ol>
+<li>微服务化，一方面是方便给核心功能提供精准的资源支持、另一方面是服务更小更轻量。</li>
+<li>减少启动依赖项</li>
+<li>使用轻量语言、框架</li>
+</ol>
+<h4 id="伸缩带来的联动影响也需要注意一下："><a href="#伸缩带来的联动影响也需要注意一下：" class="headerlink" title="伸缩带来的联动影响也需要注意一下："></a>伸缩带来的联动影响也需要注意一下：</h4><ol>
+<li>对 DB 、ZK 等下游服务的连接数增多</li>
+<li>在 Max HPA Triggerd 情况下整个 Namespace 的资源上限是否会超额</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/05/15/%E6%9E%B6%E6%9E%84%E5%B8%88%E5%85%B7%E5%A4%87%E7%9A%84%E8%83%BD%E5%8A%9B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/05/15/%E6%9E%B6%E6%9E%84%E5%B8%88%E5%85%B7%E5%A4%87%E7%9A%84%E8%83%BD%E5%8A%9B/" class="post-title-link" itemprop="url">架构师具备的能力.md</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-05-15 21:28:44 / 修改时间：21:30:54" itemprop="dateCreated datePublished" datetime="2023-05-15T21:28:44+08:00">2023-05-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/share/" itemprop="url" rel="index"><span itemprop="name">杂谈</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="在相应的场景，提出合适的架构"><a href="#在相应的场景，提出合适的架构" class="headerlink" title="在相应的场景，提出合适的架构"></a>在相应的场景，提出合适的架构</h4><p>不是提出一些假大空的架构，所谓的高大上流行的架构：</p>
+<ol>
+<li>当前业务体量不需要</li>
+<li>很难落地（公司、团队的技术能力、人员配比）</li>
+</ol>
+<p>要根据业务场景、体量提出适合的架构。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/05/15/%E6%9F%A5%E7%9C%8B%E8%BF%90%E8%A1%8C%E6%97%B6%E5%AF%B9%E8%B1%A1%E5%A4%A7%E5%B0%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/05/15/%E6%9F%A5%E7%9C%8B%E8%BF%90%E8%A1%8C%E6%97%B6%E5%AF%B9%E8%B1%A1%E5%A4%A7%E5%B0%8F/" class="post-title-link" itemprop="url">查看运行时对象大小</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-05-15 21:26:31 / 修改时间：21:28:28" itemprop="dateCreated datePublished" datetime="2023-05-15T21:26:31+08:00">2023-05-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// JDK 原生 API</span></span><br><span class="line">System.setProperty(<span class="string">&quot;java.vm.name&quot;</span>, <span class="string">&quot;Java HotSpot(TM) &quot;</span>);</span><br><span class="line">System.out.println(ObjectSizeCalculator.getObjectSize(onlineChangeReportDetails));</span><br><span class="line"></span><br><span class="line"><span class="comment">// org.apache.lucene.</span></span><br><span class="line">System.out.println(<span class="string">&quot;value is &quot;</span> + RamUsageEstimator.sizeOf(onlineChangeReportDetails));</span><br><span class="line">System.out.println(<span class="string">&quot; value is &quot;</span> + RamUsageEstimator.humanSizeOf(onlineChangeReportDetails));</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/05/15/docker-tips/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/05/15/docker-tips/" class="post-title-link" itemprop="url">docker_tips</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-05-15 20:00:47 / 修改时间：20:42:46" itemprop="dateCreated datePublished" datetime="2023-05-15T20:00:47+08:00">2023-05-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%BA%91%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">云技术</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="记录一些开发中常用的-docker-命令"><a href="#记录一些开发中常用的-docker-命令" class="headerlink" title="记录一些开发中常用的 docker 命令"></a>记录一些开发中常用的 docker 命令</h3><h4 id="清除没用使用的数据，包括镜像数据、已经停止的容器"><a href="#清除没用使用的数据，包括镜像数据、已经停止的容器" class="headerlink" title="清除没用使用的数据，包括镜像数据、已经停止的容器"></a>清除没用使用的数据，包括镜像数据、已经停止的容器</h4><p><code>docker system prune -a</code></p>
+<h3 id="查询日志"><a href="#查询日志" class="headerlink" title="查询日志"></a>查询日志</h3><p><code> docker logs --since=&quot;2021-10-07T23:35:00Z&quot; --until=&quot;2021-10-07T23:36:00Z&quot;</code></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/03/18/ES%E5%8E%9F%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -470,562 +989,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/03/18/nginx%E9%85%8D%E7%BD%AE/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/03/18/nginx%E9%85%8D%E7%BD%AE/" class="post-title-link" itemprop="url">nginx配置</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2023-03-18 20:01:38 / 修改时间：20:03:49" itemprop="dateCreated datePublished" datetime="2023-03-18T20:01:38+08:00">2023-03-18</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">中间件</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/Nginx/" itemprop="url" rel="index"><span itemprop="name">Nginx</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="配置重试机制"><a href="#配置重试机制" class="headerlink" title="配置重试机制"></a>配置重试机制</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_next_upstream error timeout invalid_header http_500 http_503 http_404;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/03/18/docker-tips/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/03/18/docker-tips/" class="post-title-link" itemprop="url">docker_tips</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2023-03-18 20:00:47 / 修改时间：20:01:13" itemprop="dateCreated datePublished" datetime="2023-03-18T20:00:47+08:00">2023-03-18</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%BA%91%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">云技术</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="记录一些开发中常用的-docker-命令"><a href="#记录一些开发中常用的-docker-命令" class="headerlink" title="记录一些开发中常用的 docker 命令"></a>记录一些开发中常用的 docker 命令</h3><h4 id="清除没用使用的数据，包括镜像数据、已经停止的容器"><a href="#清除没用使用的数据，包括镜像数据、已经停止的容器" class="headerlink" title="清除没用使用的数据，包括镜像数据、已经停止的容器"></a>清除没用使用的数据，包括镜像数据、已经停止的容器</h4><p><code>docker system prune -a</code></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/03/18/%E6%8E%A5%E5%8F%A3%E6%96%87%E6%A1%A3%E8%A7%84%E8%8C%83/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/03/18/%E6%8E%A5%E5%8F%A3%E6%96%87%E6%A1%A3%E8%A7%84%E8%8C%83/" class="post-title-link" itemprop="url">接口文档规范</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2023-03-18 19:59:42 / 修改时间：20:00:26" itemprop="dateCreated datePublished" datetime="2023-03-18T19:59:42+08:00">2023-03-18</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%BB%A3%E7%A0%81%E8%AE%BE%E8%AE%A1/" itemprop="url" rel="index"><span itemprop="name">代码设计</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="接口文档"><a href="#接口文档" class="headerlink" title="接口文档"></a>接口文档</h2><p>示例：</p>
-<p><a target="_blank" rel="noopener" href="https://petstore.apifox.cn/api-5041288">https://petstore.apifox.cn/api-5041288</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/03/18/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/03/18/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" class="post-title-link" itemprop="url">分布式事务.md</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2023-03-18 19:58:03 / 修改时间：19:59:24" itemprop="dateCreated datePublished" datetime="2023-03-18T19:58:03+08:00">2023-03-18</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">系统架构</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">分布式事务</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="刚性、线性一致性、强一致性"><a href="#刚性、线性一致性、强一致性" class="headerlink" title="刚性、线性一致性、强一致性"></a>刚性、线性一致性、强一致性</h2><h3 id="2PC"><a href="#2PC" class="headerlink" title="2PC"></a>2PC</h3><h3 id="3PC"><a href="#3PC" class="headerlink" title="3PC"></a>3PC</h3><h2 id="柔性、最终一致性"><a href="#柔性、最终一致性" class="headerlink" title="柔性、最终一致性"></a>柔性、最终一致性</h2><h3 id="本地消息表"><a href="#本地消息表" class="headerlink" title="本地消息表"></a>本地消息表</h3><h3 id="TCC（Try-Confirm-Cancel）"><a href="#TCC（Try-Confirm-Cancel）" class="headerlink" title="TCC（Try  Confirm Cancel）"></a>TCC（Try  Confirm Cancel）</h3><h3 id="SAGA-事务"><a href="#SAGA-事务" class="headerlink" title="SAGA 事务"></a>SAGA 事务</h3><ul>
-<li>更像一种设计模式，根据这种设计模式，可以完成最终一致性的分布式事务</li>
-</ul>
-<h2 id="框架"><a href="#框架" class="headerlink" title="框架"></a>框架</h2><p>阿里开源的 Seta 框架就支持 TCC、SAGA</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/03/17/ConcurrentHashMap/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/03/17/ConcurrentHashMap/" class="post-title-link" itemprop="url">ConcurrentHashMap</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-03-17 19:26:21" itemprop="dateCreated datePublished" datetime="2023-03-17T19:26:21+08:00">2023-03-17</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-03-18 19:56:43" itemprop="dateModified" datetime="2023-03-18T19:56:43+08:00">2023-03-18</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/%E5%B9%B6%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">并发</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>ConcurrentHashMap 的一些方法是线程安全的，一些不是。其中线程安全的包括：get、put、remove、containsKey。线程不安全的包括：size、clear、isEmpty。</p>
-<p>其中 get 方法虽然是线程安全的，但是方法中并没有加锁。底层通过 volatile 保证读取的时的可见性（node.val）。Node 若是红黑树，则会加上读写锁进行查询。</p>
-<h2 id="注"><a href="#注" class="headerlink" title="注"></a>注</h2><p>上述方法所说的线程安全，可以保证单个方法调用的原子性 。如果存在多个方法调用的复合逻辑，可能就需要加锁保证线程安全了。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/03/13/%E5%B8%B8%E8%A7%81%E7%9A%84%E4%BB%A3%E7%A0%81%E8%AE%BE%E8%AE%A1%E6%89%8B%E6%AE%B5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/03/13/%E5%B8%B8%E8%A7%81%E7%9A%84%E4%BB%A3%E7%A0%81%E8%AE%BE%E8%AE%A1%E6%89%8B%E6%AE%B5/" class="post-title-link" itemprop="url">常见的代码设计手段</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-03-13 18:55:19" itemprop="dateCreated datePublished" datetime="2023-03-13T18:55:19+08:00">2023-03-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-03-18 19:57:11" itemprop="dateModified" datetime="2023-03-18T19:57:11+08:00">2023-03-18</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%BB%A3%E7%A0%81%E8%AE%BE%E8%AE%A1/" itemprop="url" rel="index"><span itemprop="name">代码设计</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="AOP-解决项目业务场景"><a href="#AOP-解决项目业务场景" class="headerlink" title="AOP 解决项目业务场景"></a>AOP 解决项目业务场景</h2><ol>
-<li>操作日记记录</li>
-<li>权限校验</li>
-<li>敏感数据脱敏（API接口设计）</li>
-</ol>
-<h2 id="API-调用重试机制"><a href="#API-调用重试机制" class="headerlink" title="API 调用重试机制"></a>API 调用重试机制</h2><p>使用 DelayQueue  实现重试机制。例如，接口调用失败或者请求超时后，可以将当前请求对象放入 DelayQueue，通过一个异步线程 take() 取出对象然后继续进行重试。如果还是请求失败，继续放回 DelayQueue。可以设置重试的最大次数以及采用指数退避算法设置对象的 deadline，如 2s、4s、8s、16s ……以此类推。DelayQueue的时间复杂度和Timer基本一致。</p>
-<ol>
-<li><strong>重试机制可能导致接口响应时长过长</strong></li>
-<li><strong>重试接口要设计成幂等</strong></li>
-<li><strong>超时重试、影响整个应用性能</strong></li>
-</ol>
-<h2 id="Job-与-实时操作"><a href="#Job-与-实时操作" class="headerlink" title="Job 与 实时操作"></a>Job 与 实时操作</h2><p>在平常开发大家都会遇到批量处理的功能，具体实现有 Job 定时去扫描。</p>
-<p>不实时操作的原因：</p>
-<ol>
-<li>异步</li>
-<li>下一个动作是另外一个系统的功能</li>
-</ol>
-<p>job 频率执行太快，会出现空转浪费资源；job 频率执行太慢，可能会出现用户傻等，等待job执行。</p>
-<p>因此单纯依赖定时任务，可以在前端添加一个 refresh 按钮，实时同步当前实体的数据。</p>
-<p>JDK 9 新增 <code>ifPresentOrElse()</code> ，对我来说简洁了很大部分代码</p>
-<p>JDK 9 新增 <code>ifPresentOrElse()</code> ，对我来说简洁了很大部分代码</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/03/10/%E6%9F%A5%E7%9C%8B%E7%BA%BF%E7%A8%8B%E6%95%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/03/10/%E6%9F%A5%E7%9C%8B%E7%BA%BF%E7%A8%8B%E6%95%B0/" class="post-title-link" itemprop="url">查看线程数</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-03-10 19:35:39" itemprop="dateCreated datePublished" datetime="2023-03-10T19:35:39+08:00">2023-03-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-03-18 19:57:36" itemprop="dateModified" datetime="2023-03-18T19:57:36+08:00">2023-03-18</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/system/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/system/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>查看所有线程，top默认显示所有进程第一行</p>
-<p>top -H</p>
-<p>查看所有存在的线程</p>
-<p>ps xH</p>
-<p>通过进程id查看线程数量</p>
-<p>ps -mp</p>
-<p>查看某个进程线程数</p>
-<p>ps -T -p pid</p>
-<p>查看特定某个进程线程使用<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E5%86%85%E5%AD%98&spm=1001.2101.3001.7020">内存</a>情况</p>
-<p>top -H -p pid</p>
-<p>查看进程相关的线程信息</p>
-<p>top -Hp pid    –</p>
-<h3 id="磁盘相关"><a href="#磁盘相关" class="headerlink" title="磁盘相关"></a>磁盘相关</h3><p>查看磁盘占用情况</p>
-<p>df -h [目录]</p>
-<p>查看文件夹大小</p>
-<p>du -sh [目录]</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1093,20 +1060,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-count">95</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">46</span>
+        <span class="site-state-item-count">48</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">54</span>
+        <span class="site-state-item-count">61</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

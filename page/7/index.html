@@ -186,6 +186,668 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/11/02/Liunx%E6%9F%A5%E7%9C%8B%E7%BA%BF%E7%A8%8B%E6%95%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/11/02/Liunx%E6%9F%A5%E7%9C%8B%E7%BA%BF%E7%A8%8B%E6%95%B0/" class="post-title-link" itemprop="url">Linux查看线程数</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-11-02 19:23:17" itemprop="dateCreated datePublished" datetime="2022-11-02T19:23:17+08:00">2022-11-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-23 21:39:29" itemprop="dateModified" datetime="2023-02-23T21:39:29+08:00">2023-02-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/system/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li>查看所有线程，top默认显示所有进程第一行</li>
+</ul>
+<p><code>top -H</code></p>
+<ul>
+<li>查看所有存在的线程</li>
+</ul>
+<p><code>ps xH</code></p>
+<ul>
+<li>通过进程id查看线程数量</li>
+</ul>
+<p><code>ps -mp</code></p>
+<ul>
+<li>查看某个进程线程数</li>
+</ul>
+<p><code>ps -T -p pid</code></p>
+<ul>
+<li>查看特定某个进程线程使用<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E5%86%85%E5%AD%98&spm=1001.2101.3001.7020">内存</a>情况</li>
+</ul>
+<p><code>top -H -p pid</code></p>
+<ul>
+<li>查看进程相关的线程信息</li>
+</ul>
+<p><code>top -Hp pid</code></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/10/24/JavaAgent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/24/JavaAgent/" class="post-title-link" itemprop="url">JavaAgent</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-24 20:35:09" itemprop="dateCreated datePublished" datetime="2022-10-24T20:35:09+08:00">2022-10-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/agent/" itemprop="url" rel="index"><span itemprop="name">agent</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>JavaAgent 又称 Java 探针，是在 JDK5 引进的一种动态修改字节码的技术。它在 JVM 在加载字节码之前，获取字节码信息 通过字节码转换器修改字节码来实现一些额外的功能。JavaAgent本质可以理解成一个Jar包插件，使用 JVMTI（JVM Tool Interface）完成加载，利用 JVM 提供的 <code>Instrumentatiion</code> 接口来实现字节码加载前、加载后的修改。-javaagent 参数来指定一个 agent jar包，实现启动jvm时加载 agent。利用这一特性可以实现虚拟机级别的 AOP ，实时监控、分析虚拟机，干预虚拟机的执行。</p>
+<h4 id="Instrumentation（核心）JDK-官方提供"><a href="#Instrumentation（核心）JDK-官方提供" class="headerlink" title="Instrumentation（核心）JDK 官方提供"></a>Instrumentation（核心）JDK 官方提供</h4><p>提供了注入字节码转换器的入口</p>
+<h4 id="ClassFileTransformer"><a href="#ClassFileTransformer" class="headerlink" title="ClassFileTransformer"></a>ClassFileTransformer</h4><p>字节码转换器接口，想要对字节码的转换需要实现该接口</p>
+<h3 id="Java-能做什么？"><a href="#Java-能做什么？" class="headerlink" title="Java 能做什么？"></a>Java 能做什么？</h3><ul>
+<li><p>在 JVM 加载字节码之前对字节码修改</p>
+</li>
+<li><p>在 JVM 加载字节码之后对字节码修改</p>
+</li>
+<li><p>获取当前 JVM 加载的所有类信息</p>
+</li>
+<li><p>获取 JVM 初始化的类信息</p>
+</li>
+<li><p>修改 native 方法</p>
+</li>
+<li><p>获取某个对象的大小</p>
+</li>
+<li><p>将某个jar加入到bootstrapclasspath里作为高优先级被bootstrapClassloader加载</p>
+</li>
+<li><p>将某个jar加入到classpath里供AppClassloard去加载</p>
+</li>
+</ul>
+<h3 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h3><h4 id="启动-JVM-时加载-Agent-premain"><a href="#启动-JVM-时加载-Agent-premain" class="headerlink" title="启动 JVM 时加载 Agent(premain)"></a>启动 JVM 时加载 Agent(premain)</h4><h5 id="定义-Agent"><a href="#定义-Agent" class="headerlink" title="定义 Agent"></a>定义 Agent</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyAgent</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">premain</span><span class="params">(String[] args, Instrumentation instrumentation)</span> &#123;</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;JVM starting, load agent&quot;</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="定义-MANIFEST-MF，放在-resource-x2F-META-INF-x2F"><a href="#定义-MANIFEST-MF，放在-resource-x2F-META-INF-x2F" class="headerlink" title="定义 MANIFEST.MF，放在 resource&#x2F; META-INF&#x2F;"></a>定义 <code>MANIFEST.MF</code>，放在 resource&#x2F; META-INF&#x2F;</h5><img src="../imgs/manifest.png" />
+
+
+
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="attr">Manifest-Version</span>: <span class="string">1.0</span></span><br><span class="line"></span><br><span class="line"><span class="attr">Premain-Class</span>: <span class="string">org.example.agent.MyAgent</span></span><br><span class="line"></span><br><span class="line"><span class="attr">Agent-Class</span>: <span class="string">org.example.agent.MyAgent</span></span><br><span class="line"></span><br><span class="line"><span class="attr">Can-Redefine-Classes</span>: <span class="string">true</span></span><br><span class="line"></span><br><span class="line"><span class="attr">Can-Retransform-Classes</span>: <span class="string">true</span></span><br><span class="line"></span><br><span class="line"><span class="attr">Can-Set-Native-Method-Prefix</span>: <span class="string">true</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="修改-POM-文件"><a href="#修改-POM-文件" class="headerlink" title="修改 POM 文件"></a>修改 POM 文件</h5><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-assembly-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line"></span><br><span class="line">                <span class="tag">&lt;<span class="name">descriptorRefs</span>&gt;</span></span><br><span class="line"></span><br><span class="line">                    <span class="tag">&lt;<span class="name">descriptorRef</span>&gt;</span>jar-with-dependencies<span class="tag">&lt;/<span class="name">descriptorRef</span>&gt;</span></span><br><span class="line"></span><br><span class="line">                <span class="tag">&lt;/<span class="name">descriptorRefs</span>&gt;</span></span><br><span class="line"></span><br><span class="line">                <span class="tag">&lt;<span class="name">archive</span>&gt;</span></span><br><span class="line"></span><br><span class="line">                    <span class="tag">&lt;<span class="name">manifestFile</span>&gt;</span>src/main/resources/META-INF/MANIFEST.MF<span class="tag">&lt;/<span class="name">manifestFile</span>&gt;</span></span><br><span class="line"></span><br><span class="line">                <span class="tag">&lt;/<span class="name">archive</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="打包-mvn-assembly-assembly-进行打包，会生成2个jar包，my-agent-1-0-SNAPSHOT-jar中不带这个项目所依赖的jar包，my-agent-1-0-SNAPSHOT-jar-with-dependencies-jar中包含这个项目所依赖的jar包，后面需要使用my-agent-1-0-SNAPSHOT-jar-with-dependencies-jar这个jar"><a href="#打包-mvn-assembly-assembly-进行打包，会生成2个jar包，my-agent-1-0-SNAPSHOT-jar中不带这个项目所依赖的jar包，my-agent-1-0-SNAPSHOT-jar-with-dependencies-jar中包含这个项目所依赖的jar包，后面需要使用my-agent-1-0-SNAPSHOT-jar-with-dependencies-jar这个jar" class="headerlink" title="打包 mvn assembly:assembly 进行打包，会生成2个jar包，my-agent-1.0-SNAPSHOT.jar中不带这个项目所依赖的jar包，my-agent-1.0-SNAPSHOT-jar-with-dependencies.jar中包含这个项目所依赖的jar包，后面需要使用my-agent-1.0-SNAPSHOT-jar-with-dependencies.jar这个jar"></a>打包 mvn assembly:assembly 进行打包，会生成2个jar包，my-agent-1.0-SNAPSHOT.jar中不带这个项目所依赖的jar包，my-agent-1.0-SNAPSHOT-jar-with-dependencies.jar中包含这个项目所依赖的jar包，后面需要使用my-agent-1.0-SNAPSHOT-jar-with-dependencies.jar这个jar</h5><h5 id="项目工程引入自定义-agent-，在项目启动时-添加-vm-参数，-javaagent-x3D-agentpath-x2F-myagent-jar"><a href="#项目工程引入自定义-agent-，在项目启动时-添加-vm-参数，-javaagent-x3D-agentpath-x2F-myagent-jar" class="headerlink" title="项目工程引入自定义 agent ，在项目启动时 添加 vm 参数，-javaagent&#x3D;{agentpath}&#x2F;myagent.jar"></a>项目工程引入自定义 agent ，在项目启动时 添加 vm 参数，-javaagent&#x3D;{agentpath}&#x2F;myagent.jar</h5><h3 id="JVM-运行时加载-agent（attachemain）"><a href="#JVM-运行时加载-agent（attachemain）" class="headerlink" title="JVM 运行时加载 agent（attachemain）"></a>JVM 运行时加载 agent（attachemain）</h3><ul>
+<li>该方法就不是使用  -javaagent 参数引入，需要使用 virtualMachine 下的 attche 方法引入，该类不是 jdk 官方提供，又sun公司提供，需要引入依赖</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Attacher</span> &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">throws</span> IOException, AttachNotSupportedException, AgentLoadException, AgentInitializationException &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 指定进程号</span></span><br><span class="line"></span><br><span class="line">        <span class="type">VirtualMachine</span> <span class="variable">vm</span> <span class="operator">=</span> VirtualMachine.attach(args[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 指定agent包位置和要传入的参数</span></span><br><span class="line"></span><br><span class="line">        vm.loadAgent(</span><br><span class="line"></span><br><span class="line">            <span class="string">&quot;/Users/fisher/Documents/code/gitee/myAgent/target/my-agent-1.0-SNAPSHOT-jar-with-dependencies.jar&quot;</span>,</span><br><span class="line"></span><br><span class="line">            <span class="string">&quot;Hello JVM Attach&quot;</span>);</span><br><span class="line"></span><br><span class="line">        vm.detach();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="打包-POM"><a href="#打包-POM" class="headerlink" title="打包 POM"></a>打包 POM</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line"></span><br><span class="line">       <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line"></span><br><span class="line">           <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"></span><br><span class="line">               <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"></span><br><span class="line">               <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-assembly-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"></span><br><span class="line">               <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.5.5<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"></span><br><span class="line">               <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line"></span><br><span class="line">                   <span class="tag">&lt;<span class="name">archive</span>&gt;</span></span><br><span class="line"></span><br><span class="line">                       <span class="tag">&lt;<span class="name">manifest</span>&gt;</span></span><br><span class="line"></span><br><span class="line">                           <span class="tag">&lt;<span class="name">mainClass</span>&gt;</span>org.example.attach.Attacher<span class="tag">&lt;/<span class="name">mainClass</span>&gt;</span></span><br><span class="line"></span><br><span class="line">                       <span class="tag">&lt;/<span class="name">manifest</span>&gt;</span></span><br><span class="line"></span><br><span class="line">                   <span class="tag">&lt;/<span class="name">archive</span>&gt;</span></span><br><span class="line"></span><br><span class="line">                   <span class="tag">&lt;<span class="name">descriptorRefs</span>&gt;</span></span><br><span class="line"></span><br><span class="line">                       <span class="tag">&lt;<span class="name">descriptorRef</span>&gt;</span>jar-with-dependencies<span class="tag">&lt;/<span class="name">descriptorRef</span>&gt;</span></span><br><span class="line"></span><br><span class="line">                   <span class="tag">&lt;/<span class="name">descriptorRefs</span>&gt;</span></span><br><span class="line"></span><br><span class="line">               <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"></span><br><span class="line">           <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line"></span><br><span class="line">       <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"></span><br><span class="line">   <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>利用 jps 查看进程号，选择要加载agent的进程号，启动 agent 传入 进程号，完成 agent 的载入</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/10/23/Tomcat%20%20%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/23/Tomcat%20%20%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/" class="post-title-link" itemprop="url">Tomcat  线程模型</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-23 20:59:56" itemprop="dateCreated datePublished" datetime="2022-10-23T20:59:56+08:00">2022-10-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%A1%86%E6%9E%B6/" itemprop="url" rel="index"><span itemprop="name">框架</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="NioEndpoint"><a href="#NioEndpoint" class="headerlink" title="NioEndpoint"></a>NioEndpoint</h3><h4 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h4><ul>
+<li>模板设计模式 （ NioEndpoint extends AbstractEndpoint）</li>
+</ul>
+<h4 id="线程模型"><a href="#线程模型" class="headerlink" title="线程模型"></a>线程模型</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Acceptor ( getPoller0().register(channel); )</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">    -&gt; poller <span class="title function_">register</span><span class="params">()</span> add(NioChannel , SelectionKey) (<span class="keyword">for</span> in NioChannelList) </span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">    -&gt; selector.selectedKeys() 判断 channel 状态 可写 可读</span><br><span class="line"></span><br><span class="line">    	<span class="type">Executor</span> <span class="variable">executor</span> <span class="operator">=</span> getExecutor();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (dispatch &amp;&amp; executor != <span class="literal">null</span>) &#123;</span><br><span class="line"></span><br><span class="line">                executor.execute(sc);</span><br><span class="line"></span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">                sc.run();</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>Tomcat 线程池</p>
+<p>重写了 LinkedBlockingQueue ，TaskQueue  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TaskQueue</span> <span class="keyword">extends</span> <span class="title class_">LinkedBlockingQueue</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">offer</span><span class="params">(Runnable o)</span> &#123;</span><br><span class="line"></span><br><span class="line">      <span class="comment">//we can&#x27;t do any checks</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (parent==<span class="literal">null</span>) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">super</span>.offer(o);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//we are maxed out on threads, simply queue the object</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (parent.getPoolSize() == parent.getMaximumPoolSize()) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">super</span>.offer(o);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//we have idle threads, just add it to the queue</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (parent.getSubmittedCount()&lt;=(parent.getPoolSize())) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">super</span>.offer(o);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//if we have less threads than maximum force creation of a new thread</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (parent.getPoolSize()&lt;parent.getMaximumPoolSize()) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//if we reached here, we need to add it to the queue</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">super</span>.offer(o);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>重写 offer 方法，没有达到线程池的最大线程数，则返回false ，继续创建线程，如果大于则加入阻塞队列，队列满了 则抛出 拒绝策略，如果 已提交的任务数小于当前线程池中的线程数 则加入队列（不创建新的线程）</p>
+<p>Tomcat 线程池扩展了原生的 ThreadPoolExecutor，通过重写 execute 方法实现了自己的任务处理逻辑：</p>
+<p> ● 前 corePoolSize 个任务时，来一个任务就创建一个新线程。</p>
+<p> ● 还有任务提交，直接放到队列，队列满了，但是没有达到最大线程池数则创建临时线程救火。</p>
+<p> ● 线程总线数达到 maximumPoolSize ，继续尝试把任务放到队列中。如果队列也满了，插入任务失败，才执行拒绝策略。</p>
+<p>最大的差别在于 Tomcat 在线程总数达到最大数时，不是立即执行拒绝策略，而是再尝试向任务队列添加任务，添加失败后再执行拒绝策略。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/10/23/%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/23/%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F/" class="post-title-link" itemprop="url">代码质量</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-23 18:58:40" itemprop="dateCreated datePublished" datetime="2022-10-23T18:58:40+08:00">2022-10-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/" itemprop="url" rel="index"><span itemprop="name">代码规范</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="泛型类"><a href="#泛型类" class="headerlink" title="泛型类"></a>泛型类</h3><p>在书写泛型类时，通常做以下的约定：</p>
+<ul>
+<li><p>E表示Element，通常用在集合中；</p>
+</li>
+<li><p>ID用于表示对象的唯一标识符类型</p>
+</li>
+<li><p>T表示Type(类型)，通常指代类；</p>
+</li>
+<li><p>K表示Key(键),通常用于Map中；</p>
+</li>
+<li><p>V表示Value(值),通常用于Map中，与K结对出现；</p>
+</li>
+<li><p>N表示Number,通常用于表示数值类型；</p>
+</li>
+<li><p>？表示不确定的Java类型；</p>
+</li>
+<li><p>X用于表示异常；</p>
+</li>
+<li><p>U,S表示任意的类型。</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/10/23/Spring%20MVC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/23/Spring%20MVC/" class="post-title-link" itemprop="url">Spring MVC</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-23 18:36:59" itemprop="dateCreated datePublished" datetime="2022-10-23T18:36:59+08:00">2022-10-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%A1%86%E6%9E%B6/" itemprop="url" rel="index"><span itemprop="name">框架</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%A1%86%E6%9E%B6/Spring-notes/" itemprop="url" rel="index"><span itemprop="name">Spring-notes</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Servlet容器的扩展机制"><a href="#Servlet容器的扩展机制" class="headerlink" title="Servlet容器的扩展机制"></a>Servlet容器的扩展机制</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">	生命周期由 Servlet 容器管理</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">	Servlet 3.0 特性，SPI 机制提供  ServletContainerInitializer 扩展点</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">	</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line">SpringServletContainerInitializer <span class="keyword">implements</span> <span class="title class_">ServletContainerInitializer</span></span><br><span class="line"></span><br><span class="line">    -&gt; WebApplicationInitializer (用于自定义 提供扩展。SpringBoot web项目想要以 war 包方式部署需要用到这个机制、SpringBootServletInitializer)</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> 生命周期由Spring容器管理，Spring web容器(ServletWebServerApplicationContext)管理，</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line">ServletContextInitializer</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/imgs%5CserveltContextInitializer.png" alt="image-20221211135720576"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TomcatStartSpringBoot</span> <span class="keyword">extends</span> <span class="title class_">SpringBootServletInitializer</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> SpringApplicationBuilder <span class="title function_">configure</span><span class="params">(SpringApplicationBuilder builder)</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> builder.sources(Application.class);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="创建-ServletWebServerApplicationContext"><a href="#创建-ServletWebServerApplicationContext" class="headerlink" title="创建 ServletWebServerApplicationContext"></a>创建 ServletWebServerApplicationContext</h3><ul>
+<li><p><code>AbstractApplicationContext.refresh() -&gt; onRefresh() -&gt; createWebServer() -&gt; selfInitialize() 这里会读取 beanFactory 自动配置配类 </code>DispatcherServletAutoConfiguration<code> -&gt; DispatcherServletRegistrationBean (底层实现接口</code>ServletContextInitializer<code>)-&gt; 执行 onStartup() -&gt; 导入DispacherServlet</code></p>
+</li>
+<li><p>在第一次访问到 Servlet 时，调用 init() -&gt; 加载HandlerMapping、HandlerAdpter</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">onRefresh() -&gt; initStrategies()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">initMultipartResolver(context);</span><br><span class="line"></span><br><span class="line">initLocaleResolver(context);</span><br><span class="line"></span><br><span class="line">initThemeResolver(context);</span><br><span class="line"></span><br><span class="line">initHandlerMappings(context);</span><br><span class="line"></span><br><span class="line">initHandlerAdapters(context);</span><br><span class="line"></span><br><span class="line">initHandlerExceptionResolvers(context);</span><br><span class="line"></span><br><span class="line">initRequestToViewNameTranslator(context);</span><br><span class="line"></span><br><span class="line">initViewResolvers(context);</span><br><span class="line"></span><br><span class="line">initFlashMapManager(context);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><p>tip</p>
+</li>
+<li><p>Spring MVC 的配置（默认值）：</p>
+</li>
+<li><pre><code class="yml">
+spring:
+
+  mvc:
+
+    servlet:
+
+      load-on-startup: 2
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">* </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">* servlet init 方法的调用时机，依赖 load-on-startup的配置信息</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">* init 方法是随 Servlet 实例化而被调用的，因为 load-on-startup 就是用来设置 Servlet 实例化时间的。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  * 因此，init 方法执行的时刻有两种：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  * （1） load-on-startup 的值大于等于0，则伴随 Servlet 实例化后执行。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  * （2） load-on-startup 的值小于0 或者 不配置， 则在第一次 Servlet 请求的时候执行。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### tips</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">###### WebMvcAutoConfiguration</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">* 静态内部类 `EnableWebMvcConfiguration extends DelegatingWebMvcConfiguration` 用来 注册 DispatcherServlet 各个handler (RequestMappingHandlerMapping)</span><br><span class="line"></span><br><span class="line">```java</span><br><span class="line"></span><br><span class="line">@Bean</span><br><span class="line"></span><br><span class="line">@Primary</span><br><span class="line"></span><br><span class="line">@Override</span><br><span class="line"></span><br><span class="line">public RequestMappingHandlerMapping requestMappingHandlerMapping(</span><br><span class="line"></span><br><span class="line">    @Qualifier(&quot;mvcContentNegotiationManager&quot;) ContentNegotiationManager contentNegotiationManager,</span><br><span class="line"></span><br><span class="line">    @Qualifier(&quot;mvcConversionService&quot;) FormattingConversionService conversionService,</span><br><span class="line"></span><br><span class="line">    @Qualifier(&quot;mvcResourceUrlProvider&quot;) ResourceUrlProvider resourceUrlProvider) &#123;</span><br><span class="line"></span><br><span class="line">    // Must be @Primary for MvcUriComponentsBuilder to work</span><br><span class="line"></span><br><span class="line">    return super.requestMappingHandlerMapping(contentNegotiationManager, conversionService,</span><br><span class="line"></span><br><span class="line">                                              resourceUrlProvider);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+</code></pre>
+</li>
+<li><p>Controller 在注入 Bean 以后，什么时候放入 RequestMappingHandlerMapping.mappingRegistry </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">    RequestMappingHandlerMapping extends AbstractHanlerMapping </span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">    AbstractHandlerMethodMapping implements InitializingBean</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">    在 Bean 生命周期 afterPropertiesSet() 方法 注入 Controller 中的 Method</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">    重写 RequestMappingHandlerMapping 中的 isHandler 方法即可注入其他注解或者类型的Bean</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span> <span class="type">boolean</span> <span class="title function_">isHandler</span><span class="params">(Class&lt;?&gt; beanType)</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (AnnotatedElementUtils.hasAnnotation(beanType, Controller.class) ||</span><br><span class="line"></span><br><span class="line">            AnnotatedElementUtils.hasAnnotation(beanType, RequestMapping.class));</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+</li>
+<li><p>创建 DispatcherServlet (<code>DispatcherServletConfiguration</code>)</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Bean(name = DEFAULT_DISPATCHER_SERVLET_BEAN_NAME)</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> DispatcherServlet <span class="title function_">dispatcherServlet</span><span class="params">(WebMvcProperties webMvcProperties)</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">DispatcherServlet</span> <span class="variable">dispatcherServlet</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DispatcherServlet</span>();</span><br><span class="line"></span><br><span class="line">    dispatcherServlet.setDispatchOptionsRequest(webMvcProperties.isDispatchOptionsRequest());</span><br><span class="line"></span><br><span class="line">    dispatcherServlet.setDispatchTraceRequest(webMvcProperties.isDispatchTraceRequest());</span><br><span class="line"></span><br><span class="line">    dispatcherServlet.setThrowExceptionIfNoHandlerFound(webMvcProperties.isThrowExceptionIfNoHandlerFound());</span><br><span class="line"></span><br><span class="line">    dispatcherServlet.setPublishEvents(webMvcProperties.isPublishRequestHandledEvents());</span><br><span class="line"></span><br><span class="line">    dispatcherServlet.setEnableLoggingRequestDetails(webMvcProperties.isLogRequestDetails());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> dispatcherServlet;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>通过 DispatcherServletRegistrationBean 注入 <code>DispatcherServlet</code> ,原理： RegistrationBean (注册 servlet 3.0+) 实现了 <code>ServletContextInitializer</code> 接口 servletContext 初始化生命周期方法</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/10/16/%E4%BD%95%E8%B0%93%20ServiceMesh/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/16/%E4%BD%95%E8%B0%93%20ServiceMesh/" class="post-title-link" itemprop="url">何谓 ServiceMesh</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-16 18:41:12" itemprop="dateCreated datePublished" datetime="2022-10-16T18:41:12+08:00">2022-10-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%BA%91%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">云技术</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="Service-Mesh"><a href="#Service-Mesh" class="headerlink" title="Service Mesh"></a>Service Mesh</h4><ul>
+<li><p>在  Service Mesh 架构出来之前，传统的微服务架构存在底层服务交互与业务逻辑耦合在一起，依赖冲突，考虑：透明升级，多语言服务通信等问题。</p>
+</li>
+<li><p>Service Mesh 通过部署独立的 Sidecar组件来拦截所有的出口与入口流量，集成丰富的负载均衡策略，开发本身只关注业务逻辑，开发更纯粹。</p>
+</li>
+<li><p>Service Mesh 解决了什么问题？</p>
+</li>
+</ul>
+<blockquote>
+<p>透明升级</p>
+</blockquote>
+<blockquote>
+</blockquote>
+<blockquote>
+<p>多语言</p>
+</blockquote>
+<blockquote>
+</blockquote>
+<blockquote>
+<p>依赖冲突</p>
+</blockquote>
+<blockquote>
+</blockquote>
+<blockquote>
+<p>流量治理</p>
+</blockquote>
+<ul>
+<li><p>经典 Mesh 在实施层面也面临成本过高的问题</p>
+<ol>
+<li><p>需要运维控制面（Control Panel）</p>
+</li>
+<li><p>需要运维 Sidecar</p>
+</li>
+<li><p>需要考虑如何从原有 SDK 迁移到 Sidecar</p>
+</li>
+<li><p>需要考虑引入 Sidecar 后整个链路的性能损耗</p>
+</li>
+</ol>
+</li>
+</ul>
+<h4 id="Proxyless-Mesh"><a href="#Proxyless-Mesh" class="headerlink" title="Proxyless Mesh"></a>Proxyless Mesh</h4><ul>
+<li>为了解决 Service Mesh 的问题引入全新的 Proxyless Mesh 架构，Proxyless Mesh 指的是没有 Sidecar 部署，由 Dubbo SDK 直接与控制面交互。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/10/14/ImportBeanDefinitionRegistrar/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -636,557 +1298,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/10/05/Spring%20%E4%BA%8B%E5%8A%A1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/10/05/Spring%20%E4%BA%8B%E5%8A%A1/" class="post-title-link" itemprop="url">Spring 事务</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-10-05 18:28:22" itemprop="dateCreated datePublished" datetime="2022-10-05T18:28:22+08:00">2022-10-05</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%A1%86%E6%9E%B6/" itemprop="url" rel="index"><span itemprop="name">框架</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%A1%86%E6%9E%B6/Spring-notes/" itemprop="url" rel="index"><span itemprop="name">Spring-notes</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Spring-事务失效场景之Bean对象调用自己方法"><a href="#Spring-事务失效场景之Bean对象调用自己方法" class="headerlink" title="Spring 事务失效场景之Bean对象调用自己方法"></a>Spring 事务失效场景之Bean对象调用自己方法</h3><ul>
-<li><p>Bean 对象调用自己的方法，会导致自己的方法事务失效</p>
-</li>
-<li><p>多线程导致事务失效，这样会导致两个方法不在同一个线程中，获取到的数据库连接不一样，从而是两个不同的事务。如果想doOtherThing方法中抛了异常，add方法也回滚是不可能的</p>
-</li>
-<li><p>Spring 声明式事务依赖的是 动态代理对象，在动态代理对象中this.method 调用的不是代理方法而是调用对象本身的方法，导致没有添加事务方法 ，形成了事务失效</p>
-</li>
-<li><p>为什么在我们日常开发中事务失效了，但是没有暴露出线上问题呢？</p>
-</li>
-</ul>
-<ol>
-<li>因为事务的传播机制，Spring默认的事务行为是：<code>propagation_required</code>,</li>
-</ol>
-<p>客户端与调用端存在同一个事务中，如果被调用端发生异常，那么调用端和被调用端事务都将回滚</p>
-<h3 id="Spring-支持7种事务传播行为"><a href="#Spring-支持7种事务传播行为" class="headerlink" title="Spring 支持7种事务传播行为"></a>Spring 支持7种事务传播行为</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">propagation_required（xml文件中为required)	表示当前方法必须在一个具有事务的上下文中运行，如有客户端有事务在进行，那么被调用端将在该事务中运行，否则的话重新开启一个事务。（如果被调用端发生异常，那么调用端和被调用端事务都将回滚</span><br><span class="line"></span><br><span class="line">propagation_supports(xml文件中为supports）	表示当前方法不必需要具有一个事务上下文，但是如果有一个事务的话，它也可以在这个事务中运行</span><br><span class="line"></span><br><span class="line">propagation_mandatory(xml文件中为mandatory）	表示当前方法必须在一个事务中运行，如果没有事务，将抛出异常</span><br><span class="line"></span><br><span class="line">propagation_nested(xml文件中为nested)	表示如果当前方法正有一个事务在运行中，则该方法应该运行在一个嵌套事务中，被嵌套的事务可以独立于被封装的事务中进行提交或者回滚。如果封装事务存在，并且外层事务抛出异常回滚，那么内层事务必须回滚，反之，内层事务并不影响外层事务。如果封装事务不存在，则同propagation_required的一样</span><br><span class="line"></span><br><span class="line">propagation_never（xml文件中为never)	表示当方法务不应该在一个事务中运行，如果存在一个事务，则抛出异常</span><br><span class="line"></span><br><span class="line">propagation_requires_new(xml文件中为requires_new）	表示当前方法必须运行在它自己的事务中。一个新的事务将启动，而且如果有一个现有的事务在运行的话，则这个方法将在运行期被挂起，直到新的事务提交或者回滚才恢复执行</span><br><span class="line"></span><br><span class="line">propagation_not_supported（xml文件中为not_supported）	表示该方法不应该在一个事务中运行。如果有一个事务正在运行，它将在运行期被挂起，直到这个事务提交或者回滚才恢复执行</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="TransactionSynchronizationManager（事务信息的管理器，用于实现事务传播行为）"><a href="#TransactionSynchronizationManager（事务信息的管理器，用于实现事务传播行为）" class="headerlink" title="TransactionSynchronizationManager（事务信息的管理器，用于实现事务传播行为）"></a>TransactionSynchronizationManager（事务信息的管理器，用于实现事务传播行为）</h2><p>Spring嵌套事务依赖Spring实现事务挂起功能（<code>suspend()</code>）底层实现：（事务的执行过程，无论是嵌套还是其他的事务传播行为，都是同一个线程因此需要事务的挂起）</p>
-<p>其实就是将线程变量里面的事务信息拿出来，再置空。 待事务提交或回滚后再放回线程变量中  </p>
-<p>TransactionSynchronizationManager 中的事务信息拿出来，存放在 SuspendedResourceHolder，等嵌套事务执行完，在将其放回 TransactionSynchronizationManager </p>
-<h3 id="嵌套事务还有一个特性，外层事务影响内层事务，内层不会影响外层，怎么实现？"><a href="#嵌套事务还有一个特性，外层事务影响内层事务，内层不会影响外层，怎么实现？" class="headerlink" title="嵌套事务还有一个特性，外层事务影响内层事务，内层不会影响外层，怎么实现？"></a>嵌套事务还有一个特性，外层事务影响内层事务，内层不会影响外层，怎么实现？</h3><p>利用 JDBC  <strong>Savepoint</strong>，JDBC Savepoint帮我们在事务中创建检查点（checkpoint），这样就可以回滚到指定点</p>
-<h3 id="tip"><a href="#tip" class="headerlink" title="tip"></a>tip</h3><h4 id="Spring-引入事务："><a href="#Spring-引入事务：" class="headerlink" title="Spring 引入事务："></a>Spring 引入事务：</h4><ul>
-<li>starter</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-jdbc<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
-<li>jar</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-tx<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/09/29/ThreadLocal%E4%BC%98%E5%8C%96/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/09/29/ThreadLocal%E4%BC%98%E5%8C%96/" class="post-title-link" itemprop="url">ThreadLocal优化</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-09-29 19:23:04" itemprop="dateCreated datePublished" datetime="2022-09-29T19:23:04+08:00">2022-09-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">中间件</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/Netty/" itemprop="url" rel="index"><span itemprop="name">Netty</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="核心原理"><a href="#核心原理" class="headerlink" title="核心原理"></a>核心原理</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 定义自己的 Thread</span></span><br><span class="line"></span><br><span class="line">FastThreadLocalThread </span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> InternalThreadLocalMap threadLocalMap;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">FastThreadLocal 初始化时获取一个定值的<span class="type">Index</span> </span><br><span class="line"></span><br><span class="line">    <span class="variable">index</span> <span class="operator">=</span> InternalThreadLocalMap.nextVariableIndex()</span><br><span class="line"></span><br><span class="line">    	index 便是 threadLocalMap 查找对应元素的索引</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="优化点"><a href="#优化点" class="headerlink" title="优化点"></a>优化点</h3><h4 id="高效查找"><a href="#高效查找" class="headerlink" title="高效查找"></a>高效查找</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">FastThradLocal </span><br><span class="line"></span><br><span class="line">    Object[]</span><br><span class="line"></span><br><span class="line">    	Object[<span class="number">0</span>] == Set&lt;FastThreadLocal&lt;?&gt;&gt; (addToVariablesToRemove) <span class="comment">// 方便清除</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="安全（内存泄露）"><a href="#安全（内存泄露）" class="headerlink" title="安全（内存泄露）"></a>安全（内存泄露）</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">ThreadLocal Key 弱引用存在内存泄露的问题，虽然针对这个问题 JDK 有优化，在 set()/get() 会清除无引用的 value，这种主动清除的方式会有一定的性能消耗。</span><br><span class="line"></span><br><span class="line">针对这个问题，Netty 定义 FastThreadLocal ，定义 FastThreadLocalRunnable 在多线程的情况下，线程运行完自动调用 FastThreadLocal.removeAll() 清除相关内存引用（Set&lt;FastThreadLocal&lt;?&gt;&gt;）</span><br><span class="line"></span><br><span class="line"><span class="comment">// 利用装饰者模式 保证 Runnable</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line"></span><br><span class="line">        runnable.run();</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line"></span><br><span class="line">        FastThreadLocal.removeAll();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/09/26/CompletableFuture/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/09/26/CompletableFuture/" class="post-title-link" itemprop="url">CompletableFuture</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-09-26 23:35:21" itemprop="dateCreated datePublished" datetime="2022-09-26T23:35:21+08:00">2022-09-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/%E5%B9%B6%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">并发</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="并行加载的实现方式"><a href="#并行加载的实现方式" class="headerlink" title="并行加载的实现方式"></a>并行加载的实现方式</h3><p>从IO模型上分为<strong>同步模型</strong>和<strong>异步模型</strong></p>
-<h4 id="同步模型的缺陷"><a href="#同步模型的缺陷" class="headerlink" title="同步模型的缺陷"></a>同步模型的缺陷</h4><ul>
-<li><p><strong>CPU资源大量浪费在阻塞等待上</strong>，导致CPU资源利用率低。在Java 8之前，一般会通过回调的方式来减少阻塞，但是大量使用回调，又引发臭名昭著的<strong>回调地狱</strong>问题，导致代码可读性和可维护性大大降低。</p>
-</li>
-<li><p><strong>为了增加并发度，会引入更多额外的线程池</strong>，随着CPU调度线程数的增加，会导致更严重的资源争用，宝贵的CPU资源被损耗在上下文切换上，而且线程本身也会占用系统资源，且不能无限增加。</p>
-</li>
-</ul>
-<h3 id="NIO-异步模型"><a href="#NIO-异步模型" class="headerlink" title="NIO 异步模型"></a>NIO 异步模型</h3><p>使用 CompletableFuture 相较于 Future、RxJava、Reactor 具有 学习成本低、满足我们异步、可组合的需求</p>
-<p>假设有三个操作step1、step2、step3存在依赖关系，其中step3的执行依赖step1和step2的结果。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">CompletableFuture&lt;String&gt; step1 = CompletableFuture.supplyAsync(() -&gt; <span class="string">&quot;123&quot;</span>);</span><br><span class="line"></span><br><span class="line">     CompletableFuture&lt;String&gt; step2 = CompletableFuture.supplyAsync(() -&gt; <span class="string">&quot;abc&quot;</span>);</span><br><span class="line"></span><br><span class="line">     uCompletableFuture.thenCombine(stringCompletableFuture, (s1, s2) -&gt; &#123;</span><br><span class="line"></span><br><span class="line">         <span class="keyword">return</span> s1 + s2;</span><br><span class="line"></span><br><span class="line">     &#125;).thenAccept(s -&gt; &#123;</span><br><span class="line"></span><br><span class="line">         System.out.println(s);</span><br><span class="line"></span><br><span class="line">     &#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="设计思想"><a href="#设计思想" class="headerlink" title="设计思想"></a>设计思想</h3><p>类似“观察者模式”的设计思想</p>
-<p>每个 Completable 可以看做一个被观察者，其内部有一个 Completion 类型的链表成员变量 stack。</p>
-<img src="https://p1.meituan.net/travelcube/606323a07fb7e31cb91f46c879d99b8d735272.gif" />
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/09/15/AQS/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/09/15/AQS/" class="post-title-link" itemprop="url">AQS</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-09-15 19:52:08" itemprop="dateCreated datePublished" datetime="2022-09-15T19:52:08+08:00">2022-09-15</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/%E5%B9%B6%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">并发</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>AQS 使用 FIFO 队列实现了一个锁相关的并发器模板，可以基于这个模板来实现各种锁，包括独占锁、共享锁、信号量等。</p>
-<p>AQS 中，有一个核心状态是 waitStatus，这个代表节点的状态，决定了当前节点的后续操作，比如是否等待唤醒，是否要唤醒后继节点。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/09/11/%E9%80%9A%E8%BF%87DockerImage%E7%94%9F%E6%88%90DockerFile/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/09/11/%E9%80%9A%E8%BF%87DockerImage%E7%94%9F%E6%88%90DockerFile/" class="post-title-link" itemprop="url">通过DockerImage生成DockerFile</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-09-11 23:03:59" itemprop="dateCreated datePublished" datetime="2022-09-11T23:03:59+08:00">2022-09-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%BA%91%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">云技术</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%BA%91%E6%8A%80%E6%9C%AF/docker/" itemprop="url" rel="index"><span itemprop="name">docker</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">// a.newegg.org/newegg-docker 可替换</span><br><span class="line"></span><br><span class="line"><span class="built_in">alias</span> dfimage=<span class="string">&quot;docker run -v /var/run/docker.sock:/var/run/docker.sock --rm a.newegg.org/newegg-docker/alpine/dfimage&quot;</span> </span><br><span class="line"></span><br><span class="line">dfimage -sV=1.36 7270ef2de0b0</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2022/09/11/%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/09/11/%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83/" class="post-title-link" itemprop="url">注册中心</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-09-11 20:27:30" itemprop="dateCreated datePublished" datetime="2022-09-11T20:27:30+08:00">2022-09-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-27 16:49:09" itemprop="dateModified" datetime="2023-02-27T16:49:09+08:00">2023-02-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">中间件</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/Nacos/" itemprop="url" rel="index"><span itemprop="name">Nacos</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a target="_blank" rel="noopener" href="https://img2020.cnblogs.com/blog/1128804/202010/1128804-20201022161838828-1750298688.png">https://img2020.cnblogs.com/blog/1128804/202010/1128804-20201022161838828-1750298688.png</a></p>
-<ul>
-<li><p>默认情况下，Namespace&#x3D;public、Group&#x3D;DEFAULT_GROUP，默认Cluster是DEFAULT。</p>
-</li>
-<li><p>Nacos的默认的命名空间是public，Namespace主要用来实现隔离。比如说，现在有三个环境：开发、测试和生产环境，我们就可以创建三个Namespace，不同的Namespace之间是隔离的。</p>
-</li>
-<li><p>Group默认是DEFAULT_GROUP，Group可以把不同的微服务划分到同一个分组里面。</p>
-</li>
-<li><p>Service就是微服务。一个Service可以包含多个Cluster（集群），Nacos默认Cluster就是DEFAULT，Cluster是对指定微服务的一个虚拟划分。比如说，为了容灾，将Service微服务分别部署在了杭州机房和广州机房，这时候就可以给杭州机房的Service微服务起一个集群名称（HZ），给广州机房的Service微服务起一个集群名称（GZ），还可以尽量让同一个机房的微服务互相调用，以提升性能。</p>
-</li>
-<li><p>Instance，就是微服务的实例。</p>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1254,20 +1369,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-count">95</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">46</span>
+        <span class="site-state-item-count">48</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">54</span>
+        <span class="site-state-item-count">61</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
