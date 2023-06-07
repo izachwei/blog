@@ -186,6 +186,176 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/03/18/ThreadLocalRandom/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/03/18/ThreadLocalRandom/" class="post-title-link" itemprop="url">ThreadLocalRandom</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-03-18 20:05:27 / 修改时间：20:06:27" itemprop="dateCreated datePublished" datetime="2023-03-18T20:05:27+08:00">2023-03-18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/%E5%B9%B6%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">并发</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="ThreadLocalRandom-的坑"><a href="#ThreadLocalRandom-的坑" class="headerlink" title="ThreadLocalRandom 的坑"></a>ThreadLocalRandom 的坑</h1><p>这是 JDK 提供的多线程环境下保证线程安全生成随机数的工具类</p>
+<h2 id="结论（使用注意点）"><a href="#结论（使用注意点）" class="headerlink" title="结论（使用注意点）"></a>结论（使用注意点）</h2><p>在线程自己的方法中调用 <code>ThreadLocalRandom.current() </code>。（这样才能保证线程本身生成随机数的独立性）</p>
+<p>禁止将 <code>ThreadLocalRandom</code> 提升为全局变量，例如：<code>public static final ThreadLocalRandom random =  ThreadLocalRandom.current()</code> 这样会导致使用该变量的多线程生成随机策略一样的，核心底层随机策略的种子值 <code>probe</code> 不会再次初始化。</p>
+<p>使用 ThreadLocalRandom，不能多个线程共享某线程返回的 ThreadLocalRandom 实例，需要每个线程分别调用<code>ThreadLocalRandom.current().nextInt(1000)</code>，这样才能初始化每个线程的种子，才可以起到随机数的效果。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/03/18/MySQL%E7%9A%84%E9%9A%90%E5%BC%8F%E8%BD%AC%E6%8D%A2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/my_love.jpg">
+      <meta itemprop="name" content="Zach Wei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唯's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/03/18/MySQL%E7%9A%84%E9%9A%90%E5%BC%8F%E8%BD%AC%E6%8D%A2/" class="post-title-link" itemprop="url">MySQL的隐式转换</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-03-18 20:04:12 / 修改时间：20:05:07" itemprop="dateCreated datePublished" datetime="2023-03-18T20:04:12+08:00">2023-03-18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="什么是隐式转换"><a href="#什么是隐式转换" class="headerlink" title="什么是隐式转换"></a>什么是隐式转换</h3><p>当操作符（&gt;,&#x3D;…）与不同类型的操作数一起使用时，会发生类型转换以使操作数兼容</p>
+<h3 id="转换规则"><a href="#转换规则" class="headerlink" title="转换规则"></a>转换规则</h3><ul>
+<li>两个参数至少有一个是 NULL 时，比较的结果也是 NULL，例外是使用 &lt;&#x3D;&gt; 对两个 NULL 做比较时会返回 1，这两种情况都不需要做类型转换</li>
+<li>两个参数都是字符串，会按照字符串来比较，不做类型转换</li>
+<li>两个参数都是整数，按照整数来比较，不做类型转换</li>
+<li>十六进制的值和非数字做比较时，会被当做二进制串</li>
+<li>有一个参数是 TIMESTAMP 或 DATETIME，并且另外一个参数是常量，常量会被转换为 timestamp</li>
+<li>有一个参数是 decimal 类型，如果另外一个参数是 decimal 或者整数，会将整数转换为 decimal 后进行比较，如果另外一个参数是浮点数，则会把 decimal 转换为浮点数进行比较</li>
+<li>所有其他情况下，两个参数都会被转换为浮点数再进行比较</li>
+</ul>
+<h3 id="避免隐式转换"><a href="#避免隐式转换" class="headerlink" title="避免隐式转换"></a>避免隐式转换</h3><ul>
+<li>应该避免隐式转换，隐式转换类型主要有字段类型不一致、in 参数包含多个类型，字符集类型不一致等。</li>
+<li>隐式转换可能导致索引失效，<strong>甚至会导致查询结果不准确</strong>。</li>
+</ul>
+<blockquote>
+<ul>
+<li>如果字符串的第一个字符就是非数字的字符，那么转换为数字就是0</li>
+<li>如果字符串以数字开头<ul>
+<li>如果字符串中都是数字，那么转换为数字就是整个字符串对应的数字</li>
+<li>如果字符串中存在非数字，那么转换为的数字就是开头的那些数字对应的值</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/03/18/nginx%E9%85%8D%E7%BD%AE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -867,195 +1037,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/03/08/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/03/08/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/" class="post-title-link" itemprop="url">微服务架构</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2023-03-08 21:24:54 / 修改时间：21:24:31" itemprop="dateCreated datePublished" datetime="2023-03-08T21:24:54+08:00">2023-03-08</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">系统架构</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">微服务</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>架构的优化就是一层加一层</p>
-<p>当耦合性太高的时候，就加一层，作为缓冲。 当合并有单点的时候，就分开。当分开有不能统一的时候，就合并。</p>
-<h3 id="单体应用转向微服务本质"><a href="#单体应用转向微服务本质" class="headerlink" title="单体应用转向微服务本质"></a>单体应用转向微服务本质</h3><p>单一职责，关注点分离，业务解耦，服务隔离，技术异构，简化部署，易于伸缩扩容</p>
-<p>本质：其演变最重要的驱动力时方便某个服务顺利的“死去”与“重生”。面向失败设计。</p>
-<p>方便某个服务的 死去，重生。对应的快速发布、服务淘汰、服务自动故障恢复。</p>
-<h3 id="微服务治理组件"><a href="#微服务治理组件" class="headerlink" title="微服务治理组件"></a>微服务治理组件</h3><p>强端点若管道（SOA -&gt; 微服务）</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://izachwei.github.io/2023/03/07/API%E8%AE%BE%E8%AE%A1%E8%AF%84%E5%AE%A1%E6%B8%85%E5%8D%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/my_love.jpg">
-      <meta itemprop="name" content="Zach Wei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唯's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/03/07/API%E8%AE%BE%E8%AE%A1%E8%AF%84%E5%AE%A1%E6%B8%85%E5%8D%95/" class="post-title-link" itemprop="url">API设计评审清单</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-03-07 21:24:54" itemprop="dateCreated datePublished" datetime="2023-03-07T21:24:54+08:00">2023-03-07</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-03-08 21:29:27" itemprop="dateModified" datetime="2023-03-08T21:29:27+08:00">2023-03-08</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%BB%A3%E7%A0%81%E8%AE%BE%E8%AE%A1/" itemprop="url" rel="index"><span itemprop="name">代码设计</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%BB%A3%E7%A0%81%E8%AE%BE%E8%AE%A1/API%E8%A7%84%E8%8C%83/" itemprop="url" rel="index"><span itemprop="name">API规范</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="API-设计评审清单"><a href="#API-设计评审清单" class="headerlink" title="API 设计评审清单"></a>API 设计评审清单</h3><ul>
-<li>URI 命名是否通过聚合根和实体统一</li>
-<li>URI 命名是否采用名词复数和连接线</li>
-<li>URI 命名是否都是单词小写</li>
-<li>URI 是否暴露了不必要的信息，例如<code>/cgi-bin</code></li>
-<li>URI 规则是否统一</li>
-<li>资源提供的能力是否彼此独立</li>
-<li>URI 是否存在需要编码的字符</li>
-<li>请求和返回的参数是否不多不少</li>
-<li>资源的 ID 参数是否通过 PATH 参数传递</li>
-<li>认证和授权信息是否暴露到 query 参数中</li>
-<li>参数是否使用奇怪的缩写</li>
-<li>参数和响应数据中的字段命名统一</li>
-<li>是否存在无意义的对象包装 例如<code>&#123;&quot;data&quot;:&#123;&#125;&#39;&#125;</code></li>
-<li>出错时是否破坏约定的数据结构</li>
-<li>是否使用合适的状态码</li>
-<li>是否使用合适的媒体类型</li>
-<li>响应数据的单复是否和数据内容一致</li>
-<li>响应头中是否有缓存信息</li>
-<li>是否进行了版本管理</li>
-<li>版本信息是否作为 URI 的前缀存在</li>
-<li>是否提供 API 服务期限</li>
-<li>是否提供了 API 返回所有 API 的索引</li>
-<li>是否进行了认证和授权</li>
-<li>是否采用 HTTPS</li>
-<li>是否检查了非法参数</li>
-<li>是否增加安全性的头部</li>
-<li>是否有限流策略</li>
-<li>是否支持 CORS</li>
-<li>响应中的时间格式是否采用<code>ISO 8601</code>标准</li>
-<li>是否存在越权访问</li>
-</ul>
-<p><strong>本文转载自 ThoughtWorks 洞见。</strong></p>
-<p><strong>原文链接</strong>：</p>
-<p><a target="_blank" rel="noopener" href="https://insights.thoughtworks.cn/how-to-design-api/">API设计的几条原则</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1127,7 +1108,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">95</span>
+          <span class="site-state-item-count">97</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1140,7 +1121,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">61</span>
+        <span class="site-state-item-count">62</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
